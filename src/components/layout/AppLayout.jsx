@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, BarChart3, Plus } from 'lucide-react';
+import { ShoppingCart, Plus } from 'lucide-react';
 
 export default function AppLayout() {
   const location = useLocation();
@@ -17,7 +17,7 @@ export default function AppLayout() {
           <div className="flex items-center justify-between h-16">
             <Link to="/Home" className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-200">
-                <ShoppingCart className="w-4.5 h-4.5 text-white" strokeWidth={2.5} />
+                <ShoppingCart className="w-5 h-5 text-white" strokeWidth={2.5} />
               </div>
               <span className="text-lg font-bold tracking-tight text-slate-900">
                 Cart<span className="text-emerald-600">Compare</span>
