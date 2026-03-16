@@ -3,10 +3,12 @@ import { motion } from 'framer-motion';
 import { ChevronRight, Clock, ShoppingCart, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
+import { getStoreByKey } from '@/lib/storeConfig';
 
 export default function ListCard({ list, index, onDelete }) {
   const itemCount = list.items?.length || 0;
-  const hasComparison = !!list.price_data;
+  const priceData = list.price_data;
+  const comparedStores = priceData ? Object.keys(priceData) : [];
 
   return (
     <motion.div
@@ -14,10 +16,7 @@ export default function ListCard({ list, index, onDelete }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
     >
-      <Link
-        to={`/ListDetail?id=${list.id}`}
-        className="block group"
-      >
+      <Link to={`/ListDetail?id=${list.id}`} className="block group">
         <div className="relative rounded-2xl border border-slate-100 bg-white p-5 hover:border-emerald-200 hover:shadow-md hover:shadow-emerald-50 transition-all duration-300">
           <div className="flex items-start justify-between">
             <div className="flex-1">
@@ -36,16 +35,22 @@ export default function ListCard({ list, index, onDelete }) {
                   </span>
                 )}
               </div>
-              {hasComparison && (
-                <div className="flex gap-2 mt-3">
-                  {['kroger', 'walmart', 'amazon'].map(store => {
-                    const total = list.price_data?.[store]?.reduce((s, i) => s + (i.price || 0), 0) || 0;
+              {comparedStores.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  {comparedStores.slice(0, 4).map(storeKey => {
+                    const store = getStoreByKey(storeKey);
+                    const total = priceData[storeKey]?.reduce((s, i) => s + (i.price || 0), 0) || 0;
                     return (
-                      <span key={store} className="text-xs font-medium px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">
-                        {store.charAt(0).toUpperCase() + store.slice(1)}: ${total.toFixed(2)}
+                      <span key={storeKey} className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                        {store?.name || storeKey}: ${total.toFixed(2)}
                       </span>
                     );
                   })}
+                  {comparedStores.length > 4 && (
+                    <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500">
+                      +{comparedStores.length - 4} more
+                    </span>
+                  )}
                 </div>
               )}
             </div>
