@@ -12,6 +12,29 @@ import NewList from '@/pages/NewList';
 import ListDetail from '@/pages/ListDetail';
 import Onboarding from '@/pages/Onboarding';
 
+const OnboardingGate = () => {
+  const [checking, setChecking] = React.useState(true);
+  const [needsOnboarding, setNeedsOnboarding] = React.useState(false);
+
+  React.useEffect(() => {
+    base44.auth.me().then(user => {
+      if (!user?.onboarding_complete) {
+        setNeedsOnboarding(true);
+      }
+      setChecking(false);
+    }).catch(() => setChecking(false));
+  }, []);
+
+  if (checking) return (
+    <div className="flex items-center justify-center py-20">
+      <div className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
+    </div>
+  );
+
+  if (needsOnboarding) return <Navigate to="/Onboarding" replace />;
+  return <Navigate to="/Home" replace />;
+};
+
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
