@@ -10,6 +10,7 @@ import AppLayout from '@/components/layout/AppLayout';
 import Home from '@/pages/Home';
 import NewList from '@/pages/NewList';
 import ListDetail from '@/pages/ListDetail';
+import Onboarding from '@/pages/Onboarding';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
