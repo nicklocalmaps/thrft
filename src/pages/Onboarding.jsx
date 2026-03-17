@@ -20,38 +20,14 @@ export default function Onboarding() {
     if (zipCode.length < 5) return;
     setLoadingStores(true);
 
-    const allStoreNames = ALL_STORES.map(s => s.key).join(', ');
-
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Given the US zip code ${zipCode}, return a list of grocery store keys that are realistically likely to have locations within 25 miles of that zip code. Only pick from this exact list of keys: ${allStoreNames}. 
-
-      Consider the geographic region. For example:
-      - Texas zip codes → heb, walmart, kroger, aldi, whole_foods, trader_joes, amazon
-      - California zip codes → albertsons, trader_joes, whole_foods, amazon, walmart, stater_bros, bristol_farms, gelsons, aldi
-      - Midwest zip codes → meijer, aldi, kroger, walmart, jewel_osco, hyvee, giant_eagle
-      - Northeast zip codes → stop_shop, market_basket, hannaford, wegmans, acme, big_y, stew_leonards
-      - Southeast zip codes → publix, kroger, food_lion, harris_teeter, fresh_market, piggly_wiggly
-      - National chains (walmart, kroger, aldi, amazon, trader_joes, whole_foods) are likely everywhere.
-      
-      Return between 6 and 12 store keys that are most realistic for this zip code.`,
-      response_json_schema: {
-        type: 'object',
-        properties: {
-          store_keys: {
-            type: 'array',
-            items: { type: 'string' }
-          }
-        }
-      }
-    });
-
-    const keys = result?.store_keys || [];
+    const response = await base44.functions.invoke('findNearbyStores', { zip_code: zipCode });
+    const keys = response.data?.store_keys || [];
     const found = keys
       .map(k => ALL_STORES.find(s => s.key === k))
       .filter(Boolean);
 
     setNearbyStores(found);
-    setSelectedStores(found.map(s => s.key)); // pre-select all found
+    setSelectedStores(found.map(s => s.key));
     setLoadingStores(false);
     setStep('stores');
   };
