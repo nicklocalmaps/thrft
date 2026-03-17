@@ -22,7 +22,7 @@ export default function ListDetail() {
   const [selectedStores, setSelectedStores] = useState([]);
 
   // Load user's favorite stores as default on mount
-  React.useEffect(() => {
+  useEffect(() => {
     base44.auth.me().then(user => {
       if (user?.favorite_stores?.length) {
         setSelectedStores(user.favorite_stores);
