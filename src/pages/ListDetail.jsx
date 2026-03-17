@@ -11,8 +11,6 @@ import StoreCard from '@/components/grocery/StoreCard';
 import StorePicker from '@/components/grocery/StorePicker';
 import { ALL_STORES } from '@/lib/storeConfig';
 
-const DEFAULT_STORES = ['kroger', 'walmart', 'amazon'];
-
 export default function ListDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const listId = urlParams.get('id');
@@ -21,7 +19,18 @@ export default function ListDetail() {
   const [comparing, setComparing] = useState(false);
   const [localItems, setLocalItems] = useState(null);
   const [showStorePicker, setShowStorePicker] = useState(false);
-  const [selectedStores, setSelectedStores] = useState(DEFAULT_STORES);
+  const [selectedStores, setSelectedStores] = useState([]);
+
+  // Load user's favorite stores as default on mount
+  React.useEffect(() => {
+    base44.auth.me().then(user => {
+      if (user?.favorite_stores?.length) {
+        setSelectedStores(user.favorite_stores);
+      } else {
+        setSelectedStores(['kroger', 'walmart', 'amazon']);
+      }
+    }).catch(() => setSelectedStores(['kroger', 'walmart', 'amazon']));
+  }, []);
 
   const { data: list, isLoading } = useQuery({
     queryKey: ['grocery-list', listId],
