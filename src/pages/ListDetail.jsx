@@ -35,13 +35,7 @@ export default function ListDetail() {
   const { data: list, isLoading } = useQuery({
     queryKey: ['grocery-list', listId],
     queryFn: () => base44.entities.GroceryList.filter({ id: listId }),
-    select: (data) => {
-      const l = data[0];
-      if (l?.selected_stores?.length && selectedStores === DEFAULT_STORES) {
-        setSelectedStores(l.selected_stores);
-      }
-      return l;
-    },
+    select: (data) => data[0],
     enabled: !!listId,
   });
 
