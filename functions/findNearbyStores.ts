@@ -63,11 +63,21 @@ async function geocodeZip(zip) {
 }
 
 async function searchGroceryStores(lat, lng) {
-  // Use Places Text Search for grocery stores within 25 miles (~40km)
-  const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=40000&type=grocery_or_supermarket&key=${GOOGLE_API_KEY}`;
-  const res = await fetch(url);
-  const data = await res.json();
-  return data.results || [];
+  // Fetch up to 3 pages of nearby grocery results (60 places)
+  let results = [];
+  let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=40000&type=grocery_or_supermarket&key=${GOOGLE_API_KEY}`;
+
+  for (let page = 0; page < 3; page++) {
+    const res = await fetch(url);
+    const data = await res.json();
+    results = results.concat(data.results || []);
+    if (!data.next_page_token) break;
+    // Google requires a short delay before using next_page_token
+    await new Promise(r => setTimeout(r, 2000));
+    url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=${data.next_page_token}&key=${GOOGLE_API_KEY}`;
+  }
+
+  return results;
 }
 
 Deno.serve(async (req) => {
