@@ -62,20 +62,29 @@ async function geocodeZip(zip) {
   return { lat, lng };
 }
 
-async function searchGroceryStores(lat, lng) {
-  // Fetch up to 3 pages of nearby grocery results (60 places)
-  let results = [];
-  let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=40000&type=grocery_or_supermarket&key=${GOOGLE_API_KEY}`;
+// Chains to explicitly text-search for (Places NearbySearch often deduplicates chains)
+const CHAINS_TO_SEARCH = [
+  'Walmart Grocery', 'Kroger', 'H-E-B', 'Publix', 'Safeway', 'Albertsons',
+  'Meijer', 'Hy-Vee', 'Wegmans', 'Food Lion', 'Harris Teeter', 'Giant Eagle',
+  'Stop & Shop', 'Jewel-Osco', 'Hannaford', 'Market Basket', 'King Soopers',
+  'Stater Bros', 'Fred Meyer', 'Piggly Wiggly', 'Rouses Market', 'Amazon Fresh',
+];
 
-  for (let page = 0; page < 3; page++) {
-    const res = await fetch(url);
-    const data = await res.json();
-    results = results.concat(data.results || []);
-    if (!data.next_page_token) break;
-    // Google requires a short delay before using next_page_token
-    await new Promise(r => setTimeout(r, 2000));
-    url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=${data.next_page_token}&key=${GOOGLE_API_KEY}`;
-  }
+async function searchGroceryStores(lat, lng) {
+  // 1. General nearby grocery search
+  const nearbyUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=40000&type=grocery_or_supermarket&key=${GOOGLE_API_KEY}`;
+  const nearbyRes = await fetch(nearbyUrl);
+  const nearbyData = await nearbyRes.json();
+  let results = nearbyData.results || [];
+
+  // 2. Targeted text searches for major chains (run in parallel)
+  const textSearches = CHAINS_TO_SEARCH.map(chain => {
+    const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(chain + ' grocery store')}&location=${lat},${lng}&radius=40000&key=${GOOGLE_API_KEY}`;
+    return fetch(url).then(r => r.json()).then(d => d.results || []).catch(() => []);
+  });
+
+  const chainResults = await Promise.all(textSearches);
+  for (const r of chainResults) results = results.concat(r);
 
   return results;
 }
