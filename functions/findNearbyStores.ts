@@ -78,9 +78,23 @@ async function searchGroceryStores(lat, lng) {
   let results = nearbyData.results || [];
 
   // 2. Targeted text searches for major chains (run in parallel)
+  // Filter to only results actually within ~25 miles (40km)
   const textSearches = CHAINS_TO_SEARCH.map(chain => {
     const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(chain + ' grocery store')}&location=${lat},${lng}&radius=40000&key=${GOOGLE_API_KEY}`;
-    return fetch(url).then(r => r.json()).then(d => d.results || []).catch(() => []);
+    return fetch(url).then(r => r.json()).then(d => {
+      return (d.results || []).filter(place => {
+        const plat = place.geometry?.location?.lat;
+        const plng = place.geometry?.location?.lng;
+        if (!plat || !plng) return false;
+        // Haversine distance check (km)
+        const R = 6371;
+        const dLat = (plat - lat) * Math.PI / 180;
+        const dLng = (plng - lng) * Math.PI / 180;
+        const a = Math.sin(dLat/2)**2 + Math.cos(lat * Math.PI/180) * Math.cos(plat * Math.PI/180) * Math.sin(dLng/2)**2;
+        const dist = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return dist <= 40;
+      });
+    }).catch(() => []);
   });
 
   const chainResults = await Promise.all(textSearches);
