@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Plus } from 'lucide-react';
+import { ShoppingCart, Plus, Store } from 'lucide-react';
 
 const THRFT_BLUE = '#4181ed';
 
