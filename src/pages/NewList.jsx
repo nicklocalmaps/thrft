@@ -1,27 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { AnimatePresence } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Settings2 } from 'lucide-react';
 import AddItemForm from '@/components/grocery/AddItemForm';
 import GroceryItemRow from '@/components/grocery/GroceryItemRow';
 import EmptyState from '@/components/grocery/EmptyState';
+import ShoppingMethodPicker from '@/components/grocery/ShoppingMethodPicker';
 
 export default function NewList() {
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [items, setItems] = useState([]);
   const [saving, setSaving] = useState(false);
+  const [shoppingMethod, setShoppingMethod] = useState('all');
+  const [showMethodPicker, setShowMethodPicker] = useState(false);
 
-  const addItem = (item) => {
-    setItems(prev => [...prev, item]);
-  };
+  // Load user's saved preference
+  useEffect(() => {
+    base44.auth.me().then(user => {
+      if (user?.shopping_method) setShoppingMethod(user.shopping_method);
+    }).catch(() => {});
+  }, []);
 
-  const removeItem = (index) => {
-    setItems(prev => prev.filter((_, i) => i !== index));
-  };
+  const addItem = (item) => setItems(prev => [...prev, item]);
+  const removeItem = (index) => setItems(prev => prev.filter((_, i) => i !== index));
 
   const handleCreate = async () => {
     if (!name.trim() || items.length === 0) return;
@@ -29,8 +34,16 @@ export default function NewList() {
     const list = await base44.entities.GroceryList.create({
       name: name.trim(),
       items,
+      shopping_method: shoppingMethod,
     });
     navigate(`/ListDetail?id=${list.id}`);
+  };
+
+  const METHOD_LABELS = {
+    instore: '🏪 In-Store',
+    pickup: '🚗 Curbside Pickup',
+    delivery: '🚚 Delivery',
+    all: '📦 Compare All',
   };
 
   return (
@@ -39,6 +52,7 @@ export default function NewList() {
       <p className="text-slate-500 mb-8">Add your items, then compare prices across stores.</p>
 
       <div className="space-y-6">
+        {/* List Name */}
         <div>
           <label className="text-sm font-medium text-slate-700 mb-2 block">List Name</label>
           <Input
@@ -49,6 +63,31 @@ export default function NewList() {
           />
         </div>
 
+        {/* Shopping Method */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <label className="text-sm font-medium text-slate-700">Shopping Method</label>
+            <button
+              type="button"
+              onClick={() => setShowMethodPicker(!showMethodPicker)}
+              className="flex items-center gap-1.5 text-xs font-medium text-blue-600 hover:text-blue-700 transition-colors"
+            >
+              <Settings2 className="w-3.5 h-3.5" />
+              {showMethodPicker ? 'Hide options' : 'Change preference'}
+            </button>
+          </div>
+
+          {!showMethodPicker ? (
+            <div className="flex items-center gap-2 px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 text-sm font-medium text-slate-700">
+              {METHOD_LABELS[shoppingMethod]}
+              <span className="ml-auto text-xs text-slate-400">(from your preferences)</span>
+            </div>
+          ) : (
+            <ShoppingMethodPicker value={shoppingMethod} onChange={setShoppingMethod} />
+          )}
+        </div>
+
+        {/* Add Items */}
         <div>
           <label className="text-sm font-medium text-slate-700 mb-2 block">Add Items</label>
           <AddItemForm onAdd={addItem} />
@@ -70,7 +109,8 @@ export default function NewList() {
           <Button
             onClick={handleCreate}
             disabled={!name.trim() || saving}
-            className="w-full h-14 rounded-xl text-base font-semibold shadow-lg shadow-blue-200 gap-2 transition-all" style={{ backgroundColor: '#4181ed' }}
+            className="w-full h-14 rounded-xl text-base font-semibold shadow-lg shadow-blue-200 gap-2 transition-all"
+            style={{ backgroundColor: '#4181ed' }}
           >
             {saving ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
