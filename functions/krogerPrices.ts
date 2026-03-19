@@ -28,7 +28,8 @@ async function getToken() {
 }
 
 async function getLocationId(token, zip, chainId) {
-  const q = new URLSearchParams({ 'filter.zipCode.near': zip, 'filter.limit': '1' });
+  // Try with chain filter first
+  const q = new URLSearchParams({ 'filter.zipCode.near': zip, 'filter.limit': '5' });
   if (chainId) q.set('filter.chain', chainId);
   const r = await fetch(`${BASE}/locations?${q}`, { headers: { Authorization: `Bearer ${token}` } });
   if (!r.ok) {
@@ -36,7 +37,17 @@ async function getLocationId(token, zip, chainId) {
     return null;
   }
   const d = await r.json();
-  return d.data?.[0]?.locationId ?? null;
+  if (d.data?.length) return d.data[0].locationId;
+
+  // Fallback: search all chains and pick first Kroger-family store
+  const allChainIds = Object.values(CHAIN_IDS);
+  const q2 = new URLSearchParams({ 'filter.zipCode.near': zip, 'filter.limit': '10' });
+  const r2 = await fetch(`${BASE}/locations?${q2}`, { headers: { Authorization: `Bearer ${token}` } });
+  if (!r2.ok) return null;
+  const d2 = await r2.json();
+  // Find a store whose chain matches any of our supported chains
+  const match = d2.data?.find(loc => allChainIds.includes(loc.chain?.id?.toString()));
+  return match?.locationId ?? null;
 }
 
 async function getPrice(token, locationId, term) {
