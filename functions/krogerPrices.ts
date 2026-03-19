@@ -1,5 +1,4 @@
-// krogerPrices v2
-
+// krogerPrices v3 - 2026-03-19
 const BASE = 'https://api.kroger.com/v1';
 
 const KROGER_FAMILY = ['kroger', 'fred_meyer', 'king_soopers', 'city_market', 'smiths', 'harris_teeter', 'jewel_osco'];
@@ -37,17 +36,9 @@ async function getLocationId(token, zip, chainId) {
     return null;
   }
   const d = await r.json();
+  console.log('Location results for chain', chainId, ':', JSON.stringify(d.data?.map(s => ({ id: s.locationId, name: s.name, chain: s.chain }))));
   if (d.data?.length) return d.data[0].locationId;
-
-  // Fallback: search all chains and pick first Kroger-family store
-  const allChainIds = Object.values(CHAIN_IDS);
-  const q2 = new URLSearchParams({ 'filter.zipCode.near': zip, 'filter.limit': '10' });
-  const r2 = await fetch(`${BASE}/locations?${q2}`, { headers: { Authorization: `Bearer ${token}` } });
-  if (!r2.ok) return null;
-  const d2 = await r2.json();
-  // Find a store whose chain matches any of our supported chains
-  const match = d2.data?.find(loc => allChainIds.includes(loc.chain?.id?.toString()));
-  return match?.locationId ?? null;
+  return null;
 }
 
 async function getPrice(token, locationId, term) {
@@ -58,7 +49,10 @@ async function getPrice(token, locationId, term) {
     'filter.fulfillment': 'ais',
   });
   const r = await fetch(`${BASE}/products?${q}`, { headers: { Authorization: `Bearer ${token}` } });
-  if (!r.ok) return { item_name: term, product_name: term, price: null, unit_price: '', in_stock: false };
+  if (!r.ok) {
+    console.log('Product error for', term, r.status);
+    return { item_name: term, product_name: term, price: null, unit_price: '', in_stock: false };
+  }
   const d = await r.json();
   const p = d.data?.[0];
   if (!p) return { item_name: term, product_name: term, price: null, unit_price: '', in_stock: false };
@@ -70,27 +64,18 @@ async function getPrice(token, locationId, term) {
 Deno.serve(async (req) => {
   try {
     const body = await req.json();
-    console.log('RAW BODY:', JSON.stringify(body));
+    console.log('v3 RAW BODY:', JSON.stringify(body));
     const { items, store_keys, zip_code } = body;
-    console.log('PARSED:', { itemCount: items?.length, store_keys, zip_code });
 
     if (!items?.length || !store_keys?.length || !zip_code) {
-      return Response.json({ error: 'Missing required fields', body }, { status: 400 });
+      return Response.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     const targets = store_keys.filter(k => KROGER_FAMILY.includes(k));
-    console.log('TARGETS:', targets);
     if (!targets.length) return Response.json({ results: {}, reason: 'no kroger stores in list' });
 
     const token = await getToken();
-    console.log('Token OK length:', token?.length);
-
-    // DEBUG: find any store near zip to inspect chain IDs
-    const debugQ = new URLSearchParams({ 'filter.zipCode.near': zip_code, 'filter.limit': '5' });
-    const debugR = await fetch(`${BASE}/locations?${debugQ}`, { headers: { Authorization: `Bearer ${token}` } });
-    const debugD = await debugR.json();
-    console.log('DEBUG STORES:', JSON.stringify(debugD.data?.map(s => ({ id: s.locationId, name: s.name, chain: s.chain }))));
-
+    console.log('Token OK, length:', token?.length);
 
     const results = {};
     await Promise.all(targets.map(async (key) => {
@@ -105,7 +90,7 @@ Deno.serve(async (req) => {
 
     return Response.json({ results });
   } catch (e) {
-    console.error('krogerPrices error:', e.message);
+    console.error('krogerPrices error:', e.message, e.stack);
     return Response.json({ error: e.message }, { status: 500 });
   }
 });
