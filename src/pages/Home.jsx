@@ -36,7 +36,7 @@ export default function Home() {
           <p className="text-slate-500 mt-1">Compare prices across Kroger, Walmart & Amazon</p>
         </div>
         <Link to="/NewList">
-          <Button className="h-11 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-200 gap-2">
+          <Button className="h-11 px-5 rounded-xl shadow-md shadow-blue-200 gap-2" style={{ backgroundColor: '#4181ed' }}>
             <Plus className="w-4 h-4" />
             New List
           </Button>
@@ -45,15 +45,15 @@ export default function Home() {
 
       {lists.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="w-20 h-20 rounded-2xl bg-emerald-50 flex items-center justify-center mb-5">
-            <ShoppingBasket className="w-10 h-10 text-emerald-400" />
+          <div className="w-20 h-20 rounded-2xl bg-blue-50 flex items-center justify-center mb-5">
+            <ShoppingBasket className="w-10 h-10 text-blue-400" />
           </div>
           <h3 className="text-lg font-semibold text-slate-800 mb-2">No lists yet</h3>
           <p className="text-slate-500 max-w-sm mb-6">
             Create your first grocery list to start comparing prices across stores.
           </p>
           <Link to="/NewList">
-            <Button className="rounded-xl bg-emerald-600 hover:bg-emerald-700 gap-2">
+            <Button className="rounded-xl gap-2" style={{ backgroundColor: '#4181ed' }}>
               <Plus className="w-4 h-4" />
               Create Your First List
             </Button>

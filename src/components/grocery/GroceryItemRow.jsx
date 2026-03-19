@@ -9,7 +9,7 @@ export default function GroceryItemRow({ item, index, onRemove }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -20 }}
       transition={{ delay: index * 0.03 }}
-      className="flex items-center justify-between px-4 py-3 bg-white rounded-xl border border-slate-100 hover:border-emerald-200 hover:shadow-sm transition-all group"
+      className="flex items-center justify-between px-4 py-3 bg-white rounded-xl border border-slate-100 hover:border-blue-200 hover:shadow-sm transition-all group"
     >
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-sm font-semibold text-emerald-700">

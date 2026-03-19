@@ -45,7 +45,7 @@ export default function NewList() {
             placeholder="e.g. Weekly Groceries, Party Supplies..."
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="h-12 rounded-xl border-slate-200 bg-white text-base placeholder:text-slate-400 focus-visible:ring-emerald-500"
+            className="h-12 rounded-xl border-slate-200 bg-white text-base placeholder:text-slate-400 focus-visible:ring-blue-400"
           />
         </div>
 
@@ -70,7 +70,7 @@ export default function NewList() {
           <Button
             onClick={handleCreate}
             disabled={!name.trim() || saving}
-            className="w-full h-14 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-base font-semibold shadow-lg shadow-emerald-200 gap-2 transition-all"
+            className="w-full h-14 rounded-xl text-base font-semibold shadow-lg shadow-blue-200 gap-2 transition-all" style={{ backgroundColor: '#4181ed' }}
           >
             {saving ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

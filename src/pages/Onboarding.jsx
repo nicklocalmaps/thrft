@@ -49,16 +49,16 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-amber-50/30 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50/30 flex items-center justify-center px-4">
       <div className="w-full max-w-xl">
 
         {/* Logo */}
         <div className="flex items-center justify-center gap-2.5 mb-10">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-200">
-            <ShoppingCart className="w-5 h-5 text-white" strokeWidth={2.5} />
+          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg">
+            <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT logo" className="w-full h-full object-cover" />
           </div>
           <span className="text-xl font-bold tracking-tight text-slate-900">
-            Cart<span className="text-emerald-600">Compare</span>
+            Cart<span style={{ color: '#4181ed' }}>Compare</span>
           </span>
         </div>
 
@@ -73,7 +73,7 @@ export default function Onboarding() {
             exit={{ opacity: 0, y: -20 }}
             className="bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 p-8">
             
-              <div className="bg-slate-400 mb-5 rounded-2xl w-14 h-14 flex items-center justify-center">
+              <div className="mb-5 rounded-2xl w-14 h-14 flex items-center justify-center" style={{ backgroundColor: '#4181ed' }}>
                 <MapPin className="w-7 h-7 text-white" />
               </div>
               <h1 className="text-slate-900 mb-2 text-xl font-semibold text-center normal-case">Welcome to CartCompare!</h1>
@@ -88,13 +88,13 @@ Let's find your favorite grocery stores so we can compare prices for your shoppi
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value.replace(/\D/g, '').slice(0, 5))}
                 onKeyDown={(e) => e.key === 'Enter' && zipCode.length === 5 && findNearbyStores()}
-                className="h-12 rounded-xl border-slate-200 text-base flex-1 focus-visible:ring-emerald-500"
+                className="h-12 rounded-xl border-slate-200 text-base flex-1 focus-visible:ring-blue-400"
                 maxLength={5} />
               
                 <Button
                 onClick={findNearbyStores}
                 disabled={zipCode.length < 5 || loadingStores}
-                className="h-12 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-200 gap-2">
+                className="h-12 px-6 rounded-xl shadow-md shadow-blue-200 gap-2" style={{ backgroundColor: '#4181ed' }}>
                 
                   {loadingStores ?
                 <Loader2 className="w-5 h-5 animate-spin" /> :
@@ -148,14 +148,14 @@ Let's find your favorite grocery stores so we can compare prices for your shoppi
                     onClick={() => toggleStore(store.key)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border text-left transition-all ${
                     isSelected ?
-                    'bg-emerald-50 border-emerald-200 text-slate-800' :
+                    'bg-blue-50 border-blue-200 text-slate-800' :
                     'bg-white border-slate-100 text-slate-500 hover:border-slate-200'}`
                     }>
                     
                       <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${
-                    isSelected ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300'}`
+                    isSelected ? 'border-blue-500' : 'border-slate-300'}`
                     }>
-                        {isSelected && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
+                        {isSelected && <div className="w-5 h-5 rounded-md flex items-center justify-center" style={{ backgroundColor: '#4181ed' }}><Check className="w-3 h-3 text-white" strokeWidth={3} /></div>}
                       </div>
                       <span className="font-medium">{store.name}</span>
                       <span className="ml-auto text-xs text-slate-400">{store.region}</span>
@@ -166,12 +166,12 @@ Let's find your favorite grocery stores so we can compare prices for your shoppi
 
               <div className="flex items-center justify-between">
                 <p className="text-sm text-slate-500">
-                  <span className="font-semibold text-emerald-600">{selectedStores.length}</span> store{selectedStores.length !== 1 ? 's' : ''} selected
+                  <span className="font-semibold" style={{ color: '#4181ed' }}>{selectedStores.length}</span> store{selectedStores.length !== 1 ? 's' : ''} selected
                 </p>
                 <Button
                 onClick={completeOnboarding}
                 disabled={selectedStores.length === 0 || saving}
-                className="h-11 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-200 gap-2">
+                className="h-11 px-6 rounded-xl shadow-md shadow-blue-200 gap-2" style={{ backgroundColor: '#4181ed' }}>
                 
                   {saving ?
                 <Loader2 className="w-4 h-4 animate-spin" /> :

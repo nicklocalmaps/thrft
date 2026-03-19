@@ -67,7 +67,7 @@ export default function ListCard({ list, index, onDelete }) {
               >
                 <Trash2 className="w-4 h-4" />
               </Button>
-              <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-emerald-500 transition-colors" />
+              <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-blue-500 transition-colors" />
             </div>
           </div>
         </div>

@@ -122,7 +122,7 @@ Store pricing tendencies:
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
       </div>
     );
   }
@@ -182,7 +182,7 @@ Store pricing tendencies:
             className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50 transition-colors"
           >
             <div className="flex items-center gap-2.5">
-              <Store className="w-4 h-4 text-emerald-600" />
+              <Store className="w-4 h-4" style={{ color: '#4181ed' }} />
               <span className="font-semibold text-slate-800">Stores to Compare</span>
               <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
                 {selectedStores.length} selected
@@ -211,7 +211,7 @@ Store pricing tendencies:
         <Button
           onClick={comparePrices}
           disabled={comparing || selectedStores.length === 0}
-          className="w-full h-14 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-base font-semibold shadow-lg shadow-emerald-200 gap-2 transition-all mb-8"
+          className="w-full h-14 rounded-xl text-base font-semibold shadow-lg shadow-blue-200 gap-2 transition-all mb-8" style={{ backgroundColor: '#4181ed' }}
         >
           {comparing ? (
             <>
@@ -234,8 +234,8 @@ Store pricing tendencies:
           animate={{ opacity: 1 }}
           className="flex flex-col items-center py-12 text-center"
         >
-          <div className="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mb-4">
-            <ShoppingCart className="w-8 h-8 text-emerald-500 animate-pulse" />
+          <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
+            <ShoppingCart className="w-8 h-8 animate-pulse" style={{ color: '#4181ed' }} />
           </div>
           <p className="text-slate-600 font-medium">Searching {selectedStores.length} stores...</p>
           <p className="text-sm text-slate-400 mt-1">This may take a moment</p>
@@ -268,9 +268,9 @@ Store pricing tendencies:
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="mt-6 p-5 rounded-2xl bg-emerald-50 border border-emerald-100"
+              className="mt-6 p-5 rounded-2xl bg-blue-50 border border-blue-100"
             >
-              <p className="text-sm text-emerald-700 font-medium">
+              <p className="text-sm font-medium" style={{ color: '#4181ed' }}>
                 💡 <strong>{ALL_STORES.find(s => s.key === cheapestStore)?.name || cheapestStore}</strong> has the best estimated total at{' '}
                 <strong>${storeTotals[cheapestStore]?.toFixed(2)}</strong>
                 {' '}— saving you up to{' '}
