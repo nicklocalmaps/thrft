@@ -1,10 +1,10 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 
-const KROGER_BASE = 'https://api.kroger.com/v1';
-const KROGER_FAMILY = ['kroger', 'fred_meyer', 'king_soopers', 'city_market', 'smiths', 'harris_teeter', 'food_lion', 'jewel_osco'];
+const BASE = 'https://api.kroger.com/v1';
 
-// Map store keys to Kroger chain IDs
-const CHAIN_MAP = {
+const KROGER_FAMILY = ['kroger', 'fred_meyer', 'king_soopers', 'city_market', 'smiths', 'harris_teeter', 'jewel_osco'];
+
+const CHAIN_IDS = {
   kroger: '01100',
   fred_meyer: '00200',
   king_soopers: '00400',
@@ -12,157 +12,81 @@ const CHAIN_MAP = {
   smiths: '00700',
   harris_teeter: '00600',
   jewel_osco: '00500',
-  food_lion: null, // Not in Kroger family, skip
 };
 
-async function getAccessToken() {
-  const clientId = Deno.env.get('KROGER_CLIENT_ID');
-  const clientSecret = Deno.env.get('KROGER_CLIENT_SECRET');
-  const creds = btoa(`${clientId}:${clientSecret}`);
-
-  const res = await fetch(`${KROGER_BASE}/connect/oauth2/token`, {
+async function getToken() {
+  const id = Deno.env.get('KROGER_CLIENT_ID');
+  const secret = Deno.env.get('KROGER_CLIENT_SECRET');
+  const creds = btoa(`${id}:${secret}`);
+  const r = await fetch(`${BASE}/connect/oauth2/token`, {
     method: 'POST',
-    headers: {
-      'Authorization': `Basic ${creds}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: 'grant_type=client_credentials&scope=product.compact+profile.compact',
+    headers: { 'Authorization': `Basic ${creds}`, 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'grant_type=client_credentials&scope=product.compact',
   });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Kroger auth failed: ${text}`);
-  }
-
-  const data = await res.json();
-  return data.access_token;
+  if (!r.ok) throw new Error(`Auth failed: ${await r.text()}`);
+  return (await r.json()).access_token;
 }
 
-async function findNearestLocationId(token, zipCode, chainId) {
-  // Try with chain filter first, then fall back to any nearby Kroger-family store
-  const attempts = chainId
-    ? [{ 'filter.chain': chainId }, {}]
-    : [{}];
-
-  for (const extra of attempts) {
-    const params = new URLSearchParams({
-      'filter.zipCode.near': zipCode,
-      'filter.limit': '5',
-      ...extra,
-    });
-
-    const url = `${KROGER_BASE}/locations?${params}`;
-    console.log('[kroger] Fetching location URL:', url);
-
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-    let res;
-    try {
-      res = await fetch(url, {
-        headers: { 'Authorization': `Bearer ${token}` },
-        signal: controller.signal,
-      });
-    } finally {
-      clearTimeout(timeout);
-    }
-
-    const text = await res.text();
-    console.log('[kroger] Location response status:', res.status, 'body:', text.slice(0, 400));
-
-    if (!res.ok) continue;
-    const data = JSON.parse(text);
-    if (data.data?.length > 0) {
-      return data.data[0].locationId;
-    }
+async function getLocationId(token, zip, chainId) {
+  const q = new URLSearchParams({ 'filter.zipCode.near': zip, 'filter.limit': '1' });
+  if (chainId) q.set('filter.chain', chainId);
+  const r = await fetch(`${BASE}/locations?${q}`, { headers: { Authorization: `Bearer ${token}` } });
+  if (!r.ok) {
+    console.log('location error', r.status, await r.text());
+    return null;
   }
-  return null;
+  const d = await r.json();
+  return d.data?.[0]?.locationId ?? null;
 }
 
-async function searchProduct(token, locationId, itemName) {
-  const params = new URLSearchParams({
-    'filter.term': itemName,
+async function getPrice(token, locationId, term) {
+  const q = new URLSearchParams({
+    'filter.term': term,
     'filter.locationId': locationId,
     'filter.limit': '1',
-    'filter.fulfillment': 'ais', // available in store
+    'filter.fulfillment': 'ais',
   });
-
-  const res = await fetch(`${KROGER_BASE}/products?${params}`, {
-    headers: { 'Authorization': `Bearer ${token}` },
-  });
-
-  if (!res.ok) return null;
-  const data = await res.json();
-  const product = data.data?.[0];
-  if (!product) return null;
-
-  const priceInfo = product.items?.[0]?.price;
+  const r = await fetch(`${BASE}/products?${q}`, { headers: { Authorization: `Bearer ${token}` } });
+  if (!r.ok) return { item_name: term, product_name: term, price: null, unit_price: '', in_stock: false };
+  const d = await r.json();
+  const p = d.data?.[0];
+  if (!p) return { item_name: term, product_name: term, price: null, unit_price: '', in_stock: false };
+  const priceInfo = p.items?.[0]?.price;
   const price = priceInfo?.regular ?? priceInfo?.promo ?? null;
-
-  return {
-    item_name: itemName,
-    product_name: product.description || itemName,
-    price: price || null,
-    unit_price: product.items?.[0]?.size || '',
-    in_stock: price !== null,
-  };
+  return { item_name: term, product_name: p.description || term, price, unit_price: p.items?.[0]?.size || '', in_stock: price != null };
 }
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    // Parse body first (test_backend_function sends payload directly)
-    const body = await req.json();
-    const { items, store_keys, zip_code } = body;
-
-    console.log('[kroger] Request body:', JSON.stringify({ items: items?.length, store_keys, zip_code }));
-
+    const { items, store_keys, zip_code } = await req.json();
     if (!items?.length || !store_keys?.length || !zip_code) {
-      return Response.json({ error: 'Missing items, store_keys, or zip_code', got: { items: items?.length, store_keys, zip_code } }, { status: 400 });
+      return Response.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Only handle Kroger family stores
-    const krogerStores = store_keys.filter(k => KROGER_FAMILY.includes(k) && CHAIN_MAP[k] !== undefined && CHAIN_MAP[k] !== null);
-    console.log('[kroger] krogerStores to process:', krogerStores);
+    const targets = store_keys.filter(k => KROGER_FAMILY.includes(k));
+    if (!targets.length) return Response.json({ results: {} });
 
-    if (krogerStores.length === 0) {
-      return Response.json({ results: {} });
-    }
+    const token = await getToken();
+    console.log('Token OK, targets:', targets);
 
-    const token = await getAccessToken();
-    console.log('[kroger] Got token, length:', token?.length);
     const results = {};
+    await Promise.all(targets.map(async (key) => {
+      const locationId = await getLocationId(token, zip_code, CHAIN_IDS[key]);
+      console.log(`locationId for ${key}:`, locationId);
+      if (!locationId) { results[key] = null; return; }
 
-    // Process each Kroger-family store in parallel
-    await Promise.all(krogerStores.map(async (storeKey) => {
-      const chainId = CHAIN_MAP[storeKey];
-      console.log(`[kroger] Finding location for ${storeKey}, chainId=${chainId}, zip=${zip_code}`);
-      const locationId = await findNearestLocationId(token, zip_code, chainId);
-      console.log(`[kroger] locationId for ${storeKey}:`, locationId);
-
-      if (!locationId) {
-        results[storeKey] = null; // store not found in area
-        return;
-      }
-
-      // Fetch prices for all items in parallel
-      const itemResults = await Promise.all(
-        items.map(item => searchProduct(token, locationId, item.name))
-      );
-
-      const validItems = itemResults.filter(Boolean);
-      const instoreTotal = validItems.reduce((s, i) => s + (i.price || 0), 0);
-
-      results[storeKey] = {
-        items: validItems,
-        instore_total: instoreTotal,
-        location_id: locationId,
-        source: 'kroger_api',
-      };
+      const priceItems = await Promise.all(items.map(i => getPrice(token, locationId, i.name)));
+      const instore_total = priceItems.reduce((s, i) => s + (i.price || 0), 0);
+      results[key] = { items: priceItems, instore_total, source: 'kroger_api' };
     }));
 
     return Response.json({ results });
-  } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+  } catch (e) {
+    console.error('krogerPrices error:', e.message);
+    return Response.json({ error: e.message }, { status: 500 });
   }
 });
