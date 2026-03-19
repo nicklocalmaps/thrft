@@ -11,16 +11,26 @@ import ShoppingMethodPicker from '@/components/grocery/ShoppingMethodPicker';
 export default function StoreAccounts() {
   const [user, setUser] = useState(null);
   const [loyaltyCards, setLoyaltyCards] = useState({});
-  const [editing, setEditing] = useState(null); // store key being edited
+  const [editing, setEditing] = useState(null);
   const [editValue, setEditValue] = useState('');
   const [saving, setSaving] = useState(false);
+  const [shoppingMethod, setShoppingMethod] = useState('all');
+  const [savingMethod, setSavingMethod] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(u => {
       setUser(u);
       setLoyaltyCards(u?.loyalty_cards || {});
+      if (u?.shopping_method) setShoppingMethod(u.shopping_method);
     });
   }, []);
+
+  const saveShoppingMethod = async (method) => {
+    setShoppingMethod(method);
+    setSavingMethod(true);
+    await base44.auth.updateMe({ shopping_method: method });
+    setSavingMethod(false);
+  };
 
   const favoriteStores = user?.favorite_stores || [];
   const displayStores = favoriteStores.length > 0
