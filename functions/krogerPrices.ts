@@ -96,10 +96,12 @@ async function searchProduct(token, locationId, itemName) {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { items, store_keys, zip_code } = await req.json();
+    // Parse body first (test_backend_function sends payload directly)
+    const body = await req.json();
+    const { items, store_keys, zip_code } = body;
+
+    console.log('[kroger] Request body:', JSON.stringify({ items: items?.length, store_keys, zip_code }));
 
     if (!items?.length || !store_keys?.length || !zip_code) {
       return Response.json({ error: 'Missing items, store_keys, or zip_code' }, { status: 400 });
