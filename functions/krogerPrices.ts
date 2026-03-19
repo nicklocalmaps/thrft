@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
+// krogerPrices v2
 
 const BASE = 'https://api.kroger.com/v1';
 
