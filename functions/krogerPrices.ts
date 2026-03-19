@@ -113,12 +113,15 @@ Deno.serve(async (req) => {
     }
 
     const token = await getAccessToken();
+    console.log('[kroger] Got token, length:', token?.length);
     const results = {};
 
     // Process each Kroger-family store in parallel
     await Promise.all(krogerStores.map(async (storeKey) => {
       const chainId = CHAIN_MAP[storeKey];
+      console.log(`[kroger] Finding location for ${storeKey}, chainId=${chainId}, zip=${zip_code}`);
       const locationId = await findNearestLocationId(token, zip_code, chainId);
+      console.log(`[kroger] locationId for ${storeKey}:`, locationId);
 
       if (!locationId) {
         results[storeKey] = null; // store not found in area
