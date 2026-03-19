@@ -77,6 +77,13 @@ Deno.serve(async (req) => {
     const token = await getToken();
     console.log('Token OK, length:', token?.length);
 
+    // DEBUG: find any store near zip without chain filter
+    const dbgQ = new URLSearchParams({ 'filter.zipCode.near': zip_code, 'filter.limit': '10' });
+    const dbgR = await fetch(`${BASE}/locations?${dbgQ}`, { headers: { Authorization: `Bearer ${token}` } });
+    const dbgD = await dbgR.json();
+    console.log('ALL NEARBY STORES:', JSON.stringify(dbgD.data?.map(s => ({ id: s.locationId, name: s.name, chain: s.chain }))));
+
+
     const results = {};
     await Promise.all(targets.map(async (key) => {
       const locationId = await getLocationId(token, zip_code, CHAIN_IDS[key]);
