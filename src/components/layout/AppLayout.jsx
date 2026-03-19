@@ -1,15 +1,14 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { ShoppingCart, Plus } from 'lucide-react';
 
 const THRFT_BLUE = '#4181ed';
-const THRFT_LOGO = 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg';
 
 export default function AppLayout() {
   const location = useLocation();
 
   const navItems = [
-    { path: '/Home', label: 'My Lists' },
-    { path: '/NewList', label: 'New List' },
+    { path: '/Home', label: 'My Lists', icon: ShoppingCart },
+    { path: '/NewList', label: 'New List', icon: Plus },
   ];
 
   return (
@@ -37,11 +36,7 @@ export default function AppLayout() {
                     className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200"
                     style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
                   >
-                    {path === '/Home' ? (
-                      <img src={THRFT_LOGO} alt="THRFT" className="w-4 h-4 rounded-sm object-cover" />
-                    ) : (
-                      <Plus className="w-4 h-4" />
-                    )}
+                    <Icon className="w-4 h-4" />
                     <span className="hidden sm:inline">{label}</span>
                   </Link>
                 );
