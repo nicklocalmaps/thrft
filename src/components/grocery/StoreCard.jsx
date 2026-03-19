@@ -54,12 +54,19 @@ export default function StoreCard({ storeKey, storeName, storeColor = 'blue', st
         isCheapest ? `${colors.border} ${colors.shadow} shadow-lg` : 'border-slate-100'
       }`}
     >
-      {isCheapest && (
-        <div className={`absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full ${colors.light} text-xs font-semibold ${colors.badge.split(' ')[1]}`}>
-          <TrendingDown className="w-3 h-3" />
-          Best Price
-        </div>
-      )}
+      <div className="absolute top-3 right-3 flex flex-col items-end gap-1.5">
+        {isCheapest && (
+          <div className={`flex items-center gap-1 px-2.5 py-1 rounded-full ${colors.light} text-xs font-semibold ${colors.badge.split(' ')[1]}`}>
+            <TrendingDown className="w-3 h-3" />
+            Best Price
+          </div>
+        )}
+        {storeData?.source === 'kroger_api' && (
+          <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-200">
+            ✓ Live Prices
+          </div>
+        )}
+      </div>
 
       <div className={`h-1.5 bg-gradient-to-r ${colors.bar}`} />
 
