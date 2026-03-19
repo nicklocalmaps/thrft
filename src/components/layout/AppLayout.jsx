@@ -7,6 +7,11 @@ const THRFT_LOGO = 'https://media.base44.com/images/public/69b782bc4deba77b6b05b
 export default function AppLayout() {
   const location = useLocation();
 
+  const navItems = [
+    { path: '/Home', label: 'My Lists' },
+    { path: '/NewList', label: 'New List' },
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50/30">
       {/* Header */}
