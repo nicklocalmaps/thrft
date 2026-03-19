@@ -74,7 +74,7 @@ export default function Onboarding() {
             className="bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 p-8">
             
               <div className="bg-slate-400 mb-5 rounded-2xl w-14 h-14 flex items-center justify-center">
-                <MapPin className="text-[fee100] lucide lucide-map-pin w-7 h-7" />
+                <MapPin className="w-7 h-7 text-white" />
               </div>
               <h1 className="text-slate-900 mb-2 text-xl font-semibold text-center normal-case">Welcome to CartCompare!</h1>
               <p className="text-slate-500 mb-8 text-center">Your intelligent grocery shopping assistant that helps you find the best prices at stores near you.
