@@ -47,8 +47,8 @@ export default function Home() {
 
       {lists.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="w-20 h-20 rounded-2xl bg-blue-50 flex items-center justify-center mb-5">
-            <ShoppingBasket className="w-10 h-10 text-blue-400" />
+          <div className="w-20 h-20 rounded-2xl overflow-hidden mb-5 shadow-md">
+            <img src={THRFT_LOGO} alt="THRFT" className="w-full h-full object-cover" />
           </div>
           <h3 className="text-lg font-semibold text-slate-800 mb-2">No lists yet</h3>
           <p className="text-slate-500 max-w-sm mb-6">
