@@ -51,12 +51,18 @@ async function findNearestLocationId(token, zipCode, chainId) {
       ...extra,
     });
 
-    const res = await fetch(`${KROGER_BASE}/locations?${params}`, {
+    const url = `${KROGER_BASE}/locations?${params}`;
+    console.log('[kroger] Fetching location URL:', url);
+
+    const res = await fetch(url, {
       headers: { 'Authorization': `Bearer ${token}` },
     });
 
+    const text = await res.text();
+    console.log('[kroger] Location response status:', res.status, 'body:', text.slice(0, 300));
+
     if (!res.ok) continue;
-    const data = await res.json();
+    const data = JSON.parse(text);
     if (data.data?.length > 0) {
       return data.data[0].locationId;
     }
