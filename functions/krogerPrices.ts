@@ -54,12 +54,20 @@ async function findNearestLocationId(token, zipCode, chainId) {
     const url = `${KROGER_BASE}/locations?${params}`;
     console.log('[kroger] Fetching location URL:', url);
 
-    const res = await fetch(url, {
-      headers: { 'Authorization': `Bearer ${token}` },
-    });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    let res;
+    try {
+      res = await fetch(url, {
+        headers: { 'Authorization': `Bearer ${token}` },
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
 
     const text = await res.text();
-    console.log('[kroger] Location response status:', res.status, 'body:', text.slice(0, 300));
+    console.log('[kroger] Location response status:', res.status, 'body:', text.slice(0, 400));
 
     if (!res.ok) continue;
     const data = JSON.parse(text);
