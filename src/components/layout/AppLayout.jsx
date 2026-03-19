@@ -9,6 +9,7 @@ export default function AppLayout() {
   const navItems = [
     { path: '/Home', label: 'My Lists', icon: ShoppingCart },
     { path: '/NewList', label: 'New List', icon: Plus },
+    { path: '/StoreAccounts', label: 'Store Accounts', icon: Store },
   ];
 
   return (
