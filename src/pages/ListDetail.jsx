@@ -11,6 +11,13 @@ import StoreCard from '@/components/grocery/StoreCard';
 import StorePicker from '@/components/grocery/StorePicker';
 import { ALL_STORES } from '@/lib/storeConfig';
 
+const METHOD_LABELS = {
+  instore: '🏪 In-Store',
+  pickup: '🚗 Curbside Pickup',
+  delivery: '🚚 Delivery',
+  all: '📦 All Methods',
+};
+
 export default function ListDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const listId = urlParams.get('id');
@@ -21,7 +28,6 @@ export default function ListDetail() {
   const [showStorePicker, setShowStorePicker] = useState(false);
   const [selectedStores, setSelectedStores] = useState([]);
 
-  // Load user's favorite stores as default on mount
   useEffect(() => {
     base44.auth.me().then(user => {
       if (user?.favorite_stores?.length) {
@@ -40,6 +46,7 @@ export default function ListDetail() {
   });
 
   const items = localItems || list?.items || [];
+  const shoppingMethod = list?.shopping_method || 'all';
 
   const addItem = async (item) => {
     const newItems = [...items, item];
@@ -67,31 +74,58 @@ export default function ListDetail() {
 
     const itemsList = items.map(i => `${i.quantity}x ${i.name}`).join(', ');
     const storeNames = selectedStores.map(k => ALL_STORES.find(s => s.key === k)?.name || k);
+    const includePickup = shoppingMethod === 'pickup' || shoppingMethod === 'all';
+    const includeDelivery = shoppingMethod === 'delivery' || shoppingMethod === 'all';
 
-    // Build the response schema dynamically for selected stores
-    const storeProperties = {};
-    selectedStores.forEach(key => {
-      storeProperties[key] = {
-        type: 'array',
+    const storeSchema = {
+      type: 'object',
+      properties: {
         items: {
-          type: 'object',
-          properties: {
-            item_name: { type: 'string' },
-            product_name: { type: 'string' },
-            price: { type: 'number' },
-            unit_price: { type: 'string' },
-            in_stock: { type: 'boolean' },
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              item_name: { type: 'string' },
+              product_name: { type: 'string' },
+              price: { type: 'number' },
+              unit_price: { type: 'string' },
+              in_stock: { type: 'boolean' },
+            },
           },
         },
-      };
-    });
+        instore_total: { type: 'number' },
+        ...(includePickup ? {
+          pickup_total: { type: 'number' },
+          pickup_available: { type: 'boolean' },
+        } : {}),
+        ...(includeDelivery ? {
+          instacart_fee: { type: 'number' },
+          instacart_available: { type: 'boolean' },
+          shipt_fee: { type: 'number' },
+          shipt_available: { type: 'boolean' },
+        } : {}),
+      },
+    };
+
+    const storeProperties = {};
+    selectedStores.forEach(key => { storeProperties[key] = storeSchema; });
+
+    const deliveryNote = includeDelivery
+      ? `\n- For each store, also estimate if Instacart and Shipt delivery is available and provide a realistic delivery fee (typically $3-$10 for Instacart, $5-$10 for Shipt, or 0 if not available). The delivery fee is ON TOP of the store item prices.`
+      : '';
+    const pickupNote = includePickup
+      ? `\n- For each store, indicate if curbside pickup is available (most major chains offer it) and the pickup total (usually same as in-store or slightly different due to online pricing).`
+      : '';
 
     const result = await base44.integrations.Core.InvokeLLM({
       prompt: `You are a grocery price comparison assistant. For the following grocery list items, provide realistic current estimated prices from these stores: ${storeNames.join(', ')}.
 
 Items: ${itemsList}
 
-For each store, provide the best matching product with a realistic price. Use your knowledge of typical US grocery prices and each store's pricing patterns. If an item is uncommon for a store, mark it as not in stock.
+For each store:
+- Provide the best matching product with a realistic in-store price for each item
+- Calculate the instore_total as the sum of all item prices
+- If an item is uncommon for a store, mark it as not in stock${pickupNote}${deliveryNote}
 
 Store pricing tendencies:
 - Aldi & Walmart: typically lowest prices, store brands
@@ -138,10 +172,19 @@ Store pricing tendencies:
 
   const priceData = list.price_data;
   const comparedStoreKeys = priceData ? Object.keys(priceData) : [];
+
+  // For "cheapest" badge, compare instore totals
   const storeTotals = priceData
-    ? Object.fromEntries(comparedStoreKeys.map(k => [k, priceData[k]?.reduce((s, i) => s + (i.price || 0), 0) || 0]))
+    ? Object.fromEntries(comparedStoreKeys.map(k => {
+        const d = priceData[k];
+        const total = Array.isArray(d)
+          ? d.reduce((s, i) => s + (i.price || 0), 0)
+          : (d?.instore_total ?? d?.items?.reduce((s, i) => s + (i.price || 0), 0) ?? 0);
+        return [k, total];
+      }))
     : null;
-  const cheapestStore = storeTotals
+
+  const cheapestStore = storeTotals && Object.keys(storeTotals).length > 0
     ? Object.entries(storeTotals).reduce((a, b) => (a[1] < b[1] ? a : b))[0]
     : null;
 
@@ -156,7 +199,14 @@ Store pricing tendencies:
         </Link>
         <div className="flex-1">
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{list.name}</h1>
-          <p className="text-sm text-slate-500">{items.length} item{items.length !== 1 ? 's' : ''}</p>
+          <div className="flex items-center gap-2 mt-0.5">
+            <p className="text-sm text-slate-500">{items.length} item{items.length !== 1 ? 's' : ''}</p>
+            {list.shopping_method && (
+              <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-50 text-blue-600">
+                {METHOD_LABELS[list.shopping_method]}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
@@ -195,7 +245,6 @@ Store pricing tendencies:
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
               className="px-5 pb-5 border-t border-slate-100"
             >
               <div className="pt-4">
@@ -211,7 +260,8 @@ Store pricing tendencies:
         <Button
           onClick={comparePrices}
           disabled={comparing || selectedStores.length === 0}
-          className="w-full h-14 rounded-xl text-base font-semibold shadow-lg shadow-blue-200 gap-2 transition-all mb-8" style={{ backgroundColor: '#4181ed' }}
+          className="w-full h-14 rounded-xl text-base font-semibold shadow-lg shadow-blue-200 gap-2 transition-all mb-8"
+          style={{ backgroundColor: '#4181ed' }}
         >
           {comparing ? (
             <>
@@ -255,9 +305,10 @@ Store pricing tendencies:
                   storeKey={storeKey}
                   storeName={storeMeta?.name || storeKey}
                   storeColor={storeMeta?.color || 'blue'}
-                  items={priceData[storeKey]}
+                  storeData={priceData[storeKey]}
                   isCheapest={cheapestStore === storeKey}
                   index={i}
+                  shoppingMethod={shoppingMethod}
                 />
               );
             })}
@@ -271,7 +322,7 @@ Store pricing tendencies:
               className="mt-6 p-5 rounded-2xl bg-blue-50 border border-blue-100"
             >
               <p className="text-sm font-medium" style={{ color: '#4181ed' }}>
-                💡 <strong>{ALL_STORES.find(s => s.key === cheapestStore)?.name || cheapestStore}</strong> has the best estimated total at{' '}
+                💡 <strong>{ALL_STORES.find(s => s.key === cheapestStore)?.name || cheapestStore}</strong> has the best estimated in-store total at{' '}
                 <strong>${storeTotals[cheapestStore]?.toFixed(2)}</strong>
                 {' '}— saving you up to{' '}
                 <strong>${(Math.max(...Object.values(storeTotals)) - storeTotals[cheapestStore]).toFixed(2)}</strong> vs the most expensive option.
