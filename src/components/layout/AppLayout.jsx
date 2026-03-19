@@ -33,7 +33,7 @@ export default function AppLayout() {
                     to={path}
                     className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                       isActive
-                        ? 'text-white shadow-md'
+                        ? 'text-white shadow-md' style={{backgroundColor: '#4181ed'}}
                         : 'text-slate-600 hover:bg-blue-50'
                     }`}
                   >
