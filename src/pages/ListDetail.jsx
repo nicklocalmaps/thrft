@@ -68,16 +68,19 @@ export default function ListDetail() {
     queryClient.invalidateQueries({ queryKey: ['grocery-list', listId] });
   };
 
+  const KROGER_FAMILY = ['kroger', 'fred_meyer', 'king_soopers', 'city_market', 'smiths', 'harris_teeter', 'jewel_osco'];
+
   const comparePrices = async () => {
     if (items.length === 0 || selectedStores.length === 0) return;
     setComparing(true);
 
-    const itemsList = items.map(i => `${i.quantity}x ${i.name}`).join(', ');
-    const storeNames = selectedStores.map(k => ALL_STORES.find(s => s.key === k)?.name || k);
     const includePickup = shoppingMethod === 'pickup' || shoppingMethod === 'all';
     const includeDelivery = shoppingMethod === 'delivery' || shoppingMethod === 'all';
 
-    const storeSchema = {
+    const krogerStores = selectedStores.filter(k => KROGER_FAMILY.includes(k));
+    const aiStores = selectedStores.filter(k => !KROGER_FAMILY.includes(k));
+
+    const storeSchema = (includePickup, includeDelivery) => ({
       type: 'object',
       properties: {
         items: {
@@ -94,10 +97,7 @@ export default function ListDetail() {
           },
         },
         instore_total: { type: 'number' },
-        ...(includePickup ? {
-          pickup_total: { type: 'number' },
-          pickup_available: { type: 'boolean' },
-        } : {}),
+        ...(includePickup ? { pickup_total: { type: 'number' }, pickup_available: { type: 'boolean' } } : {}),
         ...(includeDelivery ? {
           instacart_fee: { type: 'number' },
           instacart_available: { type: 'boolean' },
@@ -105,46 +105,90 @@ export default function ListDetail() {
           shipt_available: { type: 'boolean' },
         } : {}),
       },
-    };
+    });
 
-    const storeProperties = {};
-    selectedStores.forEach(key => { storeProperties[key] = storeSchema; });
+    // Fetch Kroger real prices + AI estimates in parallel
+    const userZip = (await base44.auth.me())?.zip_code || '10001';
 
-    const deliveryNote = includeDelivery
-      ? `\n- For each store, also estimate if Instacart and Shipt delivery is available and provide a realistic delivery fee (typically $3-$10 for Instacart, $5-$10 for Shipt, or 0 if not available). The delivery fee is ON TOP of the store item prices.`
-      : '';
-    const pickupNote = includePickup
-      ? `\n- For each store, indicate if curbside pickup is available (most major chains offer it) and the pickup total (usually same as in-store or slightly different due to online pricing).`
-      : '';
-
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `You are a grocery price comparison assistant. For the following grocery list items, provide realistic current estimated prices from these stores: ${storeNames.join(', ')}.
+    const [krogerResponse, aiResult] = await Promise.all([
+      krogerStores.length > 0
+        ? base44.functions.invoke('krogerPrices', { items, store_keys: krogerStores, zip_code: userZip })
+        : Promise.resolve({ data: { results: {} } }),
+      aiStores.length > 0
+        ? (() => {
+            const aiStoreNames = aiStores.map(k => ALL_STORES.find(s => s.key === k)?.name || k);
+            const storeProperties = {};
+            aiStores.forEach(key => { storeProperties[key] = storeSchema(includePickup, includeDelivery); });
+            const itemsList = items.map(i => `${i.quantity}x ${i.name}`).join(', ');
+            const deliveryNote = includeDelivery
+              ? `\n- Estimate if Instacart and Shipt delivery is available and provide a realistic fee ($3-$10 for Instacart, $5-$10 for Shipt, or 0 if not available).`
+              : '';
+            const pickupNote = includePickup
+              ? `\n- Indicate if curbside pickup is available and the pickup total.`
+              : '';
+            return base44.integrations.Core.InvokeLLM({
+              prompt: `You are a grocery price comparison assistant. Provide realistic estimated prices from these stores: ${aiStoreNames.join(', ')}.
 
 Items: ${itemsList}
 
 For each store:
-- Provide the best matching product with a realistic in-store price for each item
+- Provide the best matching product with a realistic in-store price
 - Calculate the instore_total as the sum of all item prices
-- If an item is uncommon for a store, mark it as not in stock${pickupNote}${deliveryNote}
+- Mark unavailable items as not in stock${pickupNote}${deliveryNote}
 
 Store pricing tendencies:
-- Aldi & Walmart: typically lowest prices, store brands
-- Kroger, Safeway, Albertsons: mid-range, frequent sales
-- Whole Foods, Bristol Farms, Gelson's, The Fresh Market: premium pricing
-- Trader Joe's: unique private-label, competitive pricing
+- Aldi & Walmart: lowest prices, store brands
+- Safeway, Albertsons: mid-range, frequent sales
+- Whole Foods, Bristol Farms, Gelson's, The Fresh Market: premium
+- Trader Joe's: private-label, competitive
 - H-E-B, Publix: strong regional value
-- Amazon Fresh: convenient, slightly premium
-- Regional chains: match their typical local market pricing`,
-      add_context_from_internet: true,
-      model: 'gemini_3_flash',
-      response_json_schema: {
-        type: 'object',
-        properties: storeProperties,
-      },
-    });
+- Amazon Fresh: slightly premium`,
+              add_context_from_internet: true,
+              model: 'gemini_3_flash',
+              response_json_schema: { type: 'object', properties: storeProperties },
+            });
+          })()
+        : Promise.resolve({}),
+    ]);
+
+    // Merge Kroger real data with AI data
+    // For Kroger stores, add delivery/pickup estimates via AI if needed
+    const krogerRealData = krogerResponse.data?.results || {};
+    let finalData = { ...(aiStores.length > 0 ? aiResult : {}) };
+
+    for (const storeKey of krogerStores) {
+      const realData = krogerRealData[storeKey];
+      if (realData) {
+        // Add pickup/delivery estimates to real Kroger data if needed
+        if (includePickup) {
+          realData.pickup_available = true;
+          realData.pickup_total = realData.instore_total;
+        }
+        if (includeDelivery) {
+          realData.instacart_available = true;
+          realData.instacart_fee = 5.99;
+          realData.shipt_available = true;
+          realData.shipt_fee = 7.00;
+        }
+        realData.source = 'kroger_api';
+        finalData[storeKey] = realData;
+      } else {
+        // Store not found in area — fall back to AI for this store
+        const storeName = ALL_STORES.find(s => s.key === storeKey)?.name || storeKey;
+        const itemsList = items.map(i => `${i.quantity}x ${i.name}`).join(', ');
+        const props = {};
+        props[storeKey] = storeSchema(includePickup, includeDelivery);
+        const fallback = await base44.integrations.Core.InvokeLLM({
+          prompt: `Provide realistic estimated grocery prices for ${storeName}. Items: ${itemsList}. Return instore_total and item prices.`,
+          model: 'gemini_3_flash',
+          response_json_schema: { type: 'object', properties: props },
+        });
+        if (fallback?.[storeKey]) finalData[storeKey] = fallback[storeKey];
+      }
+    }
 
     await base44.entities.GroceryList.update(listId, {
-      price_data: result,
+      price_data: finalData,
       selected_stores: selectedStores,
       last_compared: new Date().toISOString(),
     });
