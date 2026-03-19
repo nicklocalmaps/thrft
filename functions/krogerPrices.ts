@@ -58,10 +58,6 @@ async function getPrice(token, locationId, term) {
 
 Deno.serve(async (req) => {
   try {
-    const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
-
     const { items, store_keys, zip_code } = await req.json();
     if (!items?.length || !store_keys?.length || !zip_code) {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
