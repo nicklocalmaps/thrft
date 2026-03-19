@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 
 const THRFT_LOGO = 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg';
+
 import { Button } from '@/components/ui/button';
 import { AnimatePresence } from 'framer-motion';
 import ListCard from '@/components/grocery/ListCard';
