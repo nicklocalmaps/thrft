@@ -104,11 +104,12 @@ Deno.serve(async (req) => {
     console.log('[kroger] Request body:', JSON.stringify({ items: items?.length, store_keys, zip_code }));
 
     if (!items?.length || !store_keys?.length || !zip_code) {
-      return Response.json({ error: 'Missing items, store_keys, or zip_code' }, { status: 400 });
+      return Response.json({ error: 'Missing items, store_keys, or zip_code', got: { items: items?.length, store_keys, zip_code } }, { status: 400 });
     }
 
     // Only handle Kroger family stores
     const krogerStores = store_keys.filter(k => KROGER_FAMILY.includes(k) && CHAIN_MAP[k] !== undefined && CHAIN_MAP[k] !== null);
+    console.log('[kroger] krogerStores to process:', krogerStores);
 
     if (krogerStores.length === 0) {
       return Response.json({ results: {} });
