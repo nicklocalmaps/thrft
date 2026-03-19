@@ -13,6 +13,7 @@ import Home from '@/pages/Home';
 import NewList from '@/pages/NewList';
 import ListDetail from '@/pages/ListDetail';
 import Onboarding from '@/pages/Onboarding';
+import StoreAccounts from '@/pages/StoreAccounts';
 
 const OnboardingGate = () => {
   const [checking, setChecking] = React.useState(true);
