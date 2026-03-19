@@ -62,7 +62,19 @@ export default function StoreAccounts() {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Store Accounts</h1>
-        <p className="text-slate-500 mt-1">Save your loyalty card numbers and quickly access your favorite store apps.</p>
+        <p className="text-slate-500 mt-1">Save your loyalty card numbers and manage your shopping preferences.</p>
+      </div>
+
+      {/* Shopping Method Preference */}
+      <div className="bg-white rounded-2xl border border-slate-100 p-5 mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="font-semibold text-slate-900">Default Shopping Method</h2>
+            <p className="text-sm text-slate-500 mt-0.5">Applied to all new lists by default</p>
+          </div>
+          {savingMethod && <span className="text-xs text-slate-400 animate-pulse">Saving...</span>}
+        </div>
+        <ShoppingMethodPicker value={shoppingMethod} onChange={saveShoppingMethod} />
       </div>
 
       <div className="space-y-3">
