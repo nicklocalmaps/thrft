@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ExternalLink, Smartphone, Check, CreditCard, Edit2, X } from 'lucide-react';
 import { motion } from 'framer-motion';
+import ShoppingMethodPicker from '@/components/grocery/ShoppingMethodPicker';
 
 export default function StoreAccounts() {
   const [user, setUser] = useState(null);
