@@ -39,19 +39,29 @@ async function getAccessToken() {
 }
 
 async function findNearestLocationId(token, zipCode, chainId) {
-  const params = new URLSearchParams({
-    'filter.zipCode.near': zipCode,
-    'filter.limit': '1',
-    ...(chainId ? { 'filter.chain': chainId } : {}),
-  });
+  // Try with chain filter first, then fall back to any nearby Kroger-family store
+  const attempts = chainId
+    ? [{ 'filter.chain': chainId }, {}]
+    : [{}];
 
-  const res = await fetch(`${KROGER_BASE}/locations?${params}`, {
-    headers: { 'Authorization': `Bearer ${token}` },
-  });
+  for (const extra of attempts) {
+    const params = new URLSearchParams({
+      'filter.zipCode.near': zipCode,
+      'filter.limit': '5',
+      ...extra,
+    });
 
-  if (!res.ok) return null;
-  const data = await res.json();
-  return data.data?.[0]?.locationId || null;
+    const res = await fetch(`${KROGER_BASE}/locations?${params}`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+
+    if (!res.ok) continue;
+    const data = await res.json();
+    if (data.data?.length > 0) {
+      return data.data[0].locationId;
+    }
+  }
+  return null;
 }
 
 async function searchProduct(token, locationId, itemName) {
