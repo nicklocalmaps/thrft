@@ -131,7 +131,7 @@ Store pricing tendencies:
     return (
       <div className="text-center py-20">
         <p className="text-slate-500">List not found.</p>
-        <Link to="/Home" className="text-emerald-600 hover:underline mt-2 inline-block">Go back</Link>
+        <Link to="/Home" className="hover:underline mt-2 inline-block" style={{ color: '#4181ed' }}>Go back</Link>
       </div>
     );
   }
@@ -184,7 +184,7 @@ Store pricing tendencies:
             <div className="flex items-center gap-2.5">
               <Store className="w-4 h-4" style={{ color: '#4181ed' }} />
               <span className="font-semibold text-slate-800">Stores to Compare</span>
-              <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+              <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
                 {selectedStores.length} selected
               </span>
             </div>
