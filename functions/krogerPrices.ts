@@ -1,16 +1,17 @@
-// krogerPrices v3 - 2026-03-19
+// krogerPrices v4 - chain names fixed
 const BASE = 'https://api.kroger.com/v1';
 
 const KROGER_FAMILY = ['kroger', 'fred_meyer', 'king_soopers', 'city_market', 'smiths', 'harris_teeter', 'jewel_osco'];
 
-const CHAIN_IDS = {
-  kroger: '01100',
-  fred_meyer: '00200',
-  king_soopers: '00400',
-  city_market: '00401',
-  smiths: '00700',
-  harris_teeter: '00600',
-  jewel_osco: '00500',
+// Map our store keys to the chain name strings returned by the Kroger API
+const CHAIN_NAMES = {
+  kroger: 'KROGER',
+  fred_meyer: 'FRED MEYER',
+  king_soopers: 'KING SOOPERS',
+  city_market: 'CITY MARKET',
+  smiths: "SMITH'S",
+  harris_teeter: 'HARRIS TEETER',
+  jewel_osco: 'JEWEL-OSCO',
 };
 
 async function getToken() {
@@ -26,19 +27,19 @@ async function getToken() {
   return (await r.json()).access_token;
 }
 
-async function getLocationId(token, zip, chainId) {
-  // Try with chain filter first
-  const q = new URLSearchParams({ 'filter.zipCode.near': zip, 'filter.limit': '5' });
-  if (chainId) q.set('filter.chain', chainId);
+async function getLocationId(token, zip, storeKey) {
+  // Fetch nearby stores and filter by chain name
+  const chainName = CHAIN_NAMES[storeKey];
+  const q = new URLSearchParams({ 'filter.zipCode.near': zip, 'filter.limit': '20' });
   const r = await fetch(`${BASE}/locations?${q}`, { headers: { Authorization: `Bearer ${token}` } });
   if (!r.ok) {
     console.log('location error', r.status, await r.text());
     return null;
   }
   const d = await r.json();
-  console.log('Location results for chain', chainId, ':', JSON.stringify(d.data?.map(s => ({ id: s.locationId, name: s.name, chain: s.chain }))));
-  if (d.data?.length) return d.data[0].locationId;
-  return null;
+  const match = d.data?.find(loc => loc.chain?.toUpperCase() === chainName);
+  console.log(`Looking for "${chainName}" near ${zip}: found ${match?.locationId ?? 'none'}`);
+  return match?.locationId ?? null;
 }
 
 async function getPrice(token, locationId, term) {
@@ -64,7 +65,6 @@ async function getPrice(token, locationId, term) {
 Deno.serve(async (req) => {
   try {
     const body = await req.json();
-    console.log('v3 RAW BODY:', JSON.stringify(body));
     const { items, store_keys, zip_code } = body;
 
     if (!items?.length || !store_keys?.length || !zip_code) {
@@ -75,19 +75,10 @@ Deno.serve(async (req) => {
     if (!targets.length) return Response.json({ results: {}, reason: 'no kroger stores in list' });
 
     const token = await getToken();
-    console.log('Token OK, length:', token?.length);
-
-    // DEBUG: find any store near zip without chain filter
-    const dbgQ = new URLSearchParams({ 'filter.zipCode.near': zip_code, 'filter.limit': '10' });
-    const dbgR = await fetch(`${BASE}/locations?${dbgQ}`, { headers: { Authorization: `Bearer ${token}` } });
-    const dbgD = await dbgR.json();
-    console.log('ALL NEARBY STORES:', JSON.stringify(dbgD.data?.map(s => ({ id: s.locationId, name: s.name, chain: s.chain }))));
-
 
     const results = {};
     await Promise.all(targets.map(async (key) => {
-      const locationId = await getLocationId(token, zip_code, CHAIN_IDS[key]);
-      console.log(`locationId for ${key}:`, locationId);
+      const locationId = await getLocationId(token, zip_code, key);
       if (!locationId) { results[key] = null; return; }
 
       const priceItems = await Promise.all(items.map(i => getPrice(token, locationId, i.name)));
@@ -97,7 +88,7 @@ Deno.serve(async (req) => {
 
     return Response.json({ results });
   } catch (e) {
-    console.error('krogerPrices error:', e.message, e.stack);
+    console.error('krogerPrices error:', e.message);
     return Response.json({ error: e.message }, { status: 500 });
   }
 });
