@@ -69,6 +69,7 @@ export default function ListDetail() {
   };
 
   const KROGER_FAMILY = ['kroger', 'fred_meyer', 'king_soopers', 'city_market', 'smiths', 'harris_teeter', 'jewel_osco'];
+  const SHIPT_STORES = new Set(ALL_STORES.filter(s => s.shipt).map(s => s.key));
 
   const comparePrices = async () => {
     if (items.length === 0 || selectedStores.length === 0) return;
