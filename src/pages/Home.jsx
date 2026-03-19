@@ -35,7 +35,7 @@ export default function Home() {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 tracking-tight">My Grocery Lists</h1>
-        <p className="text-slate-500 mt-1">Compare prices across Kroger, Walmart & Amazon</p>
+        <p className="text-slate-500 mt-1">Compare prices across all of your favorite local grocery stores</p>
         <Link to="/NewList" className="inline-block mt-4">
           <Button className="h-11 px-5 rounded-xl shadow-md shadow-blue-200 gap-2" style={{ backgroundColor: '#4181ed' }}>
             <Plus className="w-4 h-4" />
