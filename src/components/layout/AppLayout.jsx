@@ -1,15 +1,11 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 const THRFT_BLUE = '#4181ed';
+const THRFT_LOGO = 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg';
 
 export default function AppLayout() {
   const location = useLocation();
-
-  const navItems = [
-    { path: '/Home', label: 'My Lists', icon: ShoppingCart },
-    { path: '/NewList', label: 'New List', icon: Plus },
-  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50/30">
