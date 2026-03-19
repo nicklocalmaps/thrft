@@ -122,7 +122,7 @@ export default function ListDetail() {
             aiStores.forEach(key => { storeProperties[key] = storeSchema(includePickup, includeDelivery); });
             const itemsList = items.map(i => `${i.quantity}x ${i.name}`).join(', ');
             const deliveryNote = includeDelivery
-              ? `\n- Estimate if Instacart and Shipt delivery is available and provide a realistic fee ($3-$10 for Instacart, $5-$10 for Shipt, or 0 if not available).`
+              ? `\n- For Instacart: estimate if available and provide a realistic fee ($3-$10, or 0 if not available).\n- For Shipt: only mark shipt_available=true for stores that are official Shipt partners. Shipt partners in this list: ${aiStores.filter(k => SHIPT_STORES.has(k)).map(k => ALL_STORES.find(s => s.key === k)?.name).join(', ') || 'none'}. Fee $5-$10 if available, else 0.`
               : '';
             const pickupNote = includePickup
               ? `\n- Indicate if curbside pickup is available and the pickup total.`
