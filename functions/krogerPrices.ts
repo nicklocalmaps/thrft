@@ -58,16 +58,21 @@ async function getPrice(token, locationId, term) {
 
 Deno.serve(async (req) => {
   try {
-    const { items, store_keys, zip_code } = await req.json();
+    const body = await req.json();
+    console.log('RAW BODY:', JSON.stringify(body));
+    const { items, store_keys, zip_code } = body;
+    console.log('PARSED:', { itemCount: items?.length, store_keys, zip_code });
+
     if (!items?.length || !store_keys?.length || !zip_code) {
-      return Response.json({ error: 'Missing required fields' }, { status: 400 });
+      return Response.json({ error: 'Missing required fields', body }, { status: 400 });
     }
 
     const targets = store_keys.filter(k => KROGER_FAMILY.includes(k));
-    if (!targets.length) return Response.json({ results: {} });
+    console.log('TARGETS:', targets);
+    if (!targets.length) return Response.json({ results: {}, reason: 'no kroger stores in list' });
 
     const token = await getToken();
-    console.log('Token OK, targets:', targets);
+    console.log('Token OK length:', token?.length);
 
     const results = {};
     await Promise.all(targets.map(async (key) => {
