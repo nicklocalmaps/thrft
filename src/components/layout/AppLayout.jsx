@@ -16,11 +16,11 @@ export default function AppLayout() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16">
             <Link to="/Home" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-200">
-                <ShoppingCart className="w-5 h-5 text-white" strokeWidth={2.5} />
+              <div className="w-9 h-9 rounded-xl overflow-hidden">
+                <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT logo" className="w-full h-full object-cover" />
               </div>
               <span className="text-lg font-bold tracking-tight text-slate-900">
-                Cart<span className="text-emerald-600">Compare</span>
+                Cart<span style={{color: '#4181ed'}}>Compare</span>
               </span>
             </Link>
 
@@ -33,8 +33,8 @@ export default function AppLayout() {
                     to={path}
                     className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                       isActive
-                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-200'
-                        : 'text-slate-600 hover:text-emerald-700 hover:bg-emerald-50'
+                        ? 'text-white shadow-md'
+                        : 'text-slate-600 hover:bg-blue-50'
                     }`}
                   >
                     <Icon className="w-4 h-4" />
