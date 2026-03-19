@@ -168,8 +168,8 @@ Store pricing tendencies:
         if (includeDelivery) {
           realData.instacart_available = true;
           realData.instacart_fee = 5.99;
-          realData.shipt_available = true;
-          realData.shipt_fee = 7.00;
+          realData.shipt_available = SHIPT_STORES.has(storeKey);
+          realData.shipt_fee = SHIPT_STORES.has(storeKey) ? 7.00 : 0;
         }
         realData.source = 'kroger_api';
         finalData[storeKey] = realData;
