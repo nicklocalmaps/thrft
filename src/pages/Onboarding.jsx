@@ -73,10 +73,12 @@ export default function Onboarding() {
             exit={{ opacity: 0, y: -20 }}
             className="bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 p-8">
             
-              <div className="mb-5 rounded-2xl w-14 h-14 flex items-center justify-center" style={{ backgroundColor: '#4181ed' }}>
-                <MapPin className="w-7 h-7 text-white" />
+              <div className="flex items-center gap-3 mb-5">
+                <div className="rounded-2xl w-14 h-14 flex items-center justify-center shrink-0" style={{ backgroundColor: '#4181ed' }}>
+                  <MapPin className="w-7 h-7 text-white" />
+                </div>
+                <h1 className="text-slate-900 text-xl font-semibold normal-case">Welcome to THRFT!</h1>
               </div>
-              <h1 className="text-slate-900 mb-2 text-xl font-semibold text-center normal-case">Welcome to THRFT!</h1>
               <p className="text-slate-500 mb-8 text-center">Your intelligent grocery shopping assistant that helps you find the best prices at stores near you.
 
 Let's find your favorite grocery stores so we can compare prices for your shopping lists.</p>
