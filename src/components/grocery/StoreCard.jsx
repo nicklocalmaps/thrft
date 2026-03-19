@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { TrendingDown, PackageX, Store, Car, Truck } from 'lucide-react';
 import { COLOR_MAP } from '@/lib/storeConfig';
+import ShopNowButton from '@/components/grocery/ShopNowButton';
 
 function PriceRow({ icon: Icon, label, total, fee, available, isBaseline }) {
   if (!available && !isBaseline) return null;
