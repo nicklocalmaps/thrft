@@ -58,7 +58,7 @@ export default function Onboarding() {
             <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT logo" className="w-full h-full object-cover" />
           </div>
           <span className="text-xl font-bold tracking-tight text-slate-900">
-            Cart<span style={{ color: '#4181ed' }}>Compare</span>
+            THRFT
           </span>
         </div>
 
@@ -76,7 +76,7 @@ export default function Onboarding() {
               <div className="mb-5 rounded-2xl w-14 h-14 flex items-center justify-center" style={{ backgroundColor: '#4181ed' }}>
                 <MapPin className="w-7 h-7 text-white" />
               </div>
-              <h1 className="text-slate-900 mb-2 text-xl font-semibold text-center normal-case">Welcome to CartCompare!</h1>
+              <h1 className="text-slate-900 mb-2 text-xl font-semibold text-center normal-case">Welcome to THRFT!</h1>
               <p className="text-slate-500 mb-8 text-center">Your intelligent grocery shopping assistant that helps you find the best prices at stores near you.
 
 Let's find your favorite grocery stores so we can compare prices for your shopping lists.</p>

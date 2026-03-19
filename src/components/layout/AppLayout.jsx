@@ -22,7 +22,7 @@ export default function AppLayout() {
                 <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT logo" className="w-full h-full object-cover" />
               </div>
               <span className="text-lg font-bold tracking-tight text-slate-900">
-                Cart<span style={{ color: THRFT_BLUE }}>Compare</span>
+                THRFT
               </span>
             </Link>
 
