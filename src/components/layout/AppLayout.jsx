@@ -33,12 +33,8 @@ export default function AppLayout() {
                   <Link
                     key={path}
                     to={path}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                      isActive
-                        ? 'text-white shadow-md'
-                        : 'text-slate-600 hover:bg-blue-50'
-                    }`}
-                    style={isActive ? { backgroundColor: THRFT_BLUE } : {}}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200"
+                    style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
                   >
                     <Icon className="w-4 h-4" />
                     <span className="hidden sm:inline">{label}</span>
