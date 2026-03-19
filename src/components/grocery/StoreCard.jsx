@@ -93,6 +93,11 @@ export default function StoreCard({ storeKey, storeName, storeColor = 'blue', st
           )}
         </div>
 
+        {/* Shop Now */}
+        <div className="mt-3">
+          <ShopNowButton storeKey={storeKey} storeName={storeName} items={items} />
+        </div>
+
         {/* Item list */}
         <div className="space-y-1 max-h-40 overflow-y-auto border-t border-slate-100 pt-2 mt-2">
           {items.map((item, i) => (
