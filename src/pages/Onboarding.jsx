@@ -53,11 +53,11 @@ export default function Onboarding() {
       <div className="w-full max-w-xl">
 
         {/* Logo */}
-        <div className="flex items-center justify-center gap-2.5 mb-10">
-          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg">
+        <div className="flex items-center justify-center gap-4 mb-10">
+          <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-lg">
             <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT logo" className="w-full h-full object-cover" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-slate-900">
+          <span className="text-4xl font-bold tracking-tight text-slate-900">
             THRFT
           </span>
         </div>
