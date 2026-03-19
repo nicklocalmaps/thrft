@@ -26,7 +26,7 @@ async function getAccessToken() {
       'Authorization': `Basic ${creds}`,
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: 'grant_type=client_credentials&scope=product.compact',
+    body: 'grant_type=client_credentials&scope=product.compact+profile.compact',
   });
 
   if (!res.ok) {
