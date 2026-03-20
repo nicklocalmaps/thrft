@@ -21,7 +21,7 @@ export default function AddItemForm({ onAdd }) {
         placeholder="Add an item... (e.g. organic milk, bananas)"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="flex-1 h-12 rounded-xl border-slate-200 bg-white text-base placeholder:text-slate-400 focus-visible:ring-blue-400"
+        className="flex-1 h-12 rounded-xl border-slate-200 bg-white text-base placeholder:text-slate-600 focus-visible:ring-blue-400"
       />
       <Input
         type="number"

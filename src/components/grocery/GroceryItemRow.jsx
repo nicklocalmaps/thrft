@@ -15,7 +15,7 @@ export default function GroceryItemRow({ item, index, onRemove }) {
         <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-sm font-semibold text-emerald-700">
           {item.quantity}
         </div>
-        <span className="text-slate-800 font-medium">{item.name}</span>
+        <span className="text-slate-900 font-medium">{item.name}</span>
       </div>
       <Button
         variant="ghost"

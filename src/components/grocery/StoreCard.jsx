@@ -11,7 +11,7 @@ function PriceRow({ icon: Icon, label, total, fee, available, isBaseline }) {
     }`}>
       <div className="flex items-center gap-1.5">
         <Icon className="w-3 h-3 text-slate-400" />
-        <span className="text-slate-600 font-medium">{label}</span>
+        <span className="text-slate-900 font-medium">{label}</span>
         {fee > 0 && <span className="text-slate-400">(+${fee.toFixed(2)} fee)</span>}
       </div>
       <span className={`font-semibold ${available || isBaseline ? 'text-slate-900' : 'text-slate-400'}`}>
@@ -74,7 +74,7 @@ export default function StoreCard({ storeKey, storeName, storeColor = 'blue', st
       <div className="p-5">
         <h3 className="text-base font-bold text-slate-900 mb-1">{storeName}</h3>
 
-        <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-3">
+        <div className="flex items-center gap-1.5 text-xs text-slate-900 mb-3">
           <span className="text-emerald-600 font-medium">{availableCount}</span>/{totalItems} items available
           {availableCount < totalItems && <PackageX className="w-3 h-3 text-amber-500" />}
         </div>
@@ -111,7 +111,7 @@ export default function StoreCard({ storeKey, storeName, storeColor = 'blue', st
                 <p className={`font-medium truncate ${item.in_stock ? 'text-slate-700' : 'text-slate-400 line-through'}`}>
                   {item.item_name}
                 </p>
-                <p className="text-slate-400 truncate">{item.product_name}</p>
+                <p className="text-slate-900 truncate">{item.product_name}</p>
               </div>
               <span className={`font-semibold ml-2 shrink-0 ${item.in_stock ? 'text-slate-900' : 'text-slate-400'}`}>
                 {item.in_stock ? `$${item.price?.toFixed(2)}` : 'N/A'}
