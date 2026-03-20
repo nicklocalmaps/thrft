@@ -49,12 +49,12 @@ export default function NewList() {
   return (
     <div>
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight mb-2">New Grocery List</h1>
-      <p className="text-slate-500 mb-8">Add your items, then compare prices across stores.</p>
+      <p className="text-slate-900 mb-8">Add your items, then compare prices across stores.</p>
 
       <div className="space-y-6">
         {/* List Name */}
         <div>
-          <label className="text-sm font-medium text-slate-700 mb-2 block">List Name</label>
+          <label className="text-sm font-medium text-slate-900 mb-2 block">List Name</label>
           <Input
             placeholder="e.g. Weekly Groceries, Party Supplies..."
             value={name}
@@ -66,7 +66,7 @@ export default function NewList() {
         {/* Shopping Method */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <label className="text-sm font-medium text-slate-700">Shopping Method</label>
+            <label className="text-sm font-medium text-slate-900">Shopping Method</label>
             <button
               type="button"
               onClick={() => setShowMethodPicker(!showMethodPicker)}
@@ -89,7 +89,7 @@ export default function NewList() {
 
         {/* Add Items */}
         <div>
-          <label className="text-sm font-medium text-slate-700 mb-2 block">Add Items</label>
+          <label className="text-sm font-medium text-slate-900 mb-2 block">Add Items</label>
           <AddItemForm onAdd={addItem} />
         </div>
 
