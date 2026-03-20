@@ -209,7 +209,7 @@ Store pricing tendencies:
   if (!list) {
     return (
       <div className="text-center py-20">
-        <p className="text-slate-500">List not found.</p>
+        <p className="text-slate-900">List not found.</p>
         <Link to="/Home" className="hover:underline mt-2 inline-block" style={{ color: '#4181ed' }}>Go back</Link>
       </div>
     );
@@ -245,7 +245,7 @@ Store pricing tendencies:
         <div className="flex-1">
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{list.name}</h1>
           <div className="flex items-center gap-2 mt-0.5">
-            <p className="text-sm text-slate-500">{items.length} item{items.length !== 1 ? 's' : ''}</p>
+            <p className="text-sm text-slate-900">{items.length} item{items.length !== 1 ? 's' : ''}</p>
             {list.shopping_method && (
               <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-50 text-blue-600">
                 {METHOD_LABELS[list.shopping_method]}
@@ -332,8 +332,8 @@ Store pricing tendencies:
           <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
             <ShoppingCart className="w-8 h-8 animate-pulse" style={{ color: '#4181ed' }} />
           </div>
-          <p className="text-slate-600 font-medium">Searching {selectedStores.length} stores...</p>
-          <p className="text-sm text-slate-400 mt-1">This may take a moment</p>
+          <p className="text-slate-900 font-medium">Searching {selectedStores.length} stores...</p>
+          <p className="text-sm text-slate-900 mt-1">This may take a moment</p>
         </motion.div>
       )}
 
