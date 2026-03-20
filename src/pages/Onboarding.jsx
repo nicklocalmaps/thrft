@@ -79,11 +79,11 @@ export default function Onboarding() {
                 </div>
                 <h1 className="text-slate-900 text-xl font-semibold normal-case">Welcome to THRFT!</h1>
               </div>
-              <p className="text-slate-500 mb-8 text-center">Your intelligent grocery shopping assistant that helps you find the best prices at stores near you.
+              <p className="text-slate-900 mb-8 text-center">Your intelligent grocery shopping assistant that helps you find the best prices at stores near you.
 
 Let's find your favorite grocery stores so we can compare prices for your shopping lists.</p>
 
-              <label className="text-sm font-medium text-slate-700 mb-2 block">Your Zip Code</label>
+              <label className="text-sm font-medium text-slate-900 mb-2 block">Your Zip Code</label>
               <div className="flex gap-3">
                 <Input
                 placeholder="e.g. 78701"
@@ -113,7 +113,7 @@ Let's find your favorite grocery stores so we can compare prices for your shoppi
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-sm text-slate-500 mt-4 text-center">
+              className="text-sm text-slate-900 mt-4 text-center">
               
                   Searching for stores near {zipCode}...
                 </motion.p>
@@ -134,7 +134,7 @@ Let's find your favorite grocery stores so we can compare prices for your shoppi
                 <Star className="w-7 h-7 text-amber-500" />
               </div>
               <h1 className="text-2xl font-bold text-slate-900 mb-1">Stores Near {zipCode}</h1>
-              <p className="text-slate-500 mb-6">
+              <p className="text-slate-900 mb-6">
                 We found <strong>{nearbyStores.length} stores</strong> within ~25 miles. Check the ones you shop at — they'll be pre-selected on all your lists.
               </p>
 
@@ -151,7 +151,7 @@ Let's find your favorite grocery stores so we can compare prices for your shoppi
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border text-left transition-all ${
                     isSelected ?
                     'bg-blue-50 border-blue-200 text-slate-800' :
-                    'bg-white border-slate-100 text-slate-500 hover:border-slate-200'}`
+                    'bg-white border-slate-100 text-slate-900 hover:border-slate-200'}`
                     }>
                     
                       <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${
@@ -160,14 +160,14 @@ Let's find your favorite grocery stores so we can compare prices for your shoppi
                         {isSelected && <div className="w-5 h-5 rounded-md flex items-center justify-center" style={{ backgroundColor: '#4181ed' }}><Check className="w-3 h-3 text-white" strokeWidth={3} /></div>}
                       </div>
                       <span className="font-medium">{store.name}</span>
-                      <span className="ml-auto text-xs text-slate-400">{store.region}</span>
+                      <span className="ml-auto text-xs text-slate-900">{store.region}</span>
                     </motion.button>);
 
               })}
               </div>
 
               <div className="flex items-center justify-between">
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-900">
                   <span className="font-semibold" style={{ color: '#4181ed' }}>{selectedStores.length}</span> store{selectedStores.length !== 1 ? 's' : ''} selected
                 </p>
                 <Button
@@ -188,7 +188,7 @@ Let's find your favorite grocery stores so we can compare prices for your shoppi
 
               <button
               onClick={() => setStep('zip')}
-              className="mt-4 text-sm text-slate-400 hover:text-slate-600 transition-colors w-full text-center">
+              className="mt-4 text-sm text-slate-900 hover:text-black transition-colors w-full text-center">
               
                 ← Change zip code
               </button>
