@@ -134,6 +134,7 @@ async function searchGroceryStores(lat, lng) {
   return allResults;
 }
 
+// v5 - strict 25-mile radius filter
 Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
   const user = await base44.auth.me();
