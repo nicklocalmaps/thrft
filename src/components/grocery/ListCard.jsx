@@ -39,7 +39,10 @@ export default function ListCard({ list, index, onDelete }) {
                 <div className="flex flex-wrap gap-1.5 mt-3">
                   {comparedStores.slice(0, 4).map(storeKey => {
                     const store = getStoreByKey(storeKey);
-                    const total = priceData[storeKey]?.reduce((s, i) => s + (i.price || 0), 0) || 0;
+                    const d = priceData[storeKey];
+                    const total = Array.isArray(d)
+                      ? d.reduce((s, i) => s + (i.price || 0), 0)
+                      : (d?.instore_total ?? d?.items?.reduce((s, i) => s + (i.price || 0), 0) ?? 0);
                     return (
                       <span key={storeKey} className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
                         {store?.name || storeKey}: ${total.toFixed(2)}
