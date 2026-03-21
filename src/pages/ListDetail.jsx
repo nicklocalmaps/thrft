@@ -187,7 +187,12 @@ Store pricing tendencies:
       } else {
         // Store not found in area — fall back to AI for this store
         const storeName = ALL_STORES.find(s => s.key === storeKey)?.name || storeKey;
-        const itemsList = items.map(i => `${i.quantity}x ${i.name}`).join(', ');
+        const itemsList = items.map(i => {
+          const hint = i.search_hint || i.name;
+          return i.is_branded
+            ? `${i.quantity}x "${hint}" (exact product)`
+            : `${i.quantity}x "${hint}" (find best store-brand equivalent)`;
+        }).join(', ');
         const props = {};
         props[storeKey] = storeSchema(includePickup, includeDelivery);
         const fallback = await base44.integrations.Core.InvokeLLM({
