@@ -160,5 +160,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  return Response.json({ store_keys: Array.from(foundKeys) });
+  const storeKeys = Array.from(foundKeys);
+  console.log('Final store keys:', storeKeys.join(', '));
+  return Response.json({ store_keys: storeKeys });
 });
