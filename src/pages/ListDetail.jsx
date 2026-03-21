@@ -120,7 +120,14 @@ export default function ListDetail() {
             const aiStoreNames = aiStores.map(k => ALL_STORES.find(s => s.key === k)?.name || k);
             const storeProperties = {};
             aiStores.forEach(key => { storeProperties[key] = storeSchema(includePickup, includeDelivery); });
-            const itemsList = items.map(i => `${i.quantity}x ${i.name}`).join(', ');
+            const itemsList = items.map(i => {
+              const hint = i.search_hint || i.name;
+              if (i.is_branded) {
+                return `${i.quantity}x "${hint}" (exact branded product — find this specific item or the closest size variant)`;
+              } else {
+                return `${i.quantity}x "${hint}" (generic — find the best value or store-brand equivalent at each store)`;
+              }
+            }).join('\n');
             const deliveryNote = includeDelivery
               ? `\n- For Instacart: estimate if available and provide a realistic fee ($3-$10, or 0 if not available).\n- For Shipt: only mark shipt_available=true for stores that are official Shipt partners. Shipt partners in this list: ${aiStores.filter(k => SHIPT_STORES.has(k)).map(k => ALL_STORES.find(s => s.key === k)?.name).join(', ') || 'none'}. Fee $5-$10 if available, else 0.`
               : '';
