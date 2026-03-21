@@ -50,7 +50,8 @@ export default function AddItemForm({ onAdd }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name.trim()) return;
-    onAdd({ name: name.trim(), quantity: Number(quantity) || 1, unit: 'each' });
+    // Manually typed = generic item, no brand hint
+    onAdd({ name: name.trim(), quantity: Number(quantity) || 1, unit: 'each', search_hint: name.trim(), is_branded: false });
     setName('');
     setQuantity(1);
     setSuggestions([]);
@@ -61,7 +62,16 @@ export default function AddItemForm({ onAdd }) {
     const productName = product.brands
       ? `${product.product_name} (${product.brands})`
       : product.product_name;
-    onAdd({ name: productName, quantity: Number(quantity) || 1, unit: product.quantity || 'each' });
+    // search_hint carries the full branded name for accurate price lookups
+    const searchHint = [product.product_name, product.brands, product.quantity]
+      .filter(Boolean).join(' ');
+    onAdd({
+      name: productName,
+      quantity: Number(quantity) || 1,
+      unit: 'each',
+      search_hint: searchHint,
+      is_branded: true,
+    });
     setName('');
     setQuantity(1);
     setSuggestions([]);
