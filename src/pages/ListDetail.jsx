@@ -113,7 +113,11 @@ export default function ListDetail() {
 
     const [krogerResponse, aiResult] = await Promise.all([
       krogerStores.length > 0
-        ? base44.functions.invoke('krogerPrices', { items, store_keys: krogerStores, zip_code: userZip })
+        ? base44.functions.invoke('krogerPrices', {
+            items: items.map(i => ({ ...i, name: i.search_hint || i.name })),
+            store_keys: krogerStores,
+            zip_code: userZip
+          })
         : Promise.resolve({ data: { results: {} } }),
       aiStores.length > 0
         ? (() => {
