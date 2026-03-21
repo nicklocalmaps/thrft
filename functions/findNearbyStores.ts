@@ -81,18 +81,6 @@ async function geocodeZip(zip) {
   return { lat, lng };
 }
 
-// All chains to explicitly text-search for
-const CHAINS_TO_SEARCH = [
-  'Walmart Grocery', 'Kroger', 'H-E-B', 'Publix', 'Safeway', 'Albertsons',
-  'Meijer', 'Hy-Vee', 'Wegmans', 'Food Lion', 'Harris Teeter', 'Giant Eagle',
-  'Stop & Shop', 'Jewel-Osco', 'Hannaford', 'Market Basket', 'King Soopers',
-  'Stater Bros', 'Fred Meyer', 'Piggly Wiggly', 'Rouses Market', 'Amazon Fresh',
-  'Target', 'Costco', 'CVS Pharmacy', 'Walgreens',
-  'Winn-Dixie', "Lowe's Foods", 'Vons', 'Pavilions', 'Smart & Final',
-  "Raley's", 'Save Mart', 'Randalls', 'Tom Thumb', 'Schnucks',
-  'ShopRite', 'Giant Food', "Martin's Food", 'Shoppers Food',
-];
-
 function haversineKm(lat1, lng1, lat2, lng2) {
   const R = 6371;
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -101,40 +89,40 @@ function haversineKm(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-const RADIUS_KM = 40; // ~25 miles
+// ~25 miles in km
+const RADIUS_KM = 40;
 const RADIUS_M = RADIUS_KM * 1000;
 
-function isWithinRadius(lat, lng, plat, plng) {
-  if (!plat || !plng) return false;
-  return haversineKm(lat, lng, plat, plng) <= RADIUS_KM;
-}
+// All chains to explicitly text-search for
+const CHAINS_TO_SEARCH = [
+  'Walmart Supercenter', 'Kroger', 'H-E-B', 'Publix', 'Safeway', 'Albertsons',
+  'Meijer', 'Hy-Vee', 'Wegmans', 'Food Lion', 'Harris Teeter', 'Giant Eagle',
+  'Stop & Shop', 'Jewel-Osco', 'Hannaford', 'Market Basket', 'King Soopers',
+  'Stater Bros', 'Fred Meyer', 'Piggly Wiggly', 'Rouses Market', 'Amazon Fresh',
+  'Target', 'Costco', 'CVS Pharmacy', 'Walgreens', 'ALDI', 'Trader Joe\'s',
+  'Whole Foods Market', 'The Fresh Market',
+  'Winn-Dixie', "Lowe's Foods", 'Vons', 'Pavilions', 'Smart & Final',
+  "Raley's", 'Save Mart', 'Randalls', 'Tom Thumb', 'Schnucks',
+  'ShopRite', 'Giant Food', "Martin's Food", 'Shoppers Food',
+];
 
 async function searchGroceryStores(lat, lng) {
-  // 1. General nearby grocery search (strictly bounded by radius)
+  // 1. General nearby grocery search
   const nearbyUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${RADIUS_M}&type=grocery_or_supermarket&key=${GOOGLE_API_KEY}`;
   const nearbyRes = await fetch(nearbyUrl);
   const nearbyData = await nearbyRes.json();
-  const nearbyResults = (nearbyData.results || []).filter(p =>
-    isWithinRadius(lat, lng, p.geometry?.location?.lat, p.geometry?.location?.lng)
-  );
+  const nearbyResults = nearbyData.results || [];
 
-  // 2. Targeted text searches for all known chains (no "near me" — use location bias + strict distance filter)
+  // 2. Targeted text searches for all known chains
   const textSearches = CHAINS_TO_SEARCH.map(chain => {
     const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(chain)}&location=${lat},${lng}&radius=${RADIUS_M}&key=${GOOGLE_API_KEY}`;
-    return fetch(url).then(r => r.json()).then(d => {
-      return (d.results || []).filter(p =>
-        isWithinRadius(lat, lng, p.geometry?.location?.lat, p.geometry?.location?.lng)
-      );
-    }).catch(() => []);
+    return fetch(url).then(r => r.json()).then(d => d.results || []).catch(() => []);
   });
 
   const chainResults = await Promise.all(textSearches);
-  const allResults = [...nearbyResults, ...chainResults.flat()];
-
-  return allResults;
+  return [...nearbyResults, ...chainResults.flat()];
 }
 
-// v5 - strict 25-mile radius filter
 Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
   const user = await base44.auth.me();
@@ -150,25 +138,29 @@ Deno.serve(async (req) => {
 
   const foundKeys = new Set();
   for (const place of places) {
-    const plat = place.geometry?.location?.lat;
-    const plng = place.geometry?.location?.lng;
     const key = matchStoreKey(place.name);
     if (!key) continue;
-    // Hard distance check — skip if no coordinates or outside radius
-    if (!plat || !plng) {
-      console.log(`SKIP (no coords): ${place.name}`);
+
+    // Strictly enforce distance — Google text search treats radius as a BIAS, not a hard limit
+    const plat = place.geometry?.location?.lat;
+    const plng = place.geometry?.location?.lng;
+
+    if (plat == null || plng == null) {
+      console.log(`SKIP no-coords: ${place.name}`);
       continue;
     }
+
     const distKm = haversineKm(lat, lng, plat, plng);
     if (distKm > RADIUS_KM) {
-      console.log(`SKIP (too far ${distKm.toFixed(1)}km): ${place.name}`);
+      console.log(`SKIP too-far (${distKm.toFixed(1)}km): ${place.name}`);
       continue;
     }
-    console.log(`MATCH: ${place.name} → ${key} | ${distKm.toFixed(1)}km`);
+
+    console.log(`FOUND (${distKm.toFixed(1)}km): ${place.name} → ${key}`);
     foundKeys.add(key);
   }
 
   const storeKeys = Array.from(foundKeys);
-  console.log('Final store keys:', storeKeys.join(', '));
+  console.log('Result:', storeKeys.join(', '));
   return Response.json({ store_keys: storeKeys });
 });
