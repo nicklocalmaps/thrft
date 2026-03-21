@@ -150,7 +150,13 @@ Deno.serve(async (req) => {
   const foundKeys = new Set();
   for (const place of places) {
     const key = matchStoreKey(place.name);
-    if (key) foundKeys.add(key);
+    if (key) {
+      const plat = place.geometry?.location?.lat;
+      const plng = place.geometry?.location?.lng;
+      const distKm = haversineKm(lat, lng, plat, plng);
+      console.log(`MATCH: ${place.name} → ${key} | dist: ${distKm.toFixed(1)}km`);
+      foundKeys.add(key);
+    }
   }
 
   return Response.json({ store_keys: Array.from(foundKeys) });
