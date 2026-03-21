@@ -101,30 +101,37 @@ function haversineKm(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
+const RADIUS_KM = 40; // ~25 miles
+const RADIUS_M = RADIUS_KM * 1000;
+
+function isWithinRadius(lat, lng, plat, plng) {
+  if (!plat || !plng) return false;
+  return haversineKm(lat, lng, plat, plng) <= RADIUS_KM;
+}
+
 async function searchGroceryStores(lat, lng) {
-  // 1. General nearby grocery search
-  const nearbyUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=40000&type=grocery_or_supermarket&key=${GOOGLE_API_KEY}`;
+  // 1. General nearby grocery search (strictly bounded by radius)
+  const nearbyUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${RADIUS_M}&type=grocery_or_supermarket&key=${GOOGLE_API_KEY}`;
   const nearbyRes = await fetch(nearbyUrl);
   const nearbyData = await nearbyRes.json();
-  let results = nearbyData.results || [];
+  const nearbyResults = (nearbyData.results || []).filter(p =>
+    isWithinRadius(lat, lng, p.geometry?.location?.lat, p.geometry?.location?.lng)
+  );
 
-  // 2. Targeted text searches for all known chains (run in parallel)
+  // 2. Targeted text searches for all known chains (no "near me" — use location bias + strict distance filter)
   const textSearches = CHAINS_TO_SEARCH.map(chain => {
-    const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(chain + ' near me')}&location=${lat},${lng}&radius=40000&key=${GOOGLE_API_KEY}`;
+    const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(chain)}&location=${lat},${lng}&radius=${RADIUS_M}&key=${GOOGLE_API_KEY}`;
     return fetch(url).then(r => r.json()).then(d => {
-      return (d.results || []).filter(place => {
-        const plat = place.geometry?.location?.lat;
-        const plng = place.geometry?.location?.lng;
-        if (!plat || !plng) return false;
-        return haversineKm(lat, lng, plat, plng) <= 40;
-      });
+      return (d.results || []).filter(p =>
+        isWithinRadius(lat, lng, p.geometry?.location?.lat, p.geometry?.location?.lng)
+      );
     }).catch(() => []);
   });
 
   const chainResults = await Promise.all(textSearches);
-  for (const r of chainResults) results = results.concat(r);
+  const allResults = [...nearbyResults, ...chainResults.flat()];
 
-  return results;
+  return allResults;
 }
 
 Deno.serve(async (req) => {
