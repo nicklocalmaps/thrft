@@ -149,12 +149,13 @@ Deno.serve(async (req) => {
 
   const foundKeys = new Set();
   for (const place of places) {
+    const plat = place.geometry?.location?.lat;
+    const plng = place.geometry?.location?.lng;
+    // Hard distance check at handler level — Google text search ignores radius as a hard limit
+    if (!plat || !plng || haversineKm(lat, lng, plat, plng) > RADIUS_KM) continue;
     const key = matchStoreKey(place.name);
     if (key) {
-      const plat = place.geometry?.location?.lat;
-      const plng = place.geometry?.location?.lng;
-      const distKm = haversineKm(lat, lng, plat, plng);
-      console.log(`MATCH: ${place.name} → ${key} | dist: ${distKm.toFixed(1)}km`);
+      console.log(`MATCH: ${place.name} → ${key} | ${haversineKm(lat, lng, plat, plng).toFixed(1)}km`);
       foundKeys.add(key);
     }
   }
