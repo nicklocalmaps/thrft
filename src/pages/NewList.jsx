@@ -89,9 +89,9 @@ export default function NewList() {
 
         {/* Add Items */}
         <div>
-          <div className="flex items-baseline gap-2 mb-2">
+          <div className="mb-2">
             <label className="text-sm font-medium text-slate-900">Add Items</label>
-            <span className="text-xs text-slate-400">Be as specific as possible (ex. Mint Oreos or Store Brand 2% Milk)</span>
+            <p className="text-xs text-slate-400 mt-0.5 leading-snug max-w-sm">Be as specific as possible — e.g. "Mint Oreos" or "Store Brand 2% Milk"</p>
           </div>
           <AddItemForm onAdd={addItem} />
         </div>
