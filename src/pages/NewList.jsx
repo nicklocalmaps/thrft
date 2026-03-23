@@ -91,7 +91,7 @@ export default function NewList() {
         <div>
           <div className="mb-2">
             <label className="text-sm font-medium text-slate-900">Add Items</label>
-            <p className="text-xs text-slate-400 mt-0.5 leading-snug max-w-sm">Be as specific as possible — e.g. "Mint Oreos" or "Store Brand 2% Milk"</p>
+            <p className="text-xs text-slate-400 mt-0.5 leading-snug max-w-sm">Be as specific as possible — e.g. "Mint Oreos", "Store Brand 2% Milk" or "Breyer's Ice Cream"</p>
           </div>
           <AddItemForm onAdd={addItem} />
         </div>
