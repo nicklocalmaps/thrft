@@ -286,6 +286,16 @@ Store pricing tendencies:
             )}
           </div>
         </div>
+        <Button
+          variant={shoppingMode ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => { setShoppingMode(!shoppingMode); setCheckedItems(new Set()); }}
+          className={`rounded-xl gap-1.5 text-xs ${shoppingMode ? 'shadow-md' : ''}`}
+          style={shoppingMode ? { backgroundColor: '#4181ed' } : {}}
+        >
+          <CheckSquare className="w-4 h-4" />
+          {shoppingMode ? 'Done Shopping' : 'Shop Mode'}
+        </Button>
       </div>
 
       {/* Add Item */}
