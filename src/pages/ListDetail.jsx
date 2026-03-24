@@ -9,6 +9,7 @@ import AddItemForm from '@/components/grocery/AddItemForm';
 import GroceryItemRow from '@/components/grocery/GroceryItemRow';
 import StoreCard from '@/components/grocery/StoreCard';
 import StorePicker from '@/components/grocery/StorePicker';
+import PriceHistoryChart from '@/components/grocery/PriceHistoryChart';
 import { ALL_STORES } from '@/lib/storeConfig';
 
 const METHOD_LABELS = {
