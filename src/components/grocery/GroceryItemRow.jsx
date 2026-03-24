@@ -55,14 +55,24 @@ export default function GroceryItemRow({ item, index, onRemove, onUpdateQuantity
         </div>
         <span className="text-slate-900 font-medium">{item.name}</span>
       </div>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => onRemove(index)}
-        className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-red-500 hover:bg-red-50"
-      >
-        <X className="w-4 h-4" />
-      </Button>
+      <div className="flex items-center gap-1">
+        <button
+          onClick={bookmarkItem}
+          disabled={saved}
+          className="w-8 h-8 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all text-slate-300 hover:text-blue-500 hover:bg-blue-50"
+          title="Save item"
+        >
+          {saved ? <BookmarkCheck className="w-4 h-4 text-blue-500" /> : <Bookmark className="w-4 h-4" />}
+        </button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => onRemove(index)}
+          className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-red-500 hover:bg-red-50"
+        >
+          <X className="w-4 h-4" />
+        </Button>
+      </div>
     </motion.div>
   );
 }
