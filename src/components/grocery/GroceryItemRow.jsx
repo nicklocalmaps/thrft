@@ -6,6 +6,19 @@ import { motion } from 'framer-motion';
 
 export default function GroceryItemRow({ item, index, onRemove, onUpdateQuantity }) {
   const [hovering, setHovering] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  const bookmarkItem = async (e) => {
+    e.stopPropagation();
+    await base44.entities.SavedItem.create({
+      name: item.name,
+      search_hint: item.search_hint || item.name,
+      is_branded: item.is_branded || false,
+      unit: item.unit || 'each',
+      default_quantity: item.quantity || 1,
+    });
+    setSaved(true);
+  };
 
   return (
     <motion.div
