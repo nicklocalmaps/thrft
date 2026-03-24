@@ -436,7 +436,16 @@ Store pricing tendencies:
       {/* Results */}
       {priceData && !comparing && comparedStoreKeys.length > 0 && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h2 className="text-xl font-bold text-slate-900 mb-5">Price Comparison</h2>
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-xl font-bold text-slate-900">Price Comparison</h2>
+            <button
+              onClick={() => setShowHistory(v => !v)}
+              className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
+            >
+              📈 {showHistory ? 'Hide' : 'Show'} History
+            </button>
+          </div>
+          <PriceHistoryChart listId={listId} open={showHistory} onClose={() => setShowHistory(false)} />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {comparedStoreKeys.map((storeKey, i) => {
               const storeMeta = ALL_STORES.find(s => s.key === storeKey);
