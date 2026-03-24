@@ -433,21 +433,42 @@ Store pricing tendencies:
             })}
           </div>
 
-          {storeTotals && cheapestStore && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="mt-6 p-5 rounded-2xl bg-blue-50 border border-blue-100"
-            >
-              <p className="text-sm font-medium" style={{ color: '#4181ed' }}>
-                💡 <strong>{ALL_STORES.find(s => s.key === cheapestStore)?.name || cheapestStore}</strong> has the best estimated in-store total at{' '}
-                <strong>${storeTotals[cheapestStore]?.toFixed(2)}</strong>
-                {' '}— saving you up to{' '}
-                <strong>${(Math.max(...Object.values(storeTotals)) - storeTotals[cheapestStore]).toFixed(2)}</strong> vs the most expensive option.
-              </p>
-            </motion.div>
-          )}
+          {storeTotals && cheapestStore && (() => {
+            // Also compute best delivery option (instore + lowest fee)
+            const deliveryTotals = priceData
+              ? Object.fromEntries(comparedStoreKeys.map(k => {
+                  const d = priceData[k];
+                  const base = storeTotals[k] || 0;
+                  const instacart = d?.instacart_available ? base + (d?.instacart_fee || 0) : null;
+                  const shipt = d?.shipt_available ? base + (d?.shipt_fee || 0) : null;
+                  const best = [instacart, shipt].filter(v => v !== null);
+                  return [k, best.length ? Math.min(...best) : null];
+                }))
+              : {};
+            const deliveryEntries = Object.entries(deliveryTotals).filter(([, v]) => v !== null);
+            const bestDelivery = deliveryEntries.length
+              ? deliveryEntries.reduce((a, b) => a[1] < b[1] ? a : b)
+              : null;
+
+            return (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="mt-6 p-5 rounded-2xl bg-blue-50 border border-blue-100 space-y-2"
+              >
+                <p className="text-sm font-medium" style={{ color: '#4181ed' }}>
+                  🏪 Best in-store: <strong>{ALL_STORES.find(s => s.key === cheapestStore)?.name || cheapestStore}</strong> at <strong>${storeTotals[cheapestStore]?.toFixed(2)}</strong>
+                  {' '}— saves up to <strong>${(Math.max(...Object.values(storeTotals)) - storeTotals[cheapestStore]).toFixed(2)}</strong>
+                </p>
+                {bestDelivery && (
+                  <p className="text-sm font-medium" style={{ color: '#4181ed' }}>
+                    🚚 Best with delivery: <strong>{ALL_STORES.find(s => s.key === bestDelivery[0])?.name || bestDelivery[0]}</strong> at <strong>${bestDelivery[1].toFixed(2)}</strong> (incl. fee)
+                  </p>
+                )}
+              </motion.div>
+            );
+          })()}
         </motion.div>
       )}
     </div>
