@@ -30,6 +30,7 @@ export default function ListDetail() {
   const [selectedStores, setSelectedStores] = useState([]);
   const [shoppingMode, setShoppingMode] = useState(false);
   const [checkedItems, setCheckedItems] = useState(new Set());
+  const [showHistory, setShowHistory] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(user => {
