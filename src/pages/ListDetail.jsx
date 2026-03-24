@@ -305,11 +305,42 @@ Store pricing tendencies:
 
       {/* Items List */}
       <div className="space-y-2 mb-6">
-        <AnimatePresence>
-          {items.map((item, i) => (
-            <GroceryItemRow key={`${item.name}-${i}`} item={item} index={i} onRemove={removeItem} />
-          ))}
-        </AnimatePresence>
+        {shoppingMode ? (
+          <>
+            <p className="text-xs text-slate-400 mb-3">Tap items to check them off as you shop</p>
+            {items.map((item, i) => {
+              const checked = checkedItems.has(i);
+              return (
+                <button
+                  key={`${item.name}-${i}`}
+                  onClick={() => toggleChecked(i)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border text-left transition-all ${
+                    checked ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-slate-100'
+                  }`}
+                >
+                  <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${
+                    checked ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300'
+                  }`}>
+                    {checked && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+                  </div>
+                  <div className="flex items-center gap-2 flex-1">
+                    <span className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center text-xs font-semibold text-emerald-700 shrink-0">{item.quantity}</span>
+                    <span className={`font-medium ${checked ? 'line-through text-slate-400' : 'text-slate-900'}`}>{item.name}</span>
+                  </div>
+                </button>
+              );
+            })}
+            {checkedItems.size > 0 && (
+              <p className="text-xs text-slate-400 text-center pt-1">{checkedItems.size} of {items.length} checked off</p>
+            )}
+          </>
+        ) : (
+          <AnimatePresence>
+            {items.map((item, i) => (
+              <GroceryItemRow key={`${item.name}-${i}`} item={item} index={i} onRemove={removeItem} onUpdateQuantity={updateQuantity} />
+            ))}
+          </AnimatePresence>
+        )}
       </div>
 
       {/* Store Selector */}
