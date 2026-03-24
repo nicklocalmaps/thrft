@@ -9,6 +9,8 @@ import AddItemForm from '@/components/grocery/AddItemForm';
 import GroceryItemRow from '@/components/grocery/GroceryItemRow';
 import EmptyState from '@/components/grocery/EmptyState';
 import ShoppingMethodPicker from '@/components/grocery/ShoppingMethodPicker';
+import SavedItemsDrawer from '@/components/grocery/SavedItemsDrawer';
+import TemplatesDrawer from '@/components/grocery/TemplatesDrawer';
 
 export default function NewList() {
   const navigate = useNavigate();
