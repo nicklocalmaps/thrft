@@ -4,7 +4,7 @@ import { ALL_STORES, COLOR_MAP } from '@/lib/storeConfig';
 import { getStoreLink } from '@/lib/storeLinks';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ExternalLink, Smartphone, Check, CreditCard, Edit2, X } from 'lucide-react';
+import { ExternalLink, Smartphone, Check, CreditCard, Edit2, X, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ShoppingMethodPicker from '@/components/grocery/ShoppingMethodPicker';
 
