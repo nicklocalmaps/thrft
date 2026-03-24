@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { X, Minus, Plus } from 'lucide-react';
+import { X, Minus, Plus, Bookmark, BookmarkCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function GroceryItemRow({ item, index, onRemove, onUpdateQuantity }) {
