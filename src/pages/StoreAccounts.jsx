@@ -78,6 +78,43 @@ export default function StoreAccounts() {
         <p className="text-slate-500 mt-1">Save your loyalty card numbers and manage your shopping preferences.</p>
       </div>
 
+      {/* Zip Code */}
+      <div className="bg-white rounded-2xl border border-slate-100 p-5 mb-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-slate-400" />
+            <div>
+              <h2 className="font-semibold text-slate-900">Your Zip Code</h2>
+              <p className="text-sm text-slate-500">Used to find nearby stores</p>
+            </div>
+          </div>
+          {!editingZip ? (
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-mono text-slate-700">{user?.zip_code || 'Not set'}</span>
+              <button onClick={() => setEditingZip(true)} className="text-slate-400 hover:text-slate-600 transition-colors">
+                <Edit2 className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Input
+                value={zipValue}
+                onChange={e => setZipValue(e.target.value.replace(/\D/g, '').slice(0, 5))}
+                className="h-8 w-24 rounded-lg text-sm text-center focus-visible:ring-blue-400"
+                autoFocus
+                onKeyDown={e => { if (e.key === 'Enter') saveZip(); if (e.key === 'Escape') setEditingZip(false); }}
+              />
+              <Button size="icon" className="h-8 w-8 rounded-lg" style={{ backgroundColor: '#4181ed' }} disabled={savingZip} onClick={saveZip}>
+                <Check className="w-4 h-4" />
+              </Button>
+              <Button size="icon" variant="ghost" className="h-8 w-8 rounded-lg text-slate-400" onClick={() => setEditingZip(false)}>
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Shopping Method Preference */}
       <div className="bg-white rounded-2xl border border-slate-100 p-5 mb-6">
         <div className="flex items-center justify-between mb-4">
