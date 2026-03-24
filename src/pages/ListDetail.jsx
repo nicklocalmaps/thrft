@@ -223,13 +223,33 @@ Store pricing tendencies:
       }
     }
 
+    const now = new Date().toISOString();
     await base44.entities.GroceryList.update(listId, {
       price_data: finalData,
       selected_stores: selectedStores,
-      last_compared: new Date().toISOString(),
+      last_compared: now,
+    });
+
+    // Save price history snapshot
+    const storeTotalsSnap = Object.fromEntries(
+      Object.entries(finalData).map(([k, d]) => {
+        const total = Array.isArray(d) ? d.reduce((s, i) => s + (i.price || 0), 0) : (d?.instore_total ?? 0);
+        return [k, total];
+      })
+    );
+    const cheapest = Object.entries(storeTotalsSnap).reduce((a, b) => a[1] < b[1] ? a : b, ['', Infinity]);
+    await base44.entities.PriceHistory.create({
+      list_id: listId,
+      list_name: list.name,
+      snapshot_date: now,
+      store_totals: storeTotalsSnap,
+      cheapest_store: cheapest[0],
+      cheapest_total: cheapest[1],
+      item_count: items.length,
     });
 
     queryClient.invalidateQueries({ queryKey: ['grocery-list', listId] });
+    queryClient.invalidateQueries({ queryKey: ['price-history', listId] });
     setComparing(false);
   };
 
