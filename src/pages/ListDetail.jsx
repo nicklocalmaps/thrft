@@ -64,6 +64,21 @@ export default function ListDetail() {
     queryClient.invalidateQueries({ queryKey: ['grocery-list', listId] });
   };
 
+  const updateQuantity = async (index, qty) => {
+    const newItems = items.map((item, i) => i === index ? { ...item, quantity: qty } : item);
+    setLocalItems(newItems);
+    await base44.entities.GroceryList.update(listId, { items: newItems });
+    queryClient.invalidateQueries({ queryKey: ['grocery-list', listId] });
+  };
+
+  const toggleChecked = (index) => {
+    setCheckedItems(prev => {
+      const next = new Set(prev);
+      next.has(index) ? next.delete(index) : next.add(index);
+      return next;
+    });
+  };
+
   const saveStores = async (stores) => {
     setSelectedStores(stores);
     await base44.entities.GroceryList.update(listId, { selected_stores: stores });
