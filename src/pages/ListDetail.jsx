@@ -27,6 +27,8 @@ export default function ListDetail() {
   const [localItems, setLocalItems] = useState(null);
   const [showStorePicker, setShowStorePicker] = useState(false);
   const [selectedStores, setSelectedStores] = useState([]);
+  const [shoppingMode, setShoppingMode] = useState(false);
+  const [checkedItems, setCheckedItems] = useState(new Set());
 
   useEffect(() => {
     base44.auth.me().then(user => {
