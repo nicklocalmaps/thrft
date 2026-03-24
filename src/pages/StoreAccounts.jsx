@@ -16,6 +16,9 @@ export default function StoreAccounts() {
   const [saving, setSaving] = useState(false);
   const [shoppingMethod, setShoppingMethod] = useState('all');
   const [savingMethod, setSavingMethod] = useState(false);
+  const [editingZip, setEditingZip] = useState(false);
+  const [zipValue, setZipValue] = useState('');
+  const [savingZip, setSavingZip] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(u => {
