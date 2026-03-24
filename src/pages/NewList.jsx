@@ -101,7 +101,7 @@ export default function NewList() {
           <div className="space-y-2">
             <AnimatePresence>
               {items.map((item, i) => (
-                <GroceryItemRow key={`${item.name}-${i}`} item={item} index={i} onRemove={removeItem} />
+                <GroceryItemRow key={`${item.name}-${i}`} item={item} index={i} onRemove={removeItem} onUpdateQuantity={updateQuantity} />
               ))}
             </AnimatePresence>
           </div>
