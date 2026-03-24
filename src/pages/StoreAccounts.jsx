@@ -25,8 +25,18 @@ export default function StoreAccounts() {
       setUser(u);
       setLoyaltyCards(u?.loyalty_cards || {});
       if (u?.shopping_method) setShoppingMethod(u.shopping_method);
+      if (u?.zip_code) setZipValue(u.zip_code);
     });
   }, []);
+
+  const saveZip = async () => {
+    if (zipValue.length < 5) return;
+    setSavingZip(true);
+    await base44.auth.updateMe({ zip_code: zipValue });
+    setUser(prev => ({ ...prev, zip_code: zipValue }));
+    setSavingZip(false);
+    setEditingZip(false);
+  };
 
   const saveShoppingMethod = async (method) => {
     setShoppingMethod(method);
