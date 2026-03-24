@@ -113,9 +113,14 @@ export default function StoreCard({ storeKey, storeName, storeColor = 'blue', st
                 </p>
                 <p className="text-slate-900 truncate">{item.product_name}</p>
               </div>
-              <span className={`font-semibold ml-2 shrink-0 ${item.in_stock ? 'text-slate-900' : 'text-slate-400'}`}>
-                {item.in_stock ? `$${item.price?.toFixed(2)}` : 'N/A'}
-              </span>
+              <div className="ml-2 shrink-0 text-right">
+                <span className={`font-semibold block ${item.in_stock ? 'text-slate-900' : 'text-slate-400'}`}>
+                  {item.in_stock ? `$${item.price?.toFixed(2)}` : 'N/A'}
+                </span>
+                {item.in_stock && item.unit_price && (
+                  <span className="text-xs text-slate-400">{item.unit_price}</span>
+                )}
+              </div>
             </div>
           ))}
         </div>
