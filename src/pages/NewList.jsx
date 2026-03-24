@@ -27,6 +27,7 @@ export default function NewList() {
 
   const addItem = (item) => setItems(prev => [...prev, item]);
   const removeItem = (index) => setItems(prev => prev.filter((_, i) => i !== index));
+  const updateQuantity = (index, qty) => setItems(prev => prev.map((item, i) => i === index ? { ...item, quantity: qty } : item));
 
   const handleCreate = async () => {
     if (!name.trim() || items.length === 0) return;
