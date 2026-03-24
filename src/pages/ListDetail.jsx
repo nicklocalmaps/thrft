@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, RefreshCw, Loader2, ShoppingCart, Store, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Loader2, ShoppingCart, Store, ChevronDown, ChevronUp, CheckSquare } from 'lucide-react';
 import AddItemForm from '@/components/grocery/AddItemForm';
 import GroceryItemRow from '@/components/grocery/GroceryItemRow';
 import StoreCard from '@/components/grocery/StoreCard';
