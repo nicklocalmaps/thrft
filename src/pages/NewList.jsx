@@ -90,27 +90,25 @@ export default function NewList() {
           )}
         </div>
 
+        {/* Saved Items & Templates */}
+        <div className="flex flex-col gap-3">
+          <SavedItemsDrawer onAddItem={addItem} />
+          <TemplatesDrawer
+            currentItems={items}
+            currentName={name}
+            shoppingMethod={shoppingMethod}
+            onLoadTemplate={(template) => {
+              setItems(template.items || []);
+              if (!name.trim()) setName(template.name);
+              if (template.shopping_method) setShoppingMethod(template.shopping_method);
+            }}
+          />
+        </div>
+
         {/* Add Items */}
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <div>
-              <label className="text-sm font-medium text-slate-900">Add Items</label>
-              <p className="text-xs text-slate-400 mt-0.5 leading-snug max-w-sm">Be as specific as possible — e.g. "Mint Oreos", "Store Brand 2% Milk" or "Breyer's Ice Cream"</p>
-            </div>
-            <div className="flex items-center gap-3 shrink-0 ml-4">
-              <SavedItemsDrawer onAddItem={addItem} />
-              <TemplatesDrawer
-                currentItems={items}
-                currentName={name}
-                shoppingMethod={shoppingMethod}
-                onLoadTemplate={(template) => {
-                  setItems(template.items || []);
-                  if (!name.trim()) setName(template.name);
-                  if (template.shopping_method) setShoppingMethod(template.shopping_method);
-                }}
-              />
-            </div>
-          </div>
+          <label className="text-sm font-medium text-slate-900 mb-1 block">Add Items</label>
+          <p className="text-xs text-slate-400 mb-2 leading-snug max-w-sm">Be as specific as possible — e.g. "Mint Oreos", "Store Brand 2% Milk" or "Breyer's Ice Cream"</p>
           <AddItemForm onAdd={addItem} />
         </div>
 
