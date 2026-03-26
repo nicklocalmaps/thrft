@@ -53,13 +53,26 @@ export default function Onboarding() {
       <div className="w-full max-w-xl">
 
         {/* Logo */}
-        <div className="flex items-center justify-center gap-4 mb-10">
+        <div className="flex items-center justify-center gap-4 mb-6">
           <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-lg">
             <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT logo" className="w-full h-full object-cover" />
           </div>
           <span className="text-4xl font-bold tracking-tight text-slate-900">
             THRFT
           </span>
+        </div>
+
+        {/* User count badge */}
+        <div className="flex justify-center mb-8">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm">
+            <div className="flex -space-x-1.5">
+              <div className="w-6 h-6 rounded-full bg-blue-400 border-2 border-white" />
+              <div className="w-6 h-6 rounded-full bg-emerald-400 border-2 border-white" />
+              <div className="w-6 h-6 rounded-full bg-amber-400 border-2 border-white" />
+            </div>
+            <span className="text-sm font-semibold text-slate-700">3,941 users saving money</span>
+            <span className="text-base">🎉</span>
+          </div>
         </div>
 
         <AnimatePresence mode="wait">
