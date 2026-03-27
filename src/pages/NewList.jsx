@@ -20,6 +20,7 @@ export default function NewList() {
   const [saving, setSaving] = useState(false);
   const [shoppingMethod, setShoppingMethod] = useState('all');
   const [showMethodPicker, setShowMethodPicker] = useState(false);
+  const [nameError, setNameError] = useState(false);
 
   // Load user's saved preference
   useEffect(() => {
@@ -33,7 +34,8 @@ export default function NewList() {
   const updateQuantity = (index, qty) => setItems(prev => prev.map((item, i) => i === index ? { ...item, quantity: qty } : item));
 
   const handleCreate = async () => {
-    if (!name.trim() || items.length === 0) return;
+    if (!name.trim()) { setNameError(true); return; }
+    if (items.length === 0) return;
     setSaving(true);
     const list = await base44.entities.GroceryList.create({
       name: name.trim(),
@@ -62,9 +64,10 @@ export default function NewList() {
           <Input
             placeholder="e.g. Weekly Groceries, Party Supplies..."
             value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="h-12 rounded-xl border-slate-200 bg-white text-base placeholder:text-slate-400 focus-visible:ring-blue-400"
+            onChange={(e) => { setName(e.target.value); setNameError(false); }}
+            className={`h-12 rounded-xl bg-white text-base placeholder:text-slate-400 focus-visible:ring-blue-400 ${nameError ? 'border-red-400 focus-visible:ring-red-400' : 'border-slate-200'}`}
           />
+          {nameError && <p className="text-xs text-red-500 mt-1">Please enter a list name to continue.</p>}
         </div>
 
         {/* Shopping Method */}
@@ -131,7 +134,7 @@ export default function NewList() {
         {items.length > 0 && (
           <Button
             onClick={handleCreate}
-            disabled={!name.trim() || saving}
+            disabled={saving}
             className="w-full h-14 rounded-xl text-base font-semibold shadow-lg shadow-blue-200 gap-2 transition-all"
             style={{ backgroundColor: '#4181ed' }}
           >
