@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { TrendingDown, PackageX, Store, Car, Truck } from 'lucide-react';
 import { COLOR_MAP } from '@/lib/storeConfig';
-import ShopNowButton from '@/components/grocery/ShopNowButton';
+import ShopButtons from '@/components/grocery/ShopButtons';
 
 function PriceRow({ icon: Icon, label, total, fee, available, isBaseline }) {
   if (!available && !isBaseline) return null;
@@ -93,10 +93,14 @@ export default function StoreCard({ storeKey, storeName, storeColor = 'blue', st
           )}
         </div>
 
-        {/* Shop Now */}
-        <div className="mt-3">
-          <ShopNowButton storeKey={storeKey} storeName={storeName} items={items} />
-        </div>
+        {/* Shop Buttons */}
+        <ShopButtons
+          storeKey={storeKey}
+          storeName={storeName}
+          items={items}
+          shoppingMethod={shoppingMethod}
+          storeData={storeData}
+        />
 
         {/* Item list */}
         <div className="space-y-1 max-h-40 overflow-y-auto border-t border-slate-100 pt-2 mt-2">
