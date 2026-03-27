@@ -105,11 +105,7 @@ export default function NewList() {
             }}
           />
           <PastListsDrawer
-            onLoadList={(list) => {
-              setItems(list.items || []);
-              if (!name.trim()) setName(list.name);
-              if (list.shopping_method) setShoppingMethod(list.shopping_method);
-            }}
+            onAddItems={(newItems) => setItems(prev => [...prev, ...newItems])}
           />
         </div>
 
