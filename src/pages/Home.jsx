@@ -9,6 +9,7 @@ const THRFT_LOGO = 'https://media.base44.com/images/public/69b782bc4deba77b6b05b
 import { Button } from '@/components/ui/button';
 import { AnimatePresence } from 'framer-motion';
 import ListCard from '@/components/grocery/ListCard';
+import StorePriceDashboard from '@/components/grocery/StorePriceDashboard';
 
 export default function Home() {
   const queryClient = useQueryClient();
@@ -61,6 +62,8 @@ export default function Home() {
           </Link>
         </div>
       ) : (
+        <>
+        <StorePriceDashboard lists={lists} />
         <div className="space-y-3">
           <AnimatePresence>
             {lists.map((list, i) => (
@@ -73,6 +76,7 @@ export default function Home() {
             ))}
           </AnimatePresence>
         </div>
+        </>
       )}
     </div>
   );
