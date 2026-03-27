@@ -140,27 +140,33 @@ export default function ListDetail() {
         : Promise.resolve({ data: { results: {} } }),
       aiStores.length > 0
         ? (() => {
-            const aiStoreNames = aiStores.map(k => ALL_STORES.find(s => s.key === k)?.name || k);
-            const storeProperties = {};
-            aiStores.forEach(key => { storeProperties[key] = storeSchema(includePickup, includeDelivery); });
             const itemsList = items.map(i => {
               const hint = i.search_hint || i.name;
-              if (i.is_branded) {
-                return `${i.quantity}x "${hint}" (exact branded product — find this specific item or the closest size variant)`;
-              } else {
-                return `${i.quantity}x "${hint}" (generic — find the best value or store-brand equivalent at each store)`;
-              }
+              return i.is_branded
+                ? `${i.quantity}x "${hint}" (exact branded product)`
+                : `${i.quantity}x "${hint}" (generic — store-brand equivalent ok)`;
             }).join('\n');
             const deliveryNote = includeDelivery
-              ? `\n- For Instacart: estimate if available and provide a realistic fee ($3-$10, or 0 if not available).\n- For Shipt: only mark shipt_available=true for stores that are official Shipt partners. Shipt partners in this list: ${aiStores.filter(k => SHIPT_STORES.has(k)).map(k => ALL_STORES.find(s => s.key === k)?.name).join(', ') || 'none'}. Fee $5-$10 if available, else 0.`
+              ? `\n- For Instacart: estimate fee ($3-$10) if available, else 0.\n- For Shipt: only mark shipt_available=true for official Shipt partners. Fee $5-$10 if available, else 0.`
               : '';
-            const pickupNote = includePickup
-              ? `\n- Indicate if curbside pickup is available and the pickup total.`
-              : '';
-            return base44.integrations.Core.InvokeLLM({
-              prompt: `You are a grocery price comparison assistant. Provide realistic estimated prices from these stores: ${aiStoreNames.join(', ')}.
+            const pickupNote = includePickup ? `\n- Indicate if curbside pickup is available and the pickup total.` : '';
 
-Items: ${itemsList}
+            // Batch stores into groups of 3 to avoid LLM JSON size limits
+            const BATCH_SIZE = 3;
+            const batches = [];
+            for (let i = 0; i < aiStores.length; i += BATCH_SIZE) {
+              batches.push(aiStores.slice(i, i + BATCH_SIZE));
+            }
+
+            return Promise.all(batches.map(batch => {
+              const batchStoreNames = batch.map(k => ALL_STORES.find(s => s.key === k)?.name || k);
+              const batchProperties = {};
+              batch.forEach(key => { batchProperties[key] = storeSchema(includePickup, includeDelivery); });
+              return base44.integrations.Core.InvokeLLM({
+                prompt: `You are a grocery price comparison assistant. Provide realistic estimated prices from these stores: ${batchStoreNames.join(', ')}.
+
+Items:
+${itemsList}
 
 For each store:
 - Provide the best matching product with a realistic in-store price
@@ -168,16 +174,15 @@ For each store:
 - Mark unavailable items as not in stock${pickupNote}${deliveryNote}
 
 Store pricing tendencies:
-- Aldi & Walmart: lowest prices, store brands
-- Safeway, Albertsons: mid-range, frequent sales
-- Whole Foods, Bristol Farms, Gelson's, The Fresh Market: premium
-- Trader Joe's: private-label, competitive
-- H-E-B, Publix: strong regional value
-- Amazon Fresh: slightly premium`,
-              add_context_from_internet: true,
-              model: 'gemini_3_flash',
-              response_json_schema: { type: 'object', properties: storeProperties },
-            });
+- Aldi & Walmart: lowest prices
+- Safeway, Albertsons: mid-range
+- Whole Foods, The Fresh Market: premium
+- Trader Joe's, H-E-B, Publix: competitive`,
+                add_context_from_internet: true,
+                model: 'gemini_3_flash',
+                response_json_schema: { type: 'object', properties: batchProperties },
+              });
+            })).then(results => Object.assign({}, ...results));
           })()
         : Promise.resolve({}),
     ]);
