@@ -70,7 +70,7 @@ export default function Onboarding() {
               <div className="w-6 h-6 rounded-full bg-emerald-400 border-2 border-white" />
               <div className="w-6 h-6 rounded-full bg-amber-400 border-2 border-white" />
             </div>
-            <span className="text-sm font-semibold text-slate-700">11,483 users saving money</span>
+            <span className="text-sm font-semibold text-slate-700">214 users saving money</span>
             <span className="text-base">🎉</span>
           </div>
         </div>
