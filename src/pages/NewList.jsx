@@ -11,6 +11,7 @@ import EmptyState from '@/components/grocery/EmptyState';
 import ShoppingMethodPicker from '@/components/grocery/ShoppingMethodPicker';
 import SavedItemsDrawer from '@/components/grocery/SavedItemsDrawer';
 import TemplatesDrawer from '@/components/grocery/TemplatesDrawer';
+import PastListsDrawer from '@/components/grocery/PastListsDrawer';
 
 export default function NewList() {
   const navigate = useNavigate();
@@ -90,7 +91,7 @@ export default function NewList() {
           )}
         </div>
 
-        {/* Saved Items & Templates */}
+        {/* Saved Items, Templates & Past Lists */}
         <div className="flex flex-col gap-3">
           <SavedItemsDrawer onAddItem={addItem} />
           <TemplatesDrawer
@@ -101,6 +102,13 @@ export default function NewList() {
               setItems(template.items || []);
               if (!name.trim()) setName(template.name);
               if (template.shopping_method) setShoppingMethod(template.shopping_method);
+            }}
+          />
+          <PastListsDrawer
+            onLoadList={(list) => {
+              setItems(list.items || []);
+              if (!name.trim()) setName(list.name);
+              if (list.shopping_method) setShoppingMethod(list.shopping_method);
             }}
           />
         </div>
