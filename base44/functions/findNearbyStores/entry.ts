@@ -2,18 +2,16 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 
 const GOOGLE_API_KEY = Deno.env.get("GOOGLE_PLACES_API_KEY");
 
-// Map of grocery store brand names to our store keys
+// Grocery supermarkets ONLY — no pharmacies, no general merchandise
 const STORE_NAME_MAP = [
   { key: 'kroger',          patterns: ['kroger'] },
-  { key: 'walmart',         patterns: ['walmart'] },
-  { key: 'amazon',          patterns: ['amazon fresh', 'amazon go'] },
+  { key: 'walmart',         patterns: ['walmart supercenter', 'walmart neighborhood market'] },
+  { key: 'amazon',          patterns: ['amazon fresh'] },
   { key: 'aldi',            patterns: ['aldi'] },
   { key: 'trader_joes',     patterns: ["trader joe"] },
   { key: 'whole_foods',     patterns: ['whole foods'] },
   { key: 'target',          patterns: ['target'] },
   { key: 'costco',          patterns: ['costco'] },
-  { key: 'cvs',             patterns: ['cvs pharmacy', 'cvs/pharmacy'] },
-  { key: 'walgreens',       patterns: ['walgreens'] },
   { key: 'publix',          patterns: ['publix'] },
   { key: 'safeway',         patterns: ['safeway'] },
   { key: 'albertsons',      patterns: ['albertsons'] },
@@ -21,7 +19,7 @@ const STORE_NAME_MAP = [
   { key: 'meijer',          patterns: ['meijer'] },
   { key: 'hyvee',           patterns: ['hy-vee', 'hyvee'] },
   { key: 'fred_meyer',      patterns: ['fred meyer'] },
-  { key: 'fresh_market',    patterns: ['fresh market'] },
+  { key: 'fresh_market',    patterns: ['the fresh market'] },
   { key: 'wegmans',         patterns: ['wegmans'] },
   { key: 'harris_teeter',   patterns: ['harris teeter'] },
   { key: 'food_lion',       patterns: ['food lion'] },
@@ -32,7 +30,6 @@ const STORE_NAME_MAP = [
   { key: 'market_basket',   patterns: ['market basket'] },
   { key: 'smiths',          patterns: ["smith's food", "smiths food"] },
   { key: 'acme',            patterns: ['acme markets', 'acme market'] },
-  { key: 'iga',             patterns: [' iga '] },
   { key: 'king_soopers',    patterns: ['king soopers'] },
   { key: 'city_market',     patterns: ['city market'] },
   { key: 'rouses',          patterns: ['rouses'] },
@@ -41,10 +38,8 @@ const STORE_NAME_MAP = [
   { key: 'gelsons',         patterns: ["gelson's", 'gelsons'] },
   { key: 'frys',            patterns: ["fry's food", "frys food"] },
   { key: 'piggly_wiggly',   patterns: ['piggly wiggly'] },
-  { key: 'hornbachers',     patterns: ["hornbacher"] },
   { key: 'big_y',           patterns: ['big y'] },
   { key: 'stew_leonards',   patterns: ["stew leonard"] },
-  { key: 'detweilers',      patterns: ["detweiler"] },
   { key: 'foodland',        patterns: ['foodland'] },
   { key: 'kta',             patterns: ['kta super'] },
   { key: 'winn_dixie',      patterns: ['winn-dixie', 'winn dixie'] },
@@ -62,12 +57,43 @@ const STORE_NAME_MAP = [
   { key: 'giant_food',      patterns: ['giant food'] },
   { key: 'giant_martin',    patterns: ["giant martin", "martin's food"] },
   { key: 'shoppers',        patterns: ['shoppers food'] },
+  { key: 'hornbachers',     patterns: ["hornbacher"] },
+  { key: 'iga',             patterns: [' iga '] },
 ];
 
-function matchStoreKey(name) {
+// Terms that indicate a place is NOT a grocery store
+const NOT_GROCERY_TERMS = [
+  'inn', 'suites', 'hotel', 'motel', 'storage', 'self-storage',
+  'electrical', 'inspection', 'realty', 'real estate',
+  'insurance', 'financial', 'law ', 'attorney', 'dental', 'clinic',
+  'contracting', 'construction', 'plumbing', 'hvac',
+  'apartments', 'apartment', 'memorial', 'play area', 'park',
+  'wine shop', 'restaurant', 'cafe', 'fuel', 'gas station',
+  'auto ', 'tire ', 'optical', 'vision center', 'photo',
+  'florist', 'bank', 'credit union', 'church', 'school',
+  '& briggs', '+ briggs', 'architecture', 'design firm',
+  'industrial at ', // catches "Industrial at Safeway" (an address)
+];
+
+// These stores require the place to have grocery/supermarket in its Google types
+const REQUIRE_GROCERY_TYPE_KEYS = new Set(['hannaford', 'safeway', 'acme', 'giant_food', 'giant_martin']);
+
+function isLikelyGroceryStore(name) {
   const lower = name.toLowerCase();
+  return !NOT_GROCERY_TERMS.some(term => lower.includes(term));
+}
+
+function matchStoreKey(name, types = []) {
+  if (!isLikelyGroceryStore(name)) return null;
+  const lower = name.toLowerCase();
+  const hasGroceryType = types.some(t => ['grocery_or_supermarket', 'supermarket', 'food', 'store'].includes(t));
+
   for (const { key, patterns } of STORE_NAME_MAP) {
-    if (patterns.some(p => lower.includes(p))) return key;
+    if (patterns.some(p => lower.includes(p))) {
+      // For ambiguous store names, require Google to classify it as a grocery/store type
+      if (REQUIRE_GROCERY_TYPE_KEYS.has(key) && !hasGroceryType) return null;
+      return key;
+    }
   }
   return null;
 }
@@ -89,31 +115,31 @@ function haversineKm(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-// ~25 miles in km
-const RADIUS_KM = 40;
+// Strictly 25 miles = 40.23 km
+const RADIUS_KM = 40.23;
 const RADIUS_M = RADIUS_KM * 1000;
 
-// All chains to explicitly text-search for
+// Grocery supermarket chains only — no pharmacies, no general merchandise
 const CHAINS_TO_SEARCH = [
-  'Walmart Supercenter', 'Kroger', 'H-E-B', 'Publix', 'Safeway', 'Albertsons',
-  'Meijer', 'Hy-Vee', 'Wegmans', 'Food Lion', 'Harris Teeter', 'Giant Eagle',
-  'Stop & Shop', 'Jewel-Osco', 'Hannaford', 'Market Basket', 'King Soopers',
-  'Stater Bros', 'Fred Meyer', 'Piggly Wiggly', 'Rouses Market', 'Amazon Fresh',
-  'Target', 'Costco', 'CVS Pharmacy', 'Walgreens', 'ALDI', "Trader Joe's",
-  'Whole Foods Market', 'The Fresh Market',
-  'Winn-Dixie', "Lowe's Foods", 'Vons', 'Pavilions', 'Smart & Final',
-  "Raley's", 'Save Mart', 'Randalls', 'Tom Thumb', 'Schnucks',
-  'ShopRite', 'Giant Food', "Martin's Food", 'Shoppers Food',
+  'Walmart Supercenter', 'Walmart Neighborhood Market', 'Kroger', 'H-E-B', 'Publix',
+  'Safeway', 'Albertsons', 'Meijer', 'Hy-Vee', 'Wegmans', 'Food Lion',
+  'Harris Teeter', 'Giant Eagle', 'Stop & Shop', 'Jewel-Osco', 'Hannaford',
+  'Market Basket', 'King Soopers', 'Stater Bros', 'Fred Meyer', 'Piggly Wiggly',
+  'Rouses Market', 'Amazon Fresh', 'Target', 'Costco', 'ALDI', "Trader Joe's",
+  'Whole Foods Market', 'The Fresh Market', 'Winn-Dixie', "Lowe's Foods",
+  'Vons', 'Pavilions', 'Smart & Final', "Raley's", 'Save Mart', 'Randalls',
+  'Tom Thumb', 'Schnucks', 'ShopRite', 'Giant Food', "Martin's Food",
+  'Shoppers Food', 'Dierbergs',
 ];
 
 async function searchGroceryStores(lat, lng) {
-  // 1. General nearby grocery search
+  // General nearby grocery/supermarket search
   const nearbyUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${RADIUS_M}&type=grocery_or_supermarket&key=${GOOGLE_API_KEY}`;
   const nearbyRes = await fetch(nearbyUrl);
   const nearbyData = await nearbyRes.json();
   const nearbyResults = nearbyData.results || [];
 
-  // 2. Targeted text searches for all known chains
+  // Targeted text searches for known chains
   const textSearches = CHAINS_TO_SEARCH.map(chain => {
     const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(chain)}&location=${lat},${lng}&radius=${RADIUS_M}&key=${GOOGLE_API_KEY}`;
     return fetch(url).then(r => r.json()).then(d => d.results || []).catch(() => []);
@@ -141,10 +167,9 @@ Deno.serve(async (req) => {
 
   const foundKeys = new Set();
   for (const place of places) {
-    const key = matchStoreKey(place.name);
+    const key = matchStoreKey(place.name, place.types || []);
     if (!key) continue;
 
-    // Strictly enforce distance — Google text search treats radius as a BIAS, not a hard limit
     const plat = place.geometry?.location?.lat;
     const plng = place.geometry?.location?.lng;
 
@@ -154,12 +179,12 @@ Deno.serve(async (req) => {
     }
 
     const distKm = haversineKm(lat, lng, plat, plng);
+    const distMi = distKm * 0.621371;
     if (distKm > RADIUS_KM) {
-      console.log(`SKIP too-far (${distKm.toFixed(1)}km): ${place.name} [${key}]`);
+      console.log(`SKIP too-far (${distMi.toFixed(1)}mi): ${place.name} [${key}]`);
       continue;
     }
 
-    console.log(`FOUND (${distKm.toFixed(1)}km): ${place.name} → ${key}`);
     foundKeys.add(key);
   }
 
