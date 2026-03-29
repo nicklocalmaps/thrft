@@ -163,21 +163,23 @@ export default function ListDetail() {
               const batchProperties = {};
               batch.forEach(key => { batchProperties[key] = storeSchema(includePickup, includeDelivery); });
               return base44.integrations.Core.InvokeLLM({
-                prompt: `You are a grocery price comparison assistant. Provide realistic estimated prices from these stores: ${batchStoreNames.join(', ')}.
+              prompt: `You are a grocery price comparison assistant. Provide realistic estimated prices from these stores: ${batchStoreNames.join(', ')}.
 
-Items:
-${itemsList}
+              Items:
+              ${itemsList}
 
-For each store:
-- Provide the best matching product with a realistic in-store price
-- Calculate the instore_total as the sum of all item prices
-- Mark unavailable items as not in stock${pickupNote}${deliveryNote}
+              CRITICAL RULES:
+              - ALWAYS find a product for every item — never leave an item out or mark it as unavailable unless the store literally has zero comparable products in that entire category.
+              - If the exact branded product is not carried, substitute the closest store-brand or generic equivalent (e.g. if Coca-Cola isn't sold, use a store-brand cola; if Frosted Flakes isn't sold, use a frosted corn flakes equivalent).
+              - Set in_stock=true for substitutes. Use the substitute's product_name to make it clear it's a substitute (e.g. "Trader Joe's Cola (sub for Coca-Cola)").
+              - Calculate instore_total as the sum of ALL items including substitutes — every item must be represented.
+              - Only set in_stock=false if the store has absolutely no comparable product in that category.${pickupNote}${deliveryNote}
 
-Store pricing tendencies:
-- Aldi & Walmart: lowest prices
-- Safeway, Albertsons: mid-range
-- Whole Foods, The Fresh Market: premium
-- Trader Joe's, H-E-B, Publix: competitive`,
+              Store pricing tendencies:
+              - Aldi & Walmart: lowest prices
+              - Safeway, Albertsons: mid-range
+              - Whole Foods, The Fresh Market: premium
+              - Trader Joe's, H-E-B, Publix: competitive`,
                 add_context_from_internet: true,
                 model: 'gemini_3_flash',
                 response_json_schema: { type: 'object', properties: batchProperties },
@@ -220,7 +222,7 @@ Store pricing tendencies:
         const props = {};
         props[storeKey] = storeSchema(includePickup, includeDelivery);
         const fallback = await base44.integrations.Core.InvokeLLM({
-          prompt: `Provide realistic estimated grocery prices for ${storeName}. Items: ${itemsList}. Return instore_total and item prices.`,
+          prompt: `Provide realistic estimated grocery prices for ${storeName}. Items: ${itemsList}. ALWAYS find a substitute for any item not carried — use the closest store-brand or generic equivalent, mark it in_stock=true, and include it in the instore_total. Never leave an item out. Return instore_total and item prices.`,
           model: 'gemini_3_flash',
           response_json_schema: { type: 'object', properties: props },
         });
