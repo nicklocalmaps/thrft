@@ -72,7 +72,9 @@ export default function StoreCard({ storeKey, storeName, storeColor = 'blue', st
       <div className={`h-1.5 bg-gradient-to-r ${colors.bar}`} />
 
       <div className="p-5">
-        <h3 className="text-base font-bold text-slate-900 mb-1">{storeName}</h3>
+        <h3 className="text-base font-bold text-slate-900 mb-1">
+          {storeName}{availableCount < totalItems ? <span className="text-amber-500">*</span> : ''}
+        </h3>
 
         <div className="flex items-center gap-1.5 text-xs text-slate-900 mb-3">
           <span className="text-emerald-600 font-medium">{availableCount}</span>/{totalItems} items available
@@ -112,13 +114,13 @@ export default function StoreCard({ storeKey, storeName, storeColor = 'blue', st
               }`}
             >
               <div className="flex-1 min-w-0">
-                <p className={`font-medium truncate ${item.in_stock ? 'text-slate-700' : 'text-slate-400 line-through'}`}>
-                  {item.item_name}
+                <p className={`font-medium truncate ${item.in_stock ? 'text-slate-700' : 'text-red-500'}`}>
+                  {item.item_name}{!item.in_stock ? '*' : ''}
                 </p>
                 <p className="text-slate-900 truncate">{item.product_name}</p>
               </div>
               <div className="ml-2 shrink-0 text-right">
-                <span className={`font-semibold block ${item.in_stock ? 'text-slate-900' : 'text-slate-400'}`}>
+                <span className={`font-semibold block ${item.in_stock ? 'text-slate-900' : 'text-red-400'}`}>
                   {item.in_stock ? `$${item.price?.toFixed(2)}` : 'N/A'}
                 </span>
                 {item.in_stock && item.unit_price && (
@@ -128,6 +130,21 @@ export default function StoreCard({ storeKey, storeName, storeColor = 'blue', st
             </div>
           ))}
         </div>
+
+        {/* Out of stock footnote */}
+        {availableCount < totalItems && (
+          <div className="mt-2 pt-2 border-t border-amber-100">
+            <p className="text-xs text-amber-600 font-medium mb-1">* Item Not In Stock:</p>
+            <ul className="space-y-0.5">
+              {items.filter(i => !i.in_stock).map((item, i) => (
+                <li key={i} className="text-xs text-amber-600 flex items-center gap-1">
+                  <span className="w-1 h-1 rounded-full bg-amber-400 shrink-0" />
+                  {item.item_name} — not carried at this store
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </motion.div>
   );
