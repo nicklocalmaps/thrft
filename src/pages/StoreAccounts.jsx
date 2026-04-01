@@ -4,7 +4,7 @@ import { ALL_STORES, COLOR_MAP } from '@/lib/storeConfig';
 import { getStoreLink } from '@/lib/storeLinks';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ExternalLink, Smartphone, Check, CreditCard, Edit2, X, MapPin } from 'lucide-react';
+import { ExternalLink, Smartphone, Check, CreditCard, Edit2, X, MapPin, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ShoppingMethodPicker from '@/components/grocery/ShoppingMethodPicker';
 
@@ -19,6 +19,8 @@ export default function StoreAccounts() {
   const [editingZip, setEditingZip] = useState(false);
   const [zipValue, setZipValue] = useState('');
   const [savingZip, setSavingZip] = useState(false);
+  const [refreshingStores, setRefreshingStores] = useState(false);
+  const [refreshMessage, setRefreshMessage] = useState('');
 
   useEffect(() => {
     base44.auth.me().then(u => {
@@ -36,6 +38,23 @@ export default function StoreAccounts() {
     setUser(prev => ({ ...prev, zip_code: zipValue }));
     setSavingZip(false);
     setEditingZip(false);
+  };
+
+  const refreshNearbyStores = async () => {
+    const zip = user?.zip_code;
+    if (!zip) return;
+    setRefreshingStores(true);
+    setRefreshMessage('');
+    const response = await base44.functions.invoke('findNearbyStores', { zip_code: zip });
+    const nearbyKeys = response.data?.store_keys || [];
+    if (nearbyKeys.length > 0) {
+      await base44.auth.updateMe({ favorite_stores: nearbyKeys });
+      setUser(prev => ({ ...prev, favorite_stores: nearbyKeys }));
+      setRefreshMessage(`Found ${nearbyKeys.length} stores near ${zip}`);
+    } else {
+      setRefreshMessage('No stores found — try a different zip code.');
+    }
+    setRefreshingStores(false);
   };
 
   const saveShoppingMethod = async (method) => {
@@ -113,6 +132,24 @@ export default function StoreAccounts() {
             </div>
           )}
         </div>
+        {!editingZip && user?.zip_code && (
+          <div className="mt-3 pt-3 border-t border-slate-50 flex items-center justify-between">
+            <p className="text-xs text-slate-400">Stores are cached from your last detection. Refresh to find new ones.</p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={refreshNearbyStores}
+              disabled={refreshingStores}
+              className="h-8 rounded-lg text-xs gap-1.5 border-slate-200 shrink-0 ml-3"
+            >
+              <RefreshCw className={`w-3 h-3 ${refreshingStores ? 'animate-spin' : ''}`} />
+              {refreshingStores ? 'Detecting...' : 'Refresh Nearby Stores'}
+            </Button>
+          </div>
+        )}
+        {refreshMessage && (
+          <p className="text-xs text-emerald-600 font-medium mt-2">{refreshMessage}</p>
+        )}
       </div>
 
       {/* Shopping Method Preference */}
