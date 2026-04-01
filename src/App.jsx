@@ -14,6 +14,7 @@ import NewList from '@/pages/NewList';
 import ListDetail from '@/pages/ListDetail';
 import Onboarding from '@/pages/Onboarding';
 import StoreAccounts from '@/pages/StoreAccounts';
+import SearchProducts from '@/pages/SearchProducts';
 
 const OnboardingGate = () => {
   const [checking, setChecking] = React.useState(true);
@@ -67,6 +68,7 @@ const AuthenticatedApp = () => {
         <Route path="/NewList" element={<NewList />} />
         <Route path="/ListDetail" element={<ListDetail />} />
         <Route path="/StoreAccounts" element={<StoreAccounts />} />
+        <Route path="/SearchProducts" element={<SearchProducts />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

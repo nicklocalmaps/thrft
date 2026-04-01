@@ -26,6 +26,28 @@ export default function ListDetail() {
 
   const [comparing, setComparing] = useState(false);
   const [localItems, setLocalItems] = useState(null);
+
+  // Handle item passed back from SearchProducts page
+  useEffect(() => {
+    const addItemParam = urlParams.get('addItem');
+    if (addItemParam) {
+      const item = JSON.parse(decodeURIComponent(addItemParam));
+      // Remove param from URL without reload
+      const newUrl = `/ListDetail?id=${listId}`;
+      window.history.replaceState({}, '', newUrl);
+      // Add item once list is loaded
+      const doAdd = async () => {
+        const lists = await import('@/api/base44Client').then(m => m.base44.entities.GroceryList.filter({ id: listId }));
+        const currentList = lists[0];
+        const currentItems = currentList?.items || [];
+        const newItems = [...currentItems, item];
+        setLocalItems(newItems);
+        await import('@/api/base44Client').then(m => m.base44.entities.GroceryList.update(listId, { items: newItems }));
+        queryClient.invalidateQueries({ queryKey: ['grocery-list', listId] });
+      };
+      doAdd();
+    }
+  }, []);
   const [showStorePicker, setShowStorePicker] = useState(false);
   const [selectedStores, setSelectedStores] = useState([]);
   const [shoppingMode, setShoppingMode] = useState(false);
@@ -329,7 +351,7 @@ export default function ListDetail() {
 
       {/* Add Item */}
       <div className="mb-4">
-        <AddItemForm onAdd={addItem} />
+        <AddItemForm onAdd={addItem} listId={listId} />
       </div>
 
       {/* Items List */}

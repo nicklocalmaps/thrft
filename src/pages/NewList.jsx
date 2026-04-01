@@ -22,11 +22,19 @@ export default function NewList() {
   const [showMethodPicker, setShowMethodPicker] = useState(false);
   const [nameError, setNameError] = useState(false);
 
-  // Load user's saved preference
+  // Load user's saved preference + handle item passed back from SearchProducts
   useEffect(() => {
     base44.auth.me().then(user => {
       if (user?.shopping_method) setShoppingMethod(user.shopping_method);
     }).catch(() => {});
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const addItemParam = urlParams.get('addItem');
+    if (addItemParam) {
+      const item = JSON.parse(decodeURIComponent(addItemParam));
+      setItems(prev => [...prev, item]);
+      window.history.replaceState({}, '', '/NewList');
+    }
   }, []);
 
   const addItem = (item) => setItems(prev => [...prev, item]);

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Loader2, Search } from 'lucide-react';
+import { Plus, Loader2, Search, ExternalLink } from 'lucide-react';
 
 async function searchOpenFoodFacts(query) {
   const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=6&fields=product_name,brands,image_front_small_url,quantity`;
@@ -10,7 +11,8 @@ async function searchOpenFoodFacts(query) {
   return (data.products || []).filter(p => p.product_name);
 }
 
-export default function AddItemForm({ onAdd }) {
+export default function AddItemForm({ onAdd, listId }) {
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [suggestions, setSuggestions] = useState([]);
@@ -104,6 +106,21 @@ export default function AddItemForm({ onAdd }) {
           onChange={(e) => setQuantity(e.target.value)}
           className="w-20 h-12 rounded-xl border-slate-200 bg-white text-center text-base focus-visible:ring-blue-400"
         />
+        <Button
+          type="button"
+          variant="outline"
+          title="Browse product search"
+          onClick={() => {
+            const q = name.trim();
+            const params = new URLSearchParams();
+            if (q) params.set('q', q);
+            if (listId) params.set('listId', listId);
+            navigate(`/SearchProducts?${params.toString()}`);
+          }}
+          className="h-12 px-3 rounded-xl border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-300"
+        >
+          <ExternalLink className="w-5 h-5" />
+        </Button>
         <Button
           type="submit"
           className="h-12 px-5 rounded-xl shadow-md shadow-blue-200 transition-all"
