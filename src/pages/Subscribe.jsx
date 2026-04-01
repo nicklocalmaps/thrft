@@ -74,14 +74,7 @@ export default function Subscribe() {
             className="w-full h-13 rounded-xl text-base font-semibold shadow-lg shadow-blue-200 gap-2"
             style={{ backgroundColor: '#4181ed' }}
           >
-            {loading ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-              <>
-                <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" className="w-5 h-5 rounded-md object-cover" />
-                Start Free Trial
-              </>
-            )}
+            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Start Free Trial'}
           </Button>
 
           <p className="text-xs text-slate-400 mt-4">
