@@ -1,0 +1,59 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "user"
+      ],
+      "default": "user"
+    },
+    "onboarding_complete": {
+      "type": "boolean",
+      "default": false
+    },
+    "zip_code": {
+      "type": "string"
+    },
+    "favorite_stores": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "shopping_method": {
+      "type": "string",
+      "enum": [
+        "instore",
+        "pickup",
+        "delivery",
+        "all"
+      ],
+      "default": "all"
+    },
+    "loyalty_cards": {
+      "type": "object"
+    },
+    "stripe_customer_id": {
+      "type": "string"
+    },
+    "subscription_status": {
+      "type": "string",
+      "enum": [
+        "trialing",
+        "active",
+        "inactive",
+        "past_due"
+      ]
+    },
+    "subscription_id": {
+      "type": "string"
+    },
+    "trial_end": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

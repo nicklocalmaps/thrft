@@ -15,6 +15,8 @@ import ListDetail from '@/pages/ListDetail';
 import Onboarding from '@/pages/Onboarding';
 import StoreAccounts from '@/pages/StoreAccounts';
 import SearchProducts from '@/pages/SearchProducts';
+import Subscribe from '@/pages/Subscribe';
+import SubscriptionGate from '@/components/subscription/SubscriptionGate';
 
 const OnboardingGate = () => {
   const [checking, setChecking] = React.useState(true);
@@ -62,13 +64,14 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route path="/Onboarding" element={<Onboarding />} />
+      <Route path="/Subscribe" element={<Subscribe />} />
       <Route element={<AppLayout />}>
         <Route path="/" element={<OnboardingGate />} />
-        <Route path="/Home" element={<Home />} />
-        <Route path="/NewList" element={<NewList />} />
-        <Route path="/ListDetail" element={<ListDetail />} />
-        <Route path="/StoreAccounts" element={<StoreAccounts />} />
-        <Route path="/SearchProducts" element={<SearchProducts />} />
+        <Route path="/Home" element={<SubscriptionGate><Home /></SubscriptionGate>} />
+        <Route path="/NewList" element={<SubscriptionGate><NewList /></SubscriptionGate>} />
+        <Route path="/ListDetail" element={<SubscriptionGate><ListDetail /></SubscriptionGate>} />
+        <Route path="/StoreAccounts" element={<SubscriptionGate><StoreAccounts /></SubscriptionGate>} />
+        <Route path="/SearchProducts" element={<SubscriptionGate><SearchProducts /></SubscriptionGate>} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
