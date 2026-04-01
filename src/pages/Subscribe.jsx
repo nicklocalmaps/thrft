@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Check, Loader2, ShoppingCart, Star } from 'lucide-react';
+import { Check, Loader2, Star } from 'lucide-react';
 
 const FEATURES = [
   'Unlimited grocery lists',
@@ -78,7 +78,7 @@ export default function Subscribe() {
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
               <>
-                <ShoppingCart className="w-5 h-5" />
+                <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" className="w-5 h-5 rounded-md object-cover" />
                 Start Free Trial
               </>
             )}
