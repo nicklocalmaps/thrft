@@ -77,9 +77,9 @@ export default function Landing() {
         <div className="max-w-5xl mx-auto text-center">
           <motion.div variants={fade} initial="hidden" animate="show">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
-              <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-blue-100 text-blue-700 font-semibold text-center leading-snug max-w-[220px]">
+              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-blue-100 text-blue-700 font-semibold text-center leading-snug">
                 <Star className="w-4 h-4 fill-blue-500 shrink-0" />
-                <span className="text-sm">Compare prices across top grocery stores</span>
+                <span className="text-sm">Compare prices across<br />top grocery stores</span>
               </div>
               <div className="inline-flex items-center px-5 py-2.5 rounded-full bg-blue-600 text-white font-semibold text-sm whitespace-nowrap">
                 In-Store | Curbside Pickup | Delivery
