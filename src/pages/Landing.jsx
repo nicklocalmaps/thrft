@@ -7,10 +7,12 @@ import { motion } from 'framer-motion';
 const THRFT_BLUE = '#4181ed';
 
 const STORE_LOGOS = [
-  { name: 'Walmart', emoji: '🔵' },
-  { name: 'Kroger', emoji: '🔴' },
-  { name: 'Whole Foods', emoji: '🟢' },
-  { name: 'Amazon Fresh', emoji: '🟠' },
+  { name: 'Walmart', color: '#0071CE' },
+  { name: 'Kroger', color: '#CC0000' },
+  { name: 'Whole Foods', color: '#00704A' },
+  { name: 'Amazon Fresh', color: '#FF9900' },
+  { name: "Trader Joe's", color: '#CC0000' },
+  { name: 'Shipt', color: '#E31837' },
 ];
 
 const PAIN_POINTS = [
@@ -74,8 +76,9 @@ export default function Landing() {
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-slate-50 pt-20 pb-24 px-5">
         <div className="max-w-5xl mx-auto text-center">
           <motion.div variants={fade} initial="hidden" animate="show">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold mb-6">
-              <Star className="w-3.5 h-3.5 fill-blue-500" /> Compare prices across top grocery stores
+            <div className="inline-flex flex-col items-center gap-1 px-5 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold mb-6">
+              <span className="flex items-center gap-2"><Star className="w-3.5 h-3.5 fill-blue-500" /> Compare prices across top grocery stores</span>
+              <span className="text-xs font-medium text-blue-500">In-Store | Curbside Pickup | Delivery</span>
             </div>
             <h1 className="text-5xl sm:text-6xl font-extrabold text-slate-900 leading-tight tracking-tight mb-5">
               Stop Overpaying<br className="hidden sm:block" /> for Groceries
@@ -83,13 +86,30 @@ export default function Landing() {
             <p className="text-xl text-slate-500 max-w-xl mx-auto mb-10">
               One list. Every store. Instantly find the lowest price across nearby grocery stores.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button onClick={handleCTA} className="h-14 px-8 text-base font-bold rounded-2xl shadow-xl shadow-blue-200 bg-white text-blue-600 border-2 border-blue-200 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all">
-                Start Saving Now <ChevronRight className="w-5 h-5 ml-1" />
+
+            {/* Pricing card inline in hero */}
+            <div className="max-w-sm mx-auto bg-white rounded-3xl border-2 border-blue-200 shadow-xl shadow-blue-100 p-8 mb-4">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-sm font-semibold mb-5">
+                <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" /> 30-Day Free Trial
+              </div>
+              <div className="mb-6">
+                <p className="text-5xl font-extrabold text-slate-900">$1.99<span className="text-xl font-semibold text-slate-400">/mo</span></p>
+                <p className="text-sm text-slate-400 mt-1">after your free trial</p>
+              </div>
+              <ul className="space-y-3 text-left mb-8">
+                {['Unlimited price comparisons', 'Unlimited grocery lists', 'Full store access', 'In-store, pickup & delivery'].map((f) => (
+                  <li key={f} className="flex items-center gap-3 text-sm text-slate-700">
+                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                      <Check className="w-3 h-3 text-emerald-600" strokeWidth={3} />
+                    </div>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Button onClick={handleCTA} className="w-full h-12 rounded-xl text-base font-bold shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
+                Start Your Free Trial
               </Button>
-              <Button onClick={handleCTA} className="h-14 px-8 text-base font-bold rounded-2xl shadow-xl shadow-blue-200 bg-white text-blue-600 border-2 border-blue-200 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all">
-                Try It Free for 30 Days
-              </Button>
+              <p className="text-xs text-slate-400 mt-3">No charge for 30 days. Cancel anytime.</p>
             </div>
           </motion.div>
 
@@ -114,12 +134,16 @@ export default function Landing() {
           </motion.div>
 
           {/* Trust logos */}
-          <div className="flex items-center justify-center gap-6 mt-10 flex-wrap">
-            {STORE_LOGOS.map((s) => (
-              <div key={s.name} className="flex items-center gap-1.5 text-sm text-slate-400 font-medium">
-                <span className="text-base">{s.emoji}</span>{s.name}
-              </div>
-            ))}
+          <div className="flex flex-col items-center mt-10 gap-2">
+            <div className="flex items-center justify-center gap-5 flex-wrap">
+              {STORE_LOGOS.map((s) => (
+                <div key={s.name} className="flex items-center gap-1.5 text-sm text-slate-400 font-medium">
+                  <span className="w-3 h-3 rounded-full shrink-0 inline-block" style={{ backgroundColor: s.color }} />
+                  {s.name}
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-slate-400 font-medium mt-1">In-Store | Curbside Pickup | Delivery</p>
           </div>
         </div>
       </section>
