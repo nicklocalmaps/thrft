@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Loader2, Check, ShoppingCart, ArrowRight, Star } from 'lucide-react';
+import { MapPin, Loader2, Check, ShoppingCart, ArrowRight, Star, Search } from 'lucide-react';
 import { ALL_STORES } from '@/lib/storeConfig';
 
 export default function Onboarding() {
@@ -15,6 +15,7 @@ export default function Onboarding() {
   const [nearbyStores, setNearbyStores] = useState([]);
   const [selectedStores, setSelectedStores] = useState([]);
   const [saving, setSaving] = useState(false);
+  const [storeQuery, setStoreQuery] = useState('');
   const [userCount, setUserCount] = useState(11483);
 
   useEffect(() => {
@@ -160,8 +161,20 @@ Let's find your favorite grocery stores so we can compare prices for your shoppi
                 We found <strong>{nearbyStores.length} stores</strong> within ~25 miles. Check the ones you shop at — they'll be pre-selected on all your lists.
               </p>
 
-              <div className="space-y-2 max-h-72 overflow-y-auto mb-6 pr-1">
-                {nearbyStores.map((store, i) => {
+              {/* Search */}
+              <div className="relative mb-3">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Search stores..."
+                  value={storeQuery}
+                  onChange={e => setStoreQuery(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white"
+                />
+              </div>
+
+              <div className="space-y-2 max-h-64 overflow-y-auto mb-6 pr-1">
+                {nearbyStores.filter(s => !storeQuery.trim() || s.name.toLowerCase().includes(storeQuery.toLowerCase())).map((store, i) => {
                 const isSelected = selectedStores.includes(store.key);
                 return (
                   <motion.button
