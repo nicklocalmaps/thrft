@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Check, Loader2, Star } from 'lucide-react';
+import { Check, Loader2, Star, AlertCircle } from 'lucide-react';
 
 const FEATURES = [
   'Unlimited grocery lists',
@@ -12,45 +13,75 @@ const FEATURES = [
   'Shopping mode & item checking',
 ];
 
+const TIMEOUT_SECONDS = 15;
+
 export default function Subscribe() {
   const [loading, setLoading] = useState(false);
-  const [iframeBlocked, setIframeBlocked] = useState(false);
+  const [countdown, setCountdown] = useState(null);
   const [error, setError] = useState(null);
+  const [timedOut, setTimedOut] = useState(false);
+  const timerRef = useRef(null);
+  const countdownRef = useRef(null);
 
   // Pre-warm the backend function on page load to avoid cold start delay
   useEffect(() => {
     base44.functions.invoke('createCheckoutSession', { warm: true }).catch(() => {});
+    return () => {
+      clearTimeout(timerRef.current);
+      clearInterval(countdownRef.current);
+    };
   }, []);
 
-  const handleSubscribe = async () => {
-    // Block if running inside iframe (preview mode)
-    if (window.self !== window.top) {
-      setIframeBlocked(true);
-      return;
-    }
-
-    // Track trial signup conversion
-    if (window.gtag) {
-      window.gtag('event', 'begin_checkout', {
-        event_category: 'subscription',
-        event_label: 'free_trial_signup',
-        value: 1.99,
-        currency: 'USD',
+  const startCountdown = () => {
+    setCountdown(TIMEOUT_SECONDS);
+    countdownRef.current = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          clearInterval(countdownRef.current);
+          return 0;
+        }
+        return prev - 1;
       });
-    }
+    }, 1000);
+  };
 
+  const stopCountdown = () => {
+    clearTimeout(timerRef.current);
+    clearInterval(countdownRef.current);
+    setCountdown(null);
+  };
+
+  const handleSubscribe = async () => {
+    setError(null);
+    setTimedOut(false);
     setLoading(true);
+    startCountdown();
+
+    // Set a hard timeout
+    timerRef.current = setTimeout(() => {
+      stopCountdown();
+      setLoading(false);
+      setTimedOut(true);
+    }, TIMEOUT_SECONDS * 1000);
+
     try {
       const returnUrl = window.location.origin + '/Home';
       const res = await base44.functions.invoke('createCheckoutSession', { return_url: returnUrl });
+      clearTimeout(timerRef.current);
+      stopCountdown();
+
       if (res.data?.url) {
-        window.location.href = res.data.url;
+        // Open in new tab to avoid iframe/redirect blocking issues
+        window.open(res.data.url, '_blank');
+        setLoading(false);
       } else {
-        setError('Could not start checkout. Please try again.');
+        setError('Could not start checkout. Please try again or contact us.');
         setLoading(false);
       }
     } catch (err) {
-      setError('Something went wrong. Please try again.');
+      clearTimeout(timerRef.current);
+      stopCountdown();
+      setError('Something went wrong connecting to our payment processor. Please try again or contact us.');
       setLoading(false);
     }
   };
@@ -90,35 +121,56 @@ export default function Subscribe() {
             ))}
           </ul>
 
-          {iframeBlocked ? (
-            <div className="w-full rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm font-medium px-4 py-3 text-center">
-              Checkout requires the published app.{' '}
-              <a
-                href={window.location.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline font-semibold text-blue-600"
-              >
-                Open in new tab →
-              </a>
-            </div>
-          ) : (
-            <Button
-              onClick={handleSubscribe}
-              disabled={loading}
-              className="w-full h-13 rounded-xl text-base font-semibold shadow-lg shadow-blue-200 gap-2"
-              style={{ backgroundColor: '#4181ed' }}
-            >
-              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Start Free Trial'}
-            </Button>
-          )}
+          {/* CTA Button */}
+          <Button
+            onClick={handleSubscribe}
+            disabled={loading}
+            className="w-full h-13 rounded-xl text-base font-semibold shadow-lg shadow-blue-200 gap-2"
+            style={{ backgroundColor: '#4181ed' }}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Opening Stripe… {countdown > 0 ? `(${countdown}s)` : ''}
+              </>
+            ) : 'Start Free Trial →'}
+          </Button>
 
-          {error && (
-            <p className="text-sm text-red-500 mt-3">{error}</p>
+          {/* Timeout / Error state */}
+          {(timedOut || error) && (
+            <div className="mt-4 p-4 rounded-xl bg-red-50 border border-red-100 text-left">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-red-700">
+                    {timedOut ? 'Checkout timed out' : 'Something went wrong'}
+                  </p>
+                  <p className="text-xs text-red-600 mt-0.5">
+                    {timedOut
+                      ? 'We couldn\'t connect to our payment processor in time.'
+                      : error}
+                  </p>
+                  <p className="text-xs text-slate-500 mt-2">
+                    Please try again, or{' '}
+                    <Link to="/ContactUs" className="underline font-semibold text-blue-600">
+                      contact us
+                    </Link>{' '}
+                    if the problem persists.
+                  </p>
+                </div>
+              </div>
+            </div>
           )}
 
           <p className="text-xs text-slate-400 mt-4">
             No charge for 30 days. Card required to activate trial.
+          </p>
+
+          <p className="text-xs text-slate-400 mt-1">
+            Having trouble?{' '}
+            <Link to="/ContactUs" className="underline text-blue-500 hover:text-blue-700">
+              Contact us
+            </Link>
           </p>
         </div>
       </div>

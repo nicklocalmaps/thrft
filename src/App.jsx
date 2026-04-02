@@ -19,6 +19,7 @@ import Subscribe from '@/pages/Subscribe';
 import Profile from '@/pages/Profile';
 import SubscriptionGate from '@/components/subscription/SubscriptionGate';
 import Landing from '@/pages/Landing';
+import ContactUs from '@/pages/ContactUs';
 
 const OnboardingGate = () => {
   const [checking, setChecking] = React.useState(true);
@@ -73,6 +74,7 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<Landing />} />
       <Route path="/Onboarding" element={<Onboarding />} />
       <Route path="/Subscribe" element={<Subscribe />} />
+      <Route path="/ContactUs" element={<ContactUs />} />
       <Route element={<AppLayout />}>
         <Route path="/app" element={<OnboardingGate />} />
         <Route path="/Home" element={<SubscriptionGate><Home /></SubscriptionGate>} />
