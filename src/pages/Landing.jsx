@@ -76,9 +76,14 @@ export default function Landing() {
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-slate-50 pt-20 pb-24 px-5">
         <div className="max-w-5xl mx-auto text-center">
           <motion.div variants={fade} initial="hidden" animate="show">
-            <div className="inline-flex flex-col items-center gap-1 px-5 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold mb-6">
-              <span className="flex items-center gap-2"><Star className="w-3.5 h-3.5 fill-blue-500" /> Compare prices across top grocery stores</span>
-              <span className="text-xs font-medium text-blue-500">In-Store | Curbside Pickup | Delivery</span>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
+              <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-blue-100 text-blue-700 font-semibold text-center leading-snug max-w-[220px]">
+                <Star className="w-4 h-4 fill-blue-500 shrink-0" />
+                <span className="text-sm">Compare prices across top grocery stores</span>
+              </div>
+              <div className="inline-flex items-center px-5 py-2.5 rounded-full bg-blue-600 text-white font-semibold text-sm whitespace-nowrap">
+                In-Store | Curbside Pickup | Delivery
+              </div>
             </div>
             <h1 className="text-5xl sm:text-6xl font-extrabold text-slate-900 leading-tight tracking-tight mb-5">
               Stop Overpaying<br className="hidden sm:block" /> for Groceries
