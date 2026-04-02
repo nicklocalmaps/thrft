@@ -38,6 +38,8 @@ const MOCK_STORES = [
   { name: 'Kroger', total: 51.20, badge: null },
   { name: 'Walmart', total: 48.90, badge: 'Best Price' },
   { name: 'Amazon Fresh', total: 54.10, badge: null },
+  { name: 'Trader Joe\'s', total: 52.75, badge: null },
+  { name: 'Shipt', total: 56.30, badge: null },
 ];
 
 function handleCTA() {
@@ -82,10 +84,10 @@ export default function Landing() {
               One list. Every store. Instantly find the lowest price across nearby grocery stores.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button onClick={handleCTA} className="h-14 px-8 text-base font-bold rounded-2xl shadow-xl shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
+              <Button onClick={handleCTA} className="h-14 px-8 text-base font-bold rounded-2xl shadow-xl shadow-blue-200 bg-white text-blue-600 border-2 border-blue-200 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all">
                 Start Saving Now <ChevronRight className="w-5 h-5 ml-1" />
               </Button>
-              <Button onClick={handleCTA} variant="outline" className="h-14 px-8 text-base font-semibold rounded-2xl border-2 border-slate-200">
+              <Button onClick={handleCTA} className="h-14 px-8 text-base font-bold rounded-2xl shadow-xl shadow-blue-200 bg-white text-blue-600 border-2 border-blue-200 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all">
                 Try It Free for 30 Days
               </Button>
             </div>
@@ -95,7 +97,7 @@ export default function Landing() {
           <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.6 }} className="mt-16 max-w-2xl mx-auto">
             <div className="bg-white rounded-3xl shadow-2xl shadow-blue-100 border border-slate-100 p-6">
               <p className="text-xs text-slate-400 font-medium uppercase tracking-widest mb-4">Price Comparison</p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {MOCK_STORES.map((store) => (
                   <div key={store.name} className={`relative rounded-2xl border p-4 text-center ${store.badge ? 'border-blue-300 bg-blue-50 shadow-md shadow-blue-100' : 'border-slate-100 bg-slate-50'}`}>
                     {store.badge && (
@@ -168,7 +170,7 @@ export default function Landing() {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-extrabold text-slate-900 mb-3">See Price Differences Instantly</h2>
           <p className="text-slate-500 text-lg mb-12">Same list. Different totals. Your savings = the difference.</p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
             {MOCK_STORES.map((store) => (
               <div key={store.name} className={`relative rounded-2xl border p-5 text-center ${store.badge ? 'border-blue-300 bg-white shadow-xl shadow-blue-100 scale-105' : 'border-slate-100 bg-white'}`}>
                 {store.badge && (
@@ -316,10 +318,10 @@ export default function Landing() {
           <h2 className="text-5xl font-extrabold mb-4">Stop Guessing. Start Saving.</h2>
           <p className="text-blue-200 text-xl mb-10">Your grocery bill—optimized.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button onClick={handleCTA} className="h-14 px-10 text-base font-bold rounded-2xl bg-white hover:bg-blue-50 text-blue-700">
+            <Button onClick={handleCTA} className="h-14 px-10 text-base font-bold rounded-2xl bg-white text-blue-700 border-2 border-white/80 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all">
               Start Saving Now
             </Button>
-            <Button onClick={handleCTA} variant="outline" className="h-14 px-10 text-base font-bold rounded-2xl border-2 border-white/50 text-white hover:bg-white/10">
+            <Button onClick={handleCTA} className="h-14 px-10 text-base font-bold rounded-2xl bg-white text-blue-700 border-2 border-white/80 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all">
               Try It Free for 30 Days
             </Button>
           </div>
