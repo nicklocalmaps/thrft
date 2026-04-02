@@ -10,7 +10,10 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { return_url } = await req.json();
+    const body = await req.json();
+    // Pre-warm ping — return early
+    if (body.warm) return Response.json({ ok: true });
+    const { return_url } = body;
 
     // Check if already has a Stripe customer ID
     let customerId = user.stripe_customer_id;

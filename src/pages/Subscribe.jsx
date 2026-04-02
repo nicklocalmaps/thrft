@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Check, Loader2, Star } from 'lucide-react';
@@ -14,6 +14,11 @@ const FEATURES = [
 
 export default function Subscribe() {
   const [loading, setLoading] = useState(false);
+
+  // Pre-warm the backend function on page load to avoid cold start delay
+  useEffect(() => {
+    base44.functions.invoke('createCheckoutSession', { warm: true }).catch(() => {});
+  }, []);
 
   const handleSubscribe = async () => {
     // Block if running inside iframe (preview mode)
