@@ -15,6 +15,13 @@ export default function Onboarding() {
   const [nearbyStores, setNearbyStores] = useState([]);
   const [selectedStores, setSelectedStores] = useState([]);
   const [saving, setSaving] = useState(false);
+  const [userCount, setUserCount] = useState(11483);
+
+  useEffect(() => {
+    base44.functions.invoke('getUserCount', {}).then(res => {
+      if (res.data?.count) setUserCount(res.data.count);
+    }).catch(() => {});
+  }, []);
 
   const findNearbyStores = async () => {
     if (zipCode.length < 5) return;
@@ -45,6 +52,8 @@ export default function Onboarding() {
       favorite_stores: selectedStores,
       onboarding_complete: true
     });
+    // Increment the live user count
+    base44.functions.invoke('incrementUserCount', {}).catch(() => {});
     navigate('/Subscribe');
   };
 
@@ -70,7 +79,7 @@ export default function Onboarding() {
               <div className="w-6 h-6 rounded-full bg-emerald-400 border-2 border-white" />
               <div className="w-6 h-6 rounded-full bg-amber-400 border-2 border-white" />
             </div>
-            <span className="text-sm font-semibold text-slate-700">11,483 users saving money</span>
+            <span className="text-sm font-semibold text-slate-700">{userCount.toLocaleString()} users saving money</span>
             <span className="text-base">🎉</span>
           </div>
         </div>

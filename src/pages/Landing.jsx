@@ -51,6 +51,14 @@ function handleCTA() {
 const fade = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 
 export default function Landing() {
+  const [userCount, setUserCount] = React.useState(11483);
+
+  React.useEffect(() => {
+    base44.functions.invoke('getUserCount', {}).then(res => {
+      if (res.data?.count) setUserCount(res.data.count);
+    }).catch(() => {});
+  }, []);
+
   return (
     <div className="min-h-screen bg-white font-sans">
 
@@ -113,6 +121,19 @@ export default function Landing() {
                 Start Your Free Trial
               </Button>
               <p className="text-xs text-slate-400 mt-3">No charge for 30 days. Cancel anytime.</p>
+            </div>
+
+            {/* User count badge */}
+            <div className="flex justify-center mt-5">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm">
+                <div className="flex -space-x-1.5">
+                  <div className="w-6 h-6 rounded-full bg-blue-400 border-2 border-white" />
+                  <div className="w-6 h-6 rounded-full bg-emerald-400 border-2 border-white" />
+                  <div className="w-6 h-6 rounded-full bg-amber-400 border-2 border-white" />
+                </div>
+                <span className="text-sm font-semibold text-slate-700">{userCount.toLocaleString()} users saving money</span>
+                <span className="text-base">🎉</span>
+              </div>
             </div>
           </motion.div>
 

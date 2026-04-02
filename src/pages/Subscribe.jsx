@@ -7,8 +7,8 @@ import { Check, Loader2, Star, AlertCircle } from 'lucide-react';
 const FEATURES = [
   'Unlimited grocery lists',
   'Real-time price comparison across 50+ stores',
-  'Kroger live prices',
-  'Delivery & pickup cost comparison',
+  'In-Store | Curbside Pickup | Delivery',
+  'Stay within your grocery budget with our Grocery Budget Tool',
   'Price history tracking',
   'Shopping mode & item checking',
 ];
