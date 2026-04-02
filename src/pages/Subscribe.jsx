@@ -15,6 +15,7 @@ const FEATURES = [
 export default function Subscribe() {
   const [loading, setLoading] = useState(false);
   const [iframeBlocked, setIframeBlocked] = useState(false);
+  const [error, setError] = useState(null);
 
   // Pre-warm the backend function on page load to avoid cold start delay
   useEffect(() => {
@@ -39,12 +40,17 @@ export default function Subscribe() {
     }
 
     setLoading(true);
-    const returnUrl = window.location.origin + '/Home';
-    const res = await base44.functions.invoke('createCheckoutSession', { return_url: returnUrl });
-    if (res.data?.url) {
-      window.location.href = res.data.url;
-    } else {
-      alert('Could not start checkout. Please try again.');
+    try {
+      const returnUrl = window.location.origin + '/Home';
+      const res = await base44.functions.invoke('createCheckoutSession', { return_url: returnUrl });
+      if (res.data?.url) {
+        window.location.href = res.data.url;
+      } else {
+        setError('Could not start checkout. Please try again.');
+        setLoading(false);
+      }
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
       setLoading(false);
     }
   };
@@ -105,6 +111,10 @@ export default function Subscribe() {
             >
               {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Start Free Trial'}
             </Button>
+          )}
+
+          {error && (
+            <p className="text-sm text-red-500 mt-3">{error}</p>
           )}
 
           <p className="text-xs text-slate-400 mt-4">
