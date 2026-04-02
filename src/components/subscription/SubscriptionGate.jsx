@@ -15,9 +15,12 @@ export default function SubscriptionGate({ children }) {
       const status = user?.subscription_status;
       if (!status || !ACTIVE_STATUSES.includes(status)) {
         navigate('/Subscribe');
+      } else {
+        setChecking(false);
       }
-      setChecking(false);
-    }).catch(() => setChecking(false));
+    }).catch(() => {
+      navigate('/Subscribe');
+    });
   }, []);
 
   if (checking) {
