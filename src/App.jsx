@@ -18,6 +18,7 @@ import SearchProducts from '@/pages/SearchProducts';
 import Subscribe from '@/pages/Subscribe';
 import Profile from '@/pages/Profile';
 import SubscriptionGate from '@/components/subscription/SubscriptionGate';
+import Landing from '@/pages/Landing';
 
 const OnboardingGate = () => {
   const [checking, setChecking] = React.useState(true);
@@ -40,6 +41,7 @@ const OnboardingGate = () => {
 
   if (needsOnboarding) return <Navigate to="/Onboarding" replace />;
   return <Navigate to="/Home" replace />;
+
 };
 
 const AuthenticatedApp = () => {
@@ -57,17 +59,22 @@ const AuthenticatedApp = () => {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
-      navigateToLogin();
-      return null;
+      // Allow public landing page without login
+      const isPublicRoute = ['/', '/landing'].includes(window.location.pathname);
+      if (!isPublicRoute) {
+        navigateToLogin();
+        return null;
+      }
     }
   }
 
   return (
     <Routes>
+      <Route path="/" element={<Landing />} />
       <Route path="/Onboarding" element={<Onboarding />} />
       <Route path="/Subscribe" element={<Subscribe />} />
       <Route element={<AppLayout />}>
-        <Route path="/" element={<OnboardingGate />} />
+        <Route path="/app" element={<OnboardingGate />} />
         <Route path="/Home" element={<SubscriptionGate><Home /></SubscriptionGate>} />
         <Route path="/NewList" element={<SubscriptionGate><NewList /></SubscriptionGate>} />
         <Route path="/ListDetail" element={<SubscriptionGate><ListDetail /></SubscriptionGate>} />
