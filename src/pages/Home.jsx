@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { AnimatePresence } from 'framer-motion';
 import ListCard from '@/components/grocery/ListCard';
 import StorePriceDashboard from '@/components/grocery/StorePriceDashboard';
+import ReferralBanner from '@/components/rewards/ReferralBanner';
 
 export default function Home() {
   const queryClient = useQueryClient();
@@ -64,6 +65,9 @@ export default function Home() {
       ) : (
         <>
         <StorePriceDashboard lists={lists} />
+        <div className="mb-4">
+          <ReferralBanner variant="card" />
+        </div>
         <div className="space-y-3">
           <AnimatePresence>
             {lists.map((list, i) => (

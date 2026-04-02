@@ -1,0 +1,49 @@
+{
+  "name": "UserRewards",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "User ID"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "referral_code": {
+      "type": "string",
+      "description": "User's unique referral code"
+    },
+    "total_points": {
+      "type": "number",
+      "default": 0
+    },
+    "lifetime_points_earned": {
+      "type": "number",
+      "default": 0
+    },
+    "paid_referrals_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of referrals that converted to paid"
+    },
+    "total_referrals_count": {
+      "type": "number",
+      "default": 0
+    },
+    "free_months_earned": {
+      "type": "number",
+      "default": 0
+    },
+    "has_lifetime_access": {
+      "type": "boolean",
+      "default": false
+    },
+    "referred_by_code": {
+      "type": "string",
+      "description": "Referral code used when signing up"
+    }
+  },
+  "required": [
+    "user_id"
+  ]
+}

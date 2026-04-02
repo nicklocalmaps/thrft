@@ -1,5 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Plus, Store, UserCircle } from 'lucide-react';
+import { ShoppingCart, Plus, Store, UserCircle, Gift } from 'lucide-react';
+import ReferralBanner from '@/components/rewards/ReferralBanner';
 
 const THRFT_BLUE = '#4181ed';
 
@@ -10,6 +11,7 @@ export default function AppLayout() {
     { path: '/Home', label: 'My Lists', icon: ShoppingCart },
     { path: '/NewList', label: 'New List', icon: Plus },
     { path: '/StoreAccounts', label: 'Store Accounts', icon: Store },
+    { path: '/Rewards', label: 'Rewards', icon: Gift },
     { path: '/Profile', label: 'Profile', icon: UserCircle },
   ];
 
@@ -47,6 +49,9 @@ export default function AppLayout() {
           </div>
         </div>
       </header>
+
+      {/* Referral Banner */}
+      <ReferralBanner variant="banner" />
 
       {/* Main Content */}
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">

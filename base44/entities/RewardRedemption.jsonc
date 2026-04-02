@@ -1,0 +1,45 @@
+{
+  "name": "RewardRedemption",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "reward_type": {
+      "type": "string",
+      "enum": [
+        "free_month",
+        "free_3_months",
+        "free_12_months",
+        "grocery_credit_2",
+        "grocery_credit_7",
+        "grocery_credit_25",
+        "lifetime_access"
+      ],
+      "description": "Type of reward redeemed"
+    },
+    "points_spent": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "applied",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "reward_type",
+    "points_spent"
+  ]
+}

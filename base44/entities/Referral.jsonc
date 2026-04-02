@@ -1,0 +1,46 @@
+{
+  "name": "Referral",
+  "type": "object",
+  "properties": {
+    "referrer_id": {
+      "type": "string",
+      "description": "User ID of the person who referred"
+    },
+    "referrer_email": {
+      "type": "string",
+      "description": "Email of referrer"
+    },
+    "referred_email": {
+      "type": "string",
+      "description": "Email of the person referred"
+    },
+    "referred_user_id": {
+      "type": "string",
+      "description": "User ID of referred user after signup"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "invited",
+        "signed_up",
+        "trial_started",
+        "subscribed"
+      ],
+      "default": "invited",
+      "description": "Current stage of the referral funnel"
+    },
+    "points_awarded": {
+      "type": "number",
+      "default": 0,
+      "description": "Total points awarded for this referral so far"
+    },
+    "referral_code": {
+      "type": "string",
+      "description": "Unique referral code used"
+    }
+  },
+  "required": [
+    "referrer_id",
+    "referrer_email"
+  ]
+}
