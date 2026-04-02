@@ -79,7 +79,7 @@ export default function Landing() {
             <div className="flex flex-col items-center justify-center gap-2 mb-6">
               <p className="flex items-center gap-2 text-blue-700 font-semibold text-sm">
                 <Star className="w-4 h-4 fill-blue-500 shrink-0" />
-                Compare prices across top grocery stores
+                Compare prices across all grocery stores
               </p>
               <p className="text-blue-600 font-semibold text-sm">In-Store | Curbside Pickup | Delivery</p>
             </div>
