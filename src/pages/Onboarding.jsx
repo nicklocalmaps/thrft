@@ -45,7 +45,7 @@ export default function Onboarding() {
       favorite_stores: selectedStores,
       onboarding_complete: true
     });
-    navigate('/Home');
+    navigate('/Subscribe');
   };
 
   return (
