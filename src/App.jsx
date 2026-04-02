@@ -16,6 +16,7 @@ import Onboarding from '@/pages/Onboarding';
 import StoreAccounts from '@/pages/StoreAccounts';
 import SearchProducts from '@/pages/SearchProducts';
 import Subscribe from '@/pages/Subscribe';
+import Profile from '@/pages/Profile';
 import SubscriptionGate from '@/components/subscription/SubscriptionGate';
 
 const OnboardingGate = () => {
@@ -71,6 +72,7 @@ const AuthenticatedApp = () => {
         <Route path="/NewList" element={<SubscriptionGate><NewList /></SubscriptionGate>} />
         <Route path="/ListDetail" element={<SubscriptionGate><ListDetail /></SubscriptionGate>} />
         <Route path="/StoreAccounts" element={<SubscriptionGate><StoreAccounts /></SubscriptionGate>} />
+        <Route path="/Profile" element={<SubscriptionGate><Profile /></SubscriptionGate>} />
         <Route path="/SearchProducts" element={<SubscriptionGate><SearchProducts /></SubscriptionGate>} />
       </Route>
       <Route path="*" element={<PageNotFound />} />

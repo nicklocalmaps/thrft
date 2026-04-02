@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Plus, Store } from 'lucide-react';
+import { ShoppingCart, Plus, Store, UserCircle } from 'lucide-react';
 
 const THRFT_BLUE = '#4181ed';
 
@@ -10,6 +10,7 @@ export default function AppLayout() {
     { path: '/Home', label: 'My Lists', icon: ShoppingCart },
     { path: '/NewList', label: 'New List', icon: Plus },
     { path: '/StoreAccounts', label: 'Store Accounts', icon: Store },
+    { path: '/Profile', label: 'Profile', icon: UserCircle },
   ];
 
   return (
