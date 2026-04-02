@@ -14,6 +14,7 @@ const FEATURES = [
 
 export default function Subscribe() {
   const [loading, setLoading] = useState(false);
+  const [iframeBlocked, setIframeBlocked] = useState(false);
 
   // Pre-warm the backend function on page load to avoid cold start delay
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function Subscribe() {
   const handleSubscribe = async () => {
     // Block if running inside iframe (preview mode)
     if (window.self !== window.top) {
-      alert('Checkout only works from the published app. Open the app in a new tab to subscribe.');
+      setIframeBlocked(true);
       return;
     }
 
@@ -83,14 +84,28 @@ export default function Subscribe() {
             ))}
           </ul>
 
-          <Button
-            onClick={handleSubscribe}
-            disabled={loading}
-            className="w-full h-13 rounded-xl text-base font-semibold shadow-lg shadow-blue-200 gap-2"
-            style={{ backgroundColor: '#4181ed' }}
-          >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Start Free Trial'}
-          </Button>
+          {iframeBlocked ? (
+            <div className="w-full rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm font-medium px-4 py-3 text-center">
+              Checkout requires the published app.{' '}
+              <a
+                href={window.location.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline font-semibold text-blue-600"
+              >
+                Open in new tab →
+              </a>
+            </div>
+          ) : (
+            <Button
+              onClick={handleSubscribe}
+              disabled={loading}
+              className="w-full h-13 rounded-xl text-base font-semibold shadow-lg shadow-blue-200 gap-2"
+              style={{ backgroundColor: '#4181ed' }}
+            >
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Start Free Trial'}
+            </Button>
+          )}
 
           <p className="text-xs text-slate-400 mt-4">
             No charge for 30 days. Card required to activate trial.
