@@ -22,6 +22,16 @@ export default function Subscribe() {
       return;
     }
 
+    // Track trial signup conversion
+    if (window.gtag) {
+      window.gtag('event', 'begin_checkout', {
+        event_category: 'subscription',
+        event_label: 'free_trial_signup',
+        value: 1.99,
+        currency: 'USD',
+      });
+    }
+
     setLoading(true);
     const returnUrl = window.location.origin + '/Home';
     const res = await base44.functions.invoke('createCheckoutSession', { return_url: returnUrl });
