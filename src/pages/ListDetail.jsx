@@ -10,6 +10,7 @@ import GroceryItemRow from '@/components/grocery/GroceryItemRow';
 import StoreCard from '@/components/grocery/StoreCard';
 import StorePicker from '@/components/grocery/StorePicker';
 import PriceHistoryChart from '@/components/grocery/PriceHistoryChart';
+import ListBudget from '@/components/grocery/ListBudget';
 import { ALL_STORES } from '@/lib/storeConfig';
 
 const METHOD_LABELS = {
@@ -422,6 +423,17 @@ export default function ListDetail() {
               </div>
             </motion.div>
           )}
+        </div>
+      )}
+
+      {/* Per-List Budget */}
+      {items.length > 0 && (
+        <div className="mb-6">
+          <ListBudget
+            list={list}
+            priceData={list?.price_data}
+            onUpdate={() => queryClient.invalidateQueries({ queryKey: ['grocery-list', listId] })}
+          />
         </div>
       )}
 

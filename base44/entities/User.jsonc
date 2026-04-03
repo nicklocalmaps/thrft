@@ -10,10 +10,6 @@
       ],
       "default": "user"
     },
-    "onboarding_complete": {
-      "type": "boolean",
-      "default": false
-    },
     "zip_code": {
       "type": "string"
     },
@@ -22,6 +18,10 @@
       "items": {
         "type": "string"
       }
+    },
+    "onboarding_complete": {
+      "type": "boolean",
+      "default": false
     },
     "shopping_method": {
       "type": "string",
@@ -33,27 +33,24 @@
       ],
       "default": "all"
     },
-    "loyalty_cards": {
-      "type": "object"
+    "subscription_status": {
+      "type": "string"
     },
     "stripe_customer_id": {
       "type": "string"
     },
-    "subscription_status": {
-      "type": "string",
-      "enum": [
-        "trialing",
-        "active",
-        "inactive",
-        "past_due"
-      ]
+    "monthly_budget": {
+      "type": "number",
+      "description": "Monthly grocery budget in dollars"
     },
-    "subscription_id": {
-      "type": "string"
+    "per_trip_budget": {
+      "type": "number",
+      "description": "Per-trip grocery budget in dollars"
     },
-    "trial_end": {
-      "type": "string",
-      "format": "date-time"
+    "household_size": {
+      "type": "number",
+      "default": 2,
+      "description": "Number of people in household"
     }
   }
 }

@@ -1,0 +1,112 @@
+{
+  "name": "GroceryList",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the grocery list"
+    },
+    "shopping_method": {
+      "type": "string",
+      "enum": [
+        "instore",
+        "pickup",
+        "delivery",
+        "all"
+      ],
+      "default": "all",
+      "description": "Shopping method for this list"
+    },
+    "budget": {
+      "type": "number",
+      "description": "Per-list budget target in dollars"
+    },
+    "items": {
+      "type": "array",
+      "description": "Items in the grocery list",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number",
+            "default": 1
+          },
+          "unit": {
+            "type": "string",
+            "default": "each"
+          }
+        }
+      }
+    },
+    "selected_stores": {
+      "type": "array",
+      "description": "Store keys selected for price comparison",
+      "items": {
+        "type": "string"
+      }
+    },
+    "price_data": {
+      "type": "object",
+      "description": "Cached price comparison data keyed by store key",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "item_name": {
+                  "type": "string"
+                },
+                "product_name": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                },
+                "unit_price": {
+                  "type": "string"
+                },
+                "in_stock": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "instore_total": {
+            "type": "number"
+          },
+          "pickup_total": {
+            "type": "number"
+          },
+          "pickup_available": {
+            "type": "boolean"
+          },
+          "instacart_fee": {
+            "type": "number"
+          },
+          "instacart_available": {
+            "type": "boolean"
+          },
+          "shipt_fee": {
+            "type": "number"
+          },
+          "shipt_available": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "last_compared": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
