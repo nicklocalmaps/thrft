@@ -1,8 +1,27 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Plus, Store, UserCircle, Gift } from 'lucide-react';
+import { ShoppingCart, Plus, Store, UserCircle, Gift, Share2 } from 'lucide-react';
 import ReferralBanner from '@/components/rewards/ReferralBanner';
+import { base44 } from '@/api/base44Client';
 
 const THRFT_BLUE = '#4181ed';
+
+async function handleShareInvite() {
+  let referralCode = '';
+  try {
+    const res = await base44.functions.invoke('referralTracker', { action: 'getMyRewards' });
+    referralCode = res.data?.profile?.referral_code || '';
+  } catch {}
+  const url = referralCode
+    ? `${window.location.origin}/?ref=${referralCode}`
+    : window.location.origin;
+  const text = 'I use THRFT to compare grocery prices across every store and save money every trip! Try it free:';
+  if (navigator.share) {
+    navigator.share({ title: 'Save money on groceries with THRFT', text, url });
+  } else {
+    navigator.clipboard.writeText(`${text} ${url}`);
+    alert('Link copied to clipboard!');
+  }
+}
 
 export default function AppLayout() {
   const location = useLocation();
@@ -31,6 +50,14 @@ export default function AppLayout() {
             </Link>
 
             <nav className="flex items-center gap-1">
+              <button
+                onClick={handleShareInvite}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 bg-purple-100 text-purple-700 hover:bg-purple-200 mr-1"
+                title="Invite Friends"
+              >
+                <Share2 className="w-4 h-4" />
+                <span className="hidden sm:inline">Invite</span>
+              </button>
               {navItems.map(({ path, label, icon: Icon }) => {
                 const isActive = location.pathname === path;
                 return (

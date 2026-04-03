@@ -11,9 +11,6 @@ const REDEMPTIONS = [
   { type: 'free_month', label: '1 Free Month', points: 150, icon: '🗓️', desc: 'One month of THRFT free' },
   { type: 'free_3_months', label: '3 Free Months', points: 400, icon: '📅', desc: 'Three months of THRFT free' },
   { type: 'free_12_months', label: '12 Free Months', points: 1000, icon: '🎁', desc: 'A full year of THRFT free' },
-  { type: 'grocery_credit_2', label: '$2 Grocery Credit', points: 100, icon: '🥦', desc: 'Credit toward your groceries' },
-  { type: 'grocery_credit_7', label: '$7 Grocery Credit', points: 300, icon: '🛒', desc: 'Credit toward your groceries' },
-  { type: 'grocery_credit_25', label: '$25 Grocery Credit', points: 1000, icon: '💵', desc: 'Big credit toward your groceries' },
 ];
 
 const MILESTONES = [
