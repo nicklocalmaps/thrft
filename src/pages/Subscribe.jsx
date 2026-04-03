@@ -6,11 +6,12 @@ import { Check, Loader2, Star, AlertCircle } from 'lucide-react';
 
 const FEATURES = [
   'Unlimited grocery lists',
-  'Real-time price comparison across 50+ stores',
-  'In-Store | Curbside Pickup | Delivery',
-  'Stay within your grocery budget with our Grocery Budget Tool',
+  'AI Pricing Optimization Engine — compare 50+ stores instantly',
+  'In-Store | Curbside Pickup | Delivery pricing',
+  'Coupon Scanner — photograph coupons & leave the paper at home',
+  'Grocery Budget Tool — set limits & stay on track',
   'Price history tracking',
-  'Shopping mode & item checking',
+  'Shopping mode & item check-off',
 ];
 
 const TIMEOUT_SECONDS = 15;
