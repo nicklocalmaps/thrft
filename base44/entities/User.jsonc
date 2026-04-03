@@ -23,6 +23,11 @@
       "type": "boolean",
       "default": false
     },
+    "tour_completed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user has seen the feature tour"
+    },
     "shopping_method": {
       "type": "string",
       "enum": [
@@ -52,5 +57,13 @@
       "default": 2,
       "description": "Number of people in household"
     }
-  }
+  },
+  "required": [
+    "zip_code",
+    "favorite_stores",
+    "subscription_status",
+    "stripe_customer_id",
+    "monthly_budget",
+    "per_trip_budget"
+  ]
 }

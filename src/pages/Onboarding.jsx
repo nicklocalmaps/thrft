@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
@@ -55,6 +55,8 @@ export default function Onboarding() {
     });
     // Increment the live user count
     base44.functions.invoke('incrementUserCount', {}).catch(() => {});
+    // Send welcome email
+    base44.functions.invoke('sendWelcomeEmail', {}).catch(() => {});
     navigate('/Subscribe');
   };
 

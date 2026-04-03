@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -9,11 +9,26 @@ const THRFT_LOGO = 'https://media.base44.com/images/public/69b782bc4deba77b6b05b
 import { Button } from '@/components/ui/button';
 import { AnimatePresence } from 'framer-motion';
 import ListCard from '@/components/grocery/ListCard';
+import FeatureTour from '@/components/onboarding/FeatureTour';
 import StorePriceDashboard from '@/components/grocery/StorePriceDashboard';
 import ReferralBanner from '@/components/rewards/ReferralBanner';
 
 export default function Home() {
   const queryClient = useQueryClient();
+  const [showTour, setShowTour] = useState(false);
+
+  useEffect(() => {
+    base44.auth.me().then(user => {
+      if (user && !user.tour_completed) {
+        setShowTour(true);
+      }
+    }).catch(() => {});
+  }, []);
+
+  const handleTourComplete = async () => {
+    setShowTour(false);
+    await base44.auth.updateMe({ tour_completed: true }).catch(() => {});
+  };
 
   const { data: lists = [], isLoading } = useQuery({
     queryKey: ['grocery-lists'],
@@ -35,6 +50,7 @@ export default function Home() {
 
   return (
     <div>
+      {showTour && <FeatureTour onComplete={handleTourComplete} />}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 tracking-tight">My Grocery Lists</h1>
         <p className="text-slate-900 mt-1">Compare prices across all of your favorite local grocery stores</p>
