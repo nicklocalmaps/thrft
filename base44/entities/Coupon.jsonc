@@ -1,0 +1,59 @@
+{
+  "name": "Coupon",
+  "type": "object",
+  "properties": {
+    "image_url": {
+      "type": "string",
+      "description": "URL of the uploaded coupon photo"
+    },
+    "product_name": {
+      "type": "string",
+      "description": "Extracted product name from coupon"
+    },
+    "brand": {
+      "type": "string",
+      "description": "Brand name from coupon"
+    },
+    "discount_amount": {
+      "type": "number",
+      "description": "Dollar amount off"
+    },
+    "discount_percent": {
+      "type": "number",
+      "description": "Percentage off"
+    },
+    "discount_description": {
+      "type": "string",
+      "description": "Full discount description (e.g. '$1.00 off 2')"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Coupon expiration date"
+    },
+    "store_restriction": {
+      "type": "string",
+      "description": "Store restriction if any (e.g. 'Kroger only')"
+    },
+    "raw_text": {
+      "type": "string",
+      "description": "Raw OCR text extracted from image"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "used",
+        "expired"
+      ],
+      "default": "active"
+    },
+    "added_to_list_id": {
+      "type": "string",
+      "description": "ID of the grocery list this coupon was applied to"
+    }
+  },
+  "required": [
+    "product_name"
+  ]
+}

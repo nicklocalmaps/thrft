@@ -11,6 +11,7 @@ import StoreCard from '@/components/grocery/StoreCard';
 import StorePicker from '@/components/grocery/StorePicker';
 import PriceHistoryChart from '@/components/grocery/PriceHistoryChart';
 import ListBudget from '@/components/grocery/ListBudget';
+import CouponListMatcher from '@/components/coupons/CouponListMatcher';
 import { ALL_STORES } from '@/lib/storeConfig';
 
 const METHOD_LABELS = {
@@ -64,6 +65,11 @@ export default function ListDetail() {
       }
     }).catch(() => setSelectedStores(['kroger', 'walmart', 'amazon']));
   }, []);
+
+  const { data: coupons = [] } = useQuery({
+    queryKey: ['coupons'],
+    queryFn: () => base44.entities.Coupon.filter({ status: 'active' }),
+  });
 
   const { data: list, isLoading } = useQuery({
     queryKey: ['grocery-list', listId],
@@ -349,6 +355,13 @@ export default function ListDetail() {
           {shoppingMode ? 'Done Shopping' : 'Shop Mode'}
         </Button>
       </div>
+
+      {/* Coupon Suggestions */}
+      <CouponListMatcher
+        coupons={coupons}
+        list={{ ...list, items }}
+        onItemAdded={() => queryClient.invalidateQueries({ queryKey: ['grocery-list', listId] })}
+      />
 
       {/* Add Item */}
       <div className="mb-4">

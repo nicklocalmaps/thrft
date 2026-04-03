@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Plus, Store, UserCircle, Gift, Share2, DollarSign } from 'lucide-react';
+import { ShoppingCart, Plus, Store, UserCircle, Gift, Share2, DollarSign, Ticket } from 'lucide-react';
 import ReferralBanner from '@/components/rewards/ReferralBanner';
 import { base44 } from '@/api/base44Client';
 
@@ -30,6 +30,7 @@ export default function AppLayout() {
     { path: '/Home', label: 'My Lists', icon: ShoppingCart },
     { path: '/NewList', label: 'New List', icon: Plus },
     { path: '/Budget', label: 'Budget', icon: DollarSign },
+    { path: '/Coupons', label: 'Coupons', icon: Ticket },
     { path: '/StoreAccounts', label: 'Store Accounts', icon: Store },
     { path: '/Rewards', label: 'Rewards', icon: Gift },
     { path: '/Profile', label: 'Profile', icon: UserCircle },
