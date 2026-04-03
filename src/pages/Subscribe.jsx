@@ -5,13 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Check, Loader2, Star, AlertCircle } from 'lucide-react';
 
 const FEATURES = [
-  'Unlimited grocery lists',
-  'AI Pricing Optimization Engine — compare 50+ stores instantly',
-  'In-Store | Curbside Pickup | Delivery pricing',
-  'Coupon Scanner — photograph coupons & leave the paper at home',
-  'Grocery Budget Tool — set limits & stay on track',
-  'Price history tracking',
-  'Shopping mode & item check-off',
+  'Unlimited Grocery Lists',
+  'AI Pricing Optimization Engine — Compare 50+ Stores Instantly',
+  'In-Store | Curbside Pickup | Delivery Pricing',
+  'Coupon Scanner — Photograph Coupons & Leave The Paper At Home',
+  'Grocery Budget Tool — Set Limits & Stay On Track',
+  'Price History Tracking',
+  'Shopping Mode & Item Check-Off',
 ];
 
 const TIMEOUT_SECONDS = 15;
