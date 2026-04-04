@@ -81,7 +81,7 @@ export default function Landing() {
       </header>
 
       {/* 1. HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-slate-50 pt-20 pb-24 px-5">
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-slate-50 pt-10 pb-16 px-5">
         <div className="max-w-5xl mx-auto text-center">
           <motion.div variants={fade} initial="hidden" animate="show">
             <div className="flex justify-center mb-4">
