@@ -102,11 +102,10 @@ export default function Onboarding() {
                 <div className="rounded-2xl w-14 h-14 flex items-center justify-center shrink-0" style={{ backgroundColor: '#4181ed' }}>
                   <MapPin className="w-7 h-7 text-white" />
                 </div>
-                <h1 className="text-slate-900 text-xl font-semibold normal-case">Welcome to THRFT!</h1>
+                <h1 className="text-slate-900 text-xl font-semibold normal-case">Find Stores Near You</h1>
               </div>
-              <p className="text-slate-900 mb-8 text-center">Your intelligent grocery shopping assistant that helps you find the best prices at stores near you.
-
-Let's find your favorite grocery stores so we can compare prices for your shopping lists.</p>
+              <p className="text-slate-900 mb-4">Enter your ZIP code to discover nearby grocery stores and start comparing prices instantly.</p>
+              <p className="text-slate-900 mb-8">THRFT shows you the cheapest options for your entire list—so you always shop smarter.</p>
 
               <label className="text-sm font-medium text-slate-900 mb-2 block">Your Zip Code</label>
               <div className="flex gap-3">

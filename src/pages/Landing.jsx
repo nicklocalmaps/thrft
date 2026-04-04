@@ -62,6 +62,16 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-white font-sans">
 
+      {/* Top user count bar */}
+      <div className="w-full bg-blue-600 text-white text-sm font-semibold py-2 text-center flex items-center justify-center gap-2">
+        <div className="flex -space-x-1.5">
+          <div className="w-5 h-5 rounded-full bg-blue-300 border-2 border-blue-600" />
+          <div className="w-5 h-5 rounded-full bg-emerald-300 border-2 border-blue-600" />
+          <div className="w-5 h-5 rounded-full bg-amber-300 border-2 border-blue-600" />
+        </div>
+        <span>{userCount.toLocaleString()} users saving money 🎉</span>
+      </div>
+
       {/* NAV */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-100">
         <div className="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
