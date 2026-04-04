@@ -27,10 +27,10 @@ export default function AppLayout() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16">
             <Link to="/Home" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl overflow-hidden">
+              <div className="w-9 h-9 rounded-xl overflow-hidden hidden md:block">
                 <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT logo" className="w-full h-full object-cover" />
               </div>
-              <span className="text-lg font-bold tracking-tight text-slate-900">
+              <span className="text-lg font-bold tracking-tight text-slate-900 hidden md:block">
                 THRFT
               </span>
             </Link>
@@ -53,16 +53,24 @@ export default function AppLayout() {
               })}
             </nav>
 
-            {/* Mobile nav — 2-row icon grid */}
+            {/* Mobile nav — 2-row grid: logo + 3 icons, then 4 icons */}
             <nav className="flex md:hidden flex-col gap-0.5">
-              <div className="flex items-center gap-0.5">
-                {navItems.slice(0, 4).map(({ path, label, icon: Icon }) => {
+              {/* Row 1: Logo + first 3 nav items */}
+              <div className="flex items-center">
+                {/* THRFT Logo as first "icon" */}
+                <Link to="/Home" className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl min-w-[44px]">
+                  <div className="w-6 h-6 rounded-lg overflow-hidden">
+                    <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" className="w-full h-full object-cover" />
+                  </div>
+                  <span className="text-[10px] leading-none font-bold text-slate-700">THRFT</span>
+                </Link>
+                {navItems.slice(0, 3).map(({ path, label, icon: Icon }) => {
                   const isActive = location.pathname === path;
                   return (
                     <Link
                       key={path}
                       to={path}
-                      className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 min-w-[44px]"
+                      className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 flex-1"
                       style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
                     >
                       <Icon className="w-4 h-4" />
@@ -71,14 +79,15 @@ export default function AppLayout() {
                   );
                 })}
               </div>
-              <div className="flex items-center gap-0.5">
-                {navItems.slice(4).map(({ path, label, icon: Icon }) => {
+              {/* Row 2: last 4 nav items */}
+              <div className="flex items-center">
+                {navItems.slice(3).map(({ path, label, icon: Icon }) => {
                   const isActive = location.pathname === path;
                   return (
                     <Link
                       key={path}
                       to={path}
-                      className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 min-w-[44px]"
+                      className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 flex-1"
                       style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
                     >
                       <Icon className="w-4 h-4" />
