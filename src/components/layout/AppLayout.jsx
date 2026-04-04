@@ -24,79 +24,73 @@ export default function AppLayout() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50/30">
       {/* Header */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-blue-100/50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16">
-            <Link to="/Home" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl overflow-hidden hidden md:block">
-                <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT logo" className="w-full h-full object-cover" />
-              </div>
-              <span className="text-lg font-bold tracking-tight text-slate-900 hidden md:block">
-                THRFT
-              </span>
-            </Link>
-
-            {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-1">
-              {navItems.map(({ path, label, icon: Icon }) => {
-                const isActive = location.pathname === path;
-                return (
-                  <Link
-                    key={path}
-                    to={path}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200"
-                    style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{label}</span>
-                  </Link>
-                );
-              })}
-            </nav>
-
-            {/* Mobile nav — 2-row grid: logo + 3 icons, then 4 icons */}
-            <nav className="flex md:hidden flex-col gap-0.5">
-              {/* Row 1: Logo + first 3 nav items */}
-              <div className="flex items-center">
-                {/* THRFT Logo as first "icon" */}
-                <Link to="/Home" className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl min-w-[44px]">
-                  <div className="w-6 h-6 rounded-lg overflow-hidden">
-                    <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" className="w-full h-full object-cover" />
-                  </div>
-                  <span className="text-[10px] leading-none font-bold text-slate-700">THRFT</span>
+        {/* Desktop header */}
+        <div className="hidden md:flex max-w-5xl mx-auto px-6 items-center justify-between h-16">
+          <Link to="/Home" className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl overflow-hidden">
+              <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT logo" className="w-full h-full object-cover" />
+            </div>
+            <span className="text-lg font-bold tracking-tight text-slate-900">THRFT</span>
+          </Link>
+          <nav className="flex items-center gap-1">
+            {navItems.map(({ path, label, icon: Icon }) => {
+              const isActive = location.pathname === path;
+              return (
+                <Link
+                  key={path}
+                  to={path}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200"
+                  style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{label}</span>
                 </Link>
-                {navItems.slice(0, 3).map(({ path, label, icon: Icon }) => {
-                  const isActive = location.pathname === path;
-                  return (
-                    <Link
-                      key={path}
-                      to={path}
-                      className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 flex-1"
-                      style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span className="text-[10px] leading-none">{label}</span>
-                    </Link>
-                  );
-                })}
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Mobile header — 2 rows of 4, full width */}
+        <div className="flex md:hidden flex-col w-full py-1">
+          {/* Row 1: THRFT logo + first 3 nav items */}
+          <div className="grid grid-cols-4 w-full">
+            <Link to="/Home" className="flex flex-col items-center justify-center gap-0.5 py-1.5 rounded-xl">
+              <div className="w-6 h-6 rounded-lg overflow-hidden">
+                <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" className="w-full h-full object-cover" />
               </div>
-              {/* Row 2: last 4 nav items */}
-              <div className="flex items-center">
-                {navItems.slice(3).map(({ path, label, icon: Icon }) => {
-                  const isActive = location.pathname === path;
-                  return (
-                    <Link
-                      key={path}
-                      to={path}
-                      className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 flex-1"
-                      style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span className="text-[10px] leading-none">{label}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </nav>
+              <span className="text-[10px] leading-none font-bold text-slate-700">THRFT</span>
+            </Link>
+            {navItems.slice(0, 3).map(({ path, label, icon: Icon }) => {
+              const isActive = location.pathname === path;
+              return (
+                <Link
+                  key={path}
+                  to={path}
+                  className="flex flex-col items-center justify-center gap-0.5 py-1.5 rounded-xl text-xs font-medium transition-all duration-200"
+                  style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span className="text-[10px] leading-none">{label}</span>
+                </Link>
+              );
+            })}
+          </div>
+          {/* Row 2: last 4 nav items */}
+          <div className="grid grid-cols-4 w-full">
+            {navItems.slice(3).map(({ path, label, icon: Icon }) => {
+              const isActive = location.pathname === path;
+              return (
+                <Link
+                  key={path}
+                  to={path}
+                  className="flex flex-col items-center justify-center gap-0.5 py-1.5 rounded-xl text-xs font-medium transition-all duration-200"
+                  style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span className="text-[10px] leading-none">{label}</span>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </header>
