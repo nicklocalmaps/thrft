@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Check, ShoppingCart, MapPin, List, Zap, Truck, Star, Gift, ChevronRight } from 'lucide-react';
@@ -74,7 +75,7 @@ export default function Landing() {
           <div className="flex items-center gap-3">
             <a href="#pricing" className="text-sm text-slate-500 hover:text-slate-800 transition-colors hidden sm:block">Pricing</a>
             <Button onClick={handleCTA} className="h-9 rounded-xl px-5 text-sm font-semibold" style={{ backgroundColor: THRFT_BLUE }}>
-              Start Free Trial
+              Log In
             </Button>
           </div>
         </div>
@@ -110,29 +111,33 @@ export default function Landing() {
               One list. Every store. Instantly find the lowest price across nearby grocery stores.
             </p>
 
-            {/* Pricing card inline in hero */}
-            <div className="max-w-sm mx-auto bg-white rounded-3xl border-2 border-blue-200 shadow-xl shadow-blue-100 p-8 mb-4">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-sm font-semibold mb-5">
-                <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" /> 30-Day Free Trial
+            {/* Explainer Video */}
+            <div className="max-w-2xl mx-auto rounded-3xl overflow-hidden shadow-2xl shadow-blue-100 border border-slate-100 mb-4 bg-slate-900 aspect-video flex items-center justify-center">
+              <div className="w-full h-full relative">
+                <video
+                  controls
+                  className="w-full h-full object-cover"
+                  poster=""
+                  style={{ display: 'block' }}
+                >
+                  <source src="" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center pointer-events-none">
+                  <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mb-3">
+                    <svg className="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  </div>
+                  <p className="text-sm text-white/70">See how THRFT works in 60 seconds</p>
+                </div>
               </div>
-              <div className="mb-6">
-                <p className="text-5xl font-extrabold text-slate-900">$1.99<span className="text-xl font-semibold text-slate-400">/mo</span></p>
-                <p className="text-sm text-slate-400 mt-1">after your free trial</p>
-              </div>
-              <ul className="space-y-3 text-left mb-8">
-                {['Unlimited price comparisons', 'Unlimited grocery lists', 'Full store access', 'In-store, pickup & delivery'].map((f) => (
-                  <li key={f} className="flex items-center gap-3 text-sm text-slate-700">
-                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
-                      <Check className="w-3 h-3 text-emerald-600" strokeWidth={3} />
-                    </div>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <Button onClick={handleCTA} className="w-full h-12 rounded-xl text-base font-bold shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
-                Start Your Free Trial
+            </div>
+
+            {/* CTA below video */}
+            <div className="text-center mb-2">
+              <Button onClick={handleCTA} className="h-13 px-10 text-base font-bold rounded-2xl shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
+                Get Started Free →
               </Button>
-              <p className="text-xs text-slate-400 mt-3">No charge for 30 days. Cancel anytime.</p>
+              <p className="text-xs text-slate-400 mt-3">Free to join. 30-day free trial included.</p>
             </div>
 
 
@@ -347,14 +352,15 @@ export default function Landing() {
           <p className="text-slate-500 text-lg mb-10">Join thousands of smart shoppers already using THRFT.</p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
-              { quote: '"Saved $40 on my first trip. I was shocked at the price difference between stores!"', name: 'Sarah M.' },
-              { quote: '"I never realized how much I was overpaying. THRFT paid for itself instantly."', name: 'James T.' },
-              { quote: '"The delivery fee comparison alone is worth it. So many hidden costs exposed!"', name: 'Maria L.' },
+              { quote: '"Saved $40 on my first trip. I was shocked at the price difference between stores!"', name: 'Sarah M.', location: 'Columbus, OH' },
+              { quote: '"I never realized how much I was overpaying. THRFT paid for itself instantly."', name: 'James T.', location: 'Madison, WI' },
+              { quote: '"The delivery fee comparison alone is worth it. So many hidden costs exposed!"', name: 'Maria L.', location: 'San Diego, CA' },
             ].map((t) => (
               <div key={t.name} className="bg-slate-50 rounded-2xl border border-slate-100 p-6 text-left">
                 <div className="flex gap-0.5 mb-3">{[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}</div>
                 <p className="text-slate-700 text-sm mb-4 italic">{t.quote}</p>
                 <p className="text-sm font-semibold text-slate-900">{t.name}</p>
+                <p className="text-xs text-slate-400">{t.location}</p>
               </div>
             ))}
           </div>
@@ -390,12 +396,12 @@ export default function Landing() {
             <nav className="flex flex-wrap gap-5 text-sm justify-center">
               <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
               <button onClick={handleCTA} className="hover:text-white transition-colors">Features</button>
-              <button onClick={handleCTA} className="hover:text-white transition-colors">FAQ</button>
-              <button onClick={handleCTA} className="hover:text-white transition-colors">Contact</button>
+              <Link to="/FAQ" className="hover:text-white transition-colors">FAQ</Link>
+              <a href="mailto:support@thrft.app" className="hover:text-white transition-colors">Contact</a>
             </nav>
             <div className="flex gap-4 text-sm">
-              <a href="#" className="hover:text-white transition-colors">Terms</a>
-              <a href="#" className="hover:text-white transition-colors">Privacy</a>
+              <Link to="/Terms" className="hover:text-white transition-colors">Terms</Link>
+              <Link to="/Privacy" className="hover:text-white transition-colors">Privacy</Link>
             </div>
           </div>
           <div className="mt-8 pt-6 border-t border-slate-800 text-center text-xs text-slate-600">

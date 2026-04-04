@@ -57,7 +57,7 @@ export default function Onboarding() {
     base44.functions.invoke('incrementUserCount', {}).catch(() => {});
     // Send welcome email
     base44.functions.invoke('sendWelcomeEmail', {}).catch(() => {});
-    navigate('/Subscribe');
+    navigate('/NewList');
   };
 
   return (

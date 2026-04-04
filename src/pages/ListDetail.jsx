@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -12,6 +12,7 @@ import StorePicker from '@/components/grocery/StorePicker';
 import PriceHistoryChart from '@/components/grocery/PriceHistoryChart';
 import ListBudget from '@/components/grocery/ListBudget';
 import CouponListMatcher from '@/components/coupons/CouponListMatcher';
+import FreeTrialModal from '@/components/subscription/FreeTrialModal';
 import { ALL_STORES } from '@/lib/storeConfig';
 
 const METHOD_LABELS = {
@@ -28,6 +29,8 @@ export default function ListDetail() {
 
   const [comparing, setComparing] = useState(false);
   const [localItems, setLocalItems] = useState(null);
+  const [showTrialModal, setShowTrialModal] = useState(false);
+  const trialTimerRef = React.useRef(null);
 
   // Handle item passed back from SearchProducts page
   useEffect(() => {
@@ -287,6 +290,14 @@ export default function ListDetail() {
     queryClient.invalidateQueries({ queryKey: ['grocery-list', listId] });
     queryClient.invalidateQueries({ queryKey: ['price-history', listId] });
     setComparing(false);
+
+    // Show free trial modal 30s after first comparison if user isn't subscribed
+    const user = await base44.auth.me().catch(() => null);
+    const activeStatuses = ['trialing', 'active'];
+    if (!activeStatuses.includes(user?.subscription_status)) {
+      clearTimeout(trialTimerRef.current);
+      trialTimerRef.current = setTimeout(() => setShowTrialModal(true), 30000);
+    }
   };
 
   if (isLoading) {
@@ -326,6 +337,7 @@ export default function ListDetail() {
 
   return (
     <div>
+      {showTrialModal && <FreeTrialModal onClose={() => { setShowTrialModal(false); clearTimeout(trialTimerRef.current); }} />}
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <Link to="/Home">

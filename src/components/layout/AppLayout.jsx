@@ -1,27 +1,11 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Plus, Store, UserCircle, Gift, Share2, DollarSign, Ticket } from 'lucide-react';
+import { ShoppingCart, Plus, Store, UserCircle, Gift, DollarSign, Ticket } from 'lucide-react';
 import ReferralBanner from '@/components/rewards/ReferralBanner';
 import { base44 } from '@/api/base44Client';
 
 const THRFT_BLUE = '#4181ed';
 
-async function handleShareInvite() {
-  let referralCode = '';
-  try {
-    const res = await base44.functions.invoke('referralTracker', { action: 'getMyRewards' });
-    referralCode = res.data?.profile?.referral_code || '';
-  } catch {}
-  const url = referralCode
-    ? `${window.location.origin}/?ref=${referralCode}`
-    : window.location.origin;
-  const text = 'I use THRFT to compare grocery prices across every store and save money every trip! Try it free:';
-  if (navigator.share) {
-    navigator.share({ title: 'Save money on groceries with THRFT', text, url });
-  } else {
-    navigator.clipboard.writeText(`${text} ${url}`);
-    alert('Link copied to clipboard!');
-  }
-}
+
 
 export default function AppLayout() {
   const location = useLocation();
@@ -51,29 +35,58 @@ export default function AppLayout() {
               </span>
             </Link>
 
-            <nav className="flex items-center gap-1">
-              <button
-                onClick={handleShareInvite}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 bg-purple-100 text-purple-700 hover:bg-purple-200 mr-1"
-                title="Invite Friends"
-              >
-                <Share2 className="w-4 h-4" />
-                <span className="hidden sm:inline">Invite</span>
-              </button>
+            {/* Desktop nav */}
+            <nav className="hidden md:flex items-center gap-1">
               {navItems.map(({ path, label, icon: Icon }) => {
                 const isActive = location.pathname === path;
                 return (
                   <Link
                     key={path}
                     to={path}
-                    className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200"
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200"
                     style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
                   >
                     <Icon className="w-4 h-4" />
-                    <span className="hidden sm:inline">{label}</span>
+                    <span>{label}</span>
                   </Link>
                 );
               })}
+            </nav>
+
+            {/* Mobile nav — 2-row icon grid */}
+            <nav className="flex md:hidden flex-col gap-0.5">
+              <div className="flex items-center gap-0.5">
+                {navItems.slice(0, 4).map(({ path, label, icon: Icon }) => {
+                  const isActive = location.pathname === path;
+                  return (
+                    <Link
+                      key={path}
+                      to={path}
+                      className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 min-w-[44px]"
+                      style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span className="text-[10px] leading-none">{label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+              <div className="flex items-center gap-0.5">
+                {navItems.slice(4).map(({ path, label, icon: Icon }) => {
+                  const isActive = location.pathname === path;
+                  return (
+                    <Link
+                      key={path}
+                      to={path}
+                      className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 min-w-[44px]"
+                      style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span className="text-[10px] leading-none">{label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
             </nav>
           </div>
         </div>

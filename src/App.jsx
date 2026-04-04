@@ -22,6 +22,9 @@ import Landing from '@/pages/Landing';
 import ContactUs from '@/pages/ContactUs';
 import Rewards from '@/pages/Rewards';
 import InviteFriends from '@/pages/InviteFriends';
+import FAQ from '@/pages/FAQ';
+import Terms from '@/pages/Terms';
+import Privacy from '@/pages/Privacy';
 import Budget from '@/pages/Budget';
 import Coupons from '@/pages/Coupons';
 
@@ -79,6 +82,9 @@ const AuthenticatedApp = () => {
       <Route path="/Onboarding" element={<Onboarding />} />
       <Route path="/Subscribe" element={<Subscribe />} />
       <Route path="/ContactUs" element={<ContactUs />} />
+      <Route path="/FAQ" element={<FAQ />} />
+      <Route path="/Terms" element={<Terms />} />
+      <Route path="/Privacy" element={<Privacy />} />
       <Route element={<AppLayout />}>
         <Route path="/app" element={<OnboardingGate />} />
         <Route path="/Home" element={<SubscriptionGate><Home /></SubscriptionGate>} />
