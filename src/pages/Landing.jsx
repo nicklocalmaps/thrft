@@ -62,16 +62,6 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-white font-sans">
 
-      {/* Top user count bar */}
-      <div className="w-full bg-blue-600 text-white text-sm font-semibold py-2 text-center flex items-center justify-center gap-2">
-        <div className="flex -space-x-1.5">
-          <div className="w-5 h-5 rounded-full bg-blue-300 border-2 border-blue-600" />
-          <div className="w-5 h-5 rounded-full bg-emerald-300 border-2 border-blue-600" />
-          <div className="w-5 h-5 rounded-full bg-amber-300 border-2 border-blue-600" />
-        </div>
-        <span>{userCount.toLocaleString()} users saving money 🎉</span>
-      </div>
-
       {/* NAV */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-100">
         <div className="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
@@ -94,6 +84,18 @@ export default function Landing() {
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-slate-50 pt-20 pb-24 px-5">
         <div className="max-w-5xl mx-auto text-center">
           <motion.div variants={fade} initial="hidden" animate="show">
+            <div className="flex justify-center mb-4">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm">
+                <div className="flex -space-x-1.5">
+                  <div className="w-6 h-6 rounded-full bg-blue-400 border-2 border-white" />
+                  <div className="w-6 h-6 rounded-full bg-emerald-400 border-2 border-white" />
+                  <div className="w-6 h-6 rounded-full bg-amber-400 border-2 border-white" />
+                </div>
+                <span className="text-sm font-semibold text-slate-700">{userCount.toLocaleString()} users saving money</span>
+                <span className="text-base">🎉</span>
+              </div>
+            </div>
+
             <div className="flex flex-col items-center justify-center gap-2 mb-6">
               <p className="flex items-center gap-2 text-blue-700 font-semibold text-sm">
                 <Star className="w-4 h-4 fill-blue-500 shrink-0" />
@@ -133,18 +135,7 @@ export default function Landing() {
               <p className="text-xs text-slate-400 mt-3">No charge for 30 days. Cancel anytime.</p>
             </div>
 
-            {/* User count badge */}
-            <div className="flex justify-center mt-5">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm">
-                <div className="flex -space-x-1.5">
-                  <div className="w-6 h-6 rounded-full bg-blue-400 border-2 border-white" />
-                  <div className="w-6 h-6 rounded-full bg-emerald-400 border-2 border-white" />
-                  <div className="w-6 h-6 rounded-full bg-amber-400 border-2 border-white" />
-                </div>
-                <span className="text-sm font-semibold text-slate-700">{userCount.toLocaleString()} users saving money</span>
-                <span className="text-base">🎉</span>
-              </div>
-            </div>
+
           </motion.div>
 
           {/* Mock UI Card */}
