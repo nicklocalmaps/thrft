@@ -73,7 +73,7 @@ export default function FreeTrialModal({ onClose }) {
                 <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" /> You just saved money! 🎉
               </div>
               <h2 className="text-2xl font-extrabold text-slate-900 mb-2">Unlock Full Access</h2>
-              <p className="text-slate-500 text-sm">Start your 30-day free trial to keep comparing prices and saving on every grocery trip.</p>
+              <p className="text-slate-500 text-sm">Start your 7-day free trial to keep comparing prices and saving on every grocery trip.</p>
             </div>
 
             <div className="bg-slate-50 rounded-2xl p-5 mb-6">
@@ -108,7 +108,7 @@ export default function FreeTrialModal({ onClose }) {
             >
               {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Opening Stripe…</> : 'Start Free Trial →'}
             </Button>
-            <p className="text-xs text-slate-400 text-center mt-3">No charge for 30 days. Cancel anytime.</p>
+            <p className="text-xs text-slate-400 text-center mt-3">No charge for 7 days. Cancel anytime.</p>
 
             <button onClick={onClose} className="w-full text-xs text-slate-400 hover:text-slate-600 mt-3 transition-colors">
               Maybe later

@@ -10,6 +10,38 @@
       ],
       "default": "user"
     },
+    "account_type": {
+      "type": "string",
+      "enum": [
+        "free",
+        "premium",
+        "family"
+      ],
+      "default": "free",
+      "description": "User's account tier"
+    },
+    "has_lifetime_access": {
+      "type": "boolean",
+      "default": false,
+      "description": "Granted lifetime premium via promo code"
+    },
+    "trial_start_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the user's trial started"
+    },
+    "family_group_id": {
+      "type": "string",
+      "description": "ID of the family group this user belongs to"
+    },
+    "owl_hints_dismissed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Keys of Willie Owl hints the user has dismissed forever"
+    },
     "zip_code": {
       "type": "string"
     },
@@ -25,10 +57,9 @@
     },
     "tour_completed": {
       "type": "boolean",
-      "default": false,
-      "description": "Whether the user has seen the feature tour"
+      "default": false
     },
-    "shopping_method": {
+    "default_shopping_method": {
       "type": "string",
       "enum": [
         "instore",
@@ -38,32 +69,14 @@
       ],
       "default": "all"
     },
+    "loyalty_cards": {
+      "type": "object"
+    },
     "subscription_status": {
       "type": "string"
     },
     "stripe_customer_id": {
       "type": "string"
-    },
-    "monthly_budget": {
-      "type": "number",
-      "description": "Monthly grocery budget in dollars"
-    },
-    "per_trip_budget": {
-      "type": "number",
-      "description": "Per-trip grocery budget in dollars"
-    },
-    "household_size": {
-      "type": "number",
-      "default": 2,
-      "description": "Number of people in household"
     }
-  },
-  "required": [
-    "zip_code",
-    "favorite_stores",
-    "subscription_status",
-    "stripe_customer_id",
-    "monthly_budget",
-    "per_trip_budget"
-  ]
+  }
 }

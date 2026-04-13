@@ -102,12 +102,12 @@ export default function Subscribe() {
         <div className="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-100 p-8 text-center">
           <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-sm font-semibold mb-4">
             <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-            30-Day Free Trial
+            7-Day Free Trial
           </div>
 
           <h1 className="text-2xl font-bold text-slate-900 mb-1">Start saving money today</h1>
           <p className="text-slate-500 text-sm mb-6">
-            Try free for 30 days, then just <strong className="text-slate-800">$1.99/month</strong>. Cancel anytime.
+            Try free for 7 days, then just <strong className="text-slate-800">$3.99/month</strong>. Cancel anytime.
           </p>
 
           {/* Features */}
@@ -134,7 +134,7 @@ export default function Subscribe() {
                 <Loader2 className="w-5 h-5 animate-spin" />
                 Opening Stripe… {countdown > 0 ? `(${countdown}s)` : ''}
               </>
-            ) : 'Start Free Trial →'}
+            ) : 'Start 7-Day Free Trial →'}
           </Button>
 
           {/* Timeout / Error state */}
@@ -164,7 +164,7 @@ export default function Subscribe() {
           )}
 
           <p className="text-xs text-slate-400 mt-4">
-            No charge for 30 days. Card required to activate trial.
+            No charge for 7 days. Card required to activate trial.
           </p>
 
           <p className="text-xs text-slate-400 mt-1">

@@ -9,13 +9,17 @@ import { ALL_STORES } from '@/lib/storeConfig';
 
 export default function Onboarding() {
   const navigate = useNavigate();
-  const [step, setStep] = useState('zip'); // 'zip' | 'stores' | 'saving'
+  const [step, setStep] = useState('zip'); // 'zip' | 'stores' | 'promo' | 'saving'
   const [zipCode, setZipCode] = useState('');
   const [loadingStores, setLoadingStores] = useState(false);
   const [nearbyStores, setNearbyStores] = useState([]);
   const [selectedStores, setSelectedStores] = useState([]);
   const [saving, setSaving] = useState(false);
   const [storeQuery, setStoreQuery] = useState('');
+  const [promoCode, setPromoCode] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [promoError, setPromoError] = useState('');
+  const [promoApplied, setPromoApplied] = useState(false);
   const [userCount, setUserCount] = useState(11483);
 
   useEffect(() => {
@@ -46,17 +50,38 @@ export default function Onboarding() {
     );
   };
 
+  const validatePromo = () => {
+    setPromoError('');
+    const code = promoCode.trim().toUpperCase();
+    if (code !== 'EBT2026') {
+      setPromoError('Invalid promo code. Please check and try again.');
+      return;
+    }
+    const digits = cardNumber.replace(/\D/g, '');
+    if (digits.length < 16 || digits.length > 19) {
+      setPromoError('Please enter a valid EBT card number (16–19 digits).');
+      return;
+    }
+    setPromoApplied(true);
+  };
+
   const completeOnboarding = async () => {
     setSaving(true);
-    await base44.auth.updateMe({
+    const updates = {
       zip_code: zipCode,
       favorite_stores: selectedStores,
-      onboarding_complete: true
-    });
-    // Increment the live user count
+      onboarding_complete: true,
+    };
+    if (promoApplied) {
+      updates.has_lifetime_access = true;
+      updates.account_type = 'premium';
+    }
+    await base44.auth.updateMe(updates);
     base44.functions.invoke('incrementUserCount', {}).catch(() => {});
-    // Send welcome email
     base44.functions.invoke('sendWelcomeEmail', {}).catch(() => {});
+    if (promoApplied) {
+      base44.functions.invoke('sendWelcomeToPremium', {}).catch(() => {});
+    }
     navigate('/NewList');
   };
 
@@ -207,18 +232,11 @@ export default function Onboarding() {
                   <span className="font-semibold" style={{ color: '#4181ed' }}>{selectedStores.length}</span> store{selectedStores.length !== 1 ? 's' : ''} selected
                 </p>
                 <Button
-                onClick={completeOnboarding}
-                disabled={selectedStores.length === 0 || saving}
+                onClick={() => setStep('promo')}
+                disabled={selectedStores.length === 0}
                 className="h-11 px-6 rounded-xl shadow-md shadow-blue-200 gap-2" style={{ backgroundColor: '#4181ed' }}>
                 
-                  {saving ?
-                <Loader2 className="w-4 h-4 animate-spin" /> :
-
-                <>
-                      Start Shopping
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                }
+                  <>Next <ArrowRight className="w-4 h-4" /></>
                 </Button>
               </div>
 
@@ -229,6 +247,73 @@ export default function Onboarding() {
                 ← Change zip code
               </button>
             </motion.div>
+          }
+
+          {/* Step 3: Promo Code */}
+          {step === 'promo' &&
+          <motion.div
+            key="promo"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 p-8">
+
+            <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center mb-5">
+              <span className="text-3xl">🎟️</span>
+            </div>
+            <h1 className="text-2xl font-bold text-slate-900 mb-1">Have a Promo Code?</h1>
+            <p className="text-slate-500 mb-6 text-sm">If you have an EBT promo code, enter it below for lifetime free access. Otherwise, skip to start your 7-day free trial.</p>
+
+            {promoApplied ? (
+              <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 mb-6 text-center">
+                <span className="text-3xl block mb-2">🎉</span>
+                <p className="font-bold text-emerald-800">Lifetime access unlocked!</p>
+                <p className="text-sm text-emerald-600 mt-1">Your promo code has been applied. Enjoy THRFT Premium for free.</p>
+              </div>
+            ) : (
+              <div className="space-y-3 mb-6">
+                <div>
+                  <label className="text-sm font-medium text-slate-700 mb-1.5 block">Promo Code</label>
+                  <Input
+                    placeholder="e.g. EBT2026"
+                    value={promoCode}
+                    onChange={e => { setPromoCode(e.target.value); setPromoError(''); }}
+                    className="h-11 rounded-xl border-slate-200 text-base focus-visible:ring-blue-400"
+                  />
+                </div>
+                {promoCode.trim().toUpperCase() === 'EBT2026' && (
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 mb-1.5 block">EBT Card Number (16–19 digits)</label>
+                    <Input
+                      placeholder="Card number"
+                      value={cardNumber}
+                      onChange={e => { setCardNumber(e.target.value.replace(/\D/g, '').slice(0, 19)); setPromoError(''); }}
+                      className="h-11 rounded-xl border-slate-200 text-base focus-visible:ring-blue-400"
+                      maxLength={19}
+                    />
+                    <p className="text-xs text-slate-400 mt-1">Your card number is not stored — only used to verify eligibility.</p>
+                  </div>
+                )}
+                {promoError && <p className="text-sm text-red-500">{promoError}</p>}
+                {promoCode.trim() && (
+                  <Button onClick={validatePromo} className="w-full h-11 rounded-xl" style={{ backgroundColor: '#4181ed' }}>
+                    Apply Code
+                  </Button>
+                )}
+              </div>
+            )}
+
+            <Button
+              onClick={completeOnboarding}
+              disabled={saving}
+              className="w-full h-12 rounded-xl shadow-md shadow-blue-200 gap-2 font-semibold" style={{ backgroundColor: '#4181ed' }}>
+              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <>{promoApplied ? 'Activate Lifetime Access' : 'Start 7-Day Free Trial'} <ArrowRight className="w-4 h-4" /></>}
+            </Button>
+
+            <button onClick={() => setStep('stores')} className="mt-4 text-sm text-slate-500 hover:text-black transition-colors w-full text-center">
+              ← Back to stores
+            </button>
+          </motion.div>
           }
 
         </AnimatePresence>

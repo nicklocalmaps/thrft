@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import useUserTier from '@/hooks/useUserTier';
+import UpgradePrompt from '@/components/subscription/UpgradePrompt';
+import WillieOwl from '@/components/WillieOwl';
 import { base44 } from '@/api/base44Client';
 import { AnimatePresence } from 'framer-motion';
 import { Ticket, Plus, X } from 'lucide-react';
@@ -8,6 +11,7 @@ import CouponScanner from '@/components/coupons/CouponScanner';
 import CouponCard from '@/components/coupons/CouponCard';
 
 export default function Coupons() {
+  const { isPremium } = useUserTier();
   const queryClient = useQueryClient();
   const [showScanner, setShowScanner] = useState(false);
 
@@ -55,8 +59,13 @@ export default function Coupons() {
   const active = coupons.filter(c => c.status === 'active');
   const inactive = coupons.filter(c => c.status !== 'active');
 
+  if (!isPremium) {
+    return <UpgradePrompt feature="Coupon Scanner" description="Photograph paper coupons and let AI extract the details — then add matching items directly to your grocery list." />;
+  }
+
   return (
     <div className="max-w-2xl mx-auto">
+      <WillieOwl pageKey="coupons" hint="Photograph any paper coupon and I'll extract the details automatically! Then you can add it straight to your grocery list." />
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

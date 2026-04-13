@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { AnimatePresence } from 'framer-motion';
 import ListCard from '@/components/grocery/ListCard';
 import FeatureTour from '@/components/onboarding/FeatureTour';
+import WillieOwl from '@/components/WillieOwl';
 import StorePriceDashboard from '@/components/grocery/StorePriceDashboard';
 import ReferralBanner from '@/components/rewards/ReferralBanner';
 
@@ -51,6 +52,7 @@ export default function Home() {
   return (
     <div>
       {showTour && <FeatureTour onComplete={handleTourComplete} />}
+      <WillieOwl pageKey="home" hint="Create a grocery list, select your stores, then hit Compare Prices to instantly see which store saves you the most money!" />
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 tracking-tight">My Grocery Lists</h1>
         <p className="text-slate-900 mt-1">Compare prices across all of your favorite local grocery stores</p>

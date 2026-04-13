@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
+import useUserTier from '@/hooks/useUserTier';
+import UpgradePrompt from '@/components/subscription/UpgradePrompt';
+import WillieOwl from '@/components/WillieOwl';
 import { Input } from '@/components/ui/input';
 import { Loader2, DollarSign, Target, Users, TrendingDown, Lightbulb, AlertTriangle, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,6 +15,7 @@ const THRFT_BLUE = '#4181ed';
 const AVG_SPEND_PER_PERSON = 300; // avg monthly grocery spend per person (USD)
 
 export default function Budget() {
+  const { isPremium, loading: tierLoading } = useUserTier();
   const [user, setUser] = useState(null);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -84,12 +88,16 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
     setLoadingTips(false);
   };
 
-  if (loading) {
+  if (loading || tierLoading) {
     return (
       <div className="flex items-center justify-center py-20">
         <Loader2 className="w-7 h-7 text-blue-400 animate-spin" />
       </div>
     );
+  }
+
+  if (!isPremium) {
+    return <UpgradePrompt feature="Budget Planner" description="Set spending targets, track your grocery trips, and get AI-powered saving tips." />;
   }
 
   // --- Data calculations ---
@@ -142,6 +150,7 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
 
   return (
     <div className="max-w-2xl mx-auto">
+      <WillieOwl pageKey="budget" hint="Set a monthly budget and THRFT will alert you when you're getting close. Compare prices first to keep each trip on track!" />
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
           <DollarSign className="w-7 h-7" style={{ color: THRFT_BLUE }} />

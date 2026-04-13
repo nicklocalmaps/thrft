@@ -27,6 +27,7 @@ import Terms from '@/pages/Terms';
 import Privacy from '@/pages/Privacy';
 import Budget from '@/pages/Budget';
 import Coupons from '@/pages/Coupons';
+import FamilyInvite from '@/pages/FamilyInvite';
 
 const OnboardingGate = () => {
   const [checking, setChecking] = React.useState(true);
@@ -97,6 +98,7 @@ const AuthenticatedApp = () => {
         <Route path="/InviteFriends" element={<SubscriptionGate><InviteFriends /></SubscriptionGate>} />
         <Route path="/Budget" element={<SubscriptionGate><Budget /></SubscriptionGate>} />
         <Route path="/Coupons" element={<SubscriptionGate><Coupons /></SubscriptionGate>} />
+        <Route path="/FamilyInvite" element={<SubscriptionGate><FamilyInvite /></SubscriptionGate>} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
