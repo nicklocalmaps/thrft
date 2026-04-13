@@ -41,7 +41,7 @@ const MOCK_STORES = [
   { name: 'Kroger', total: 51.20, badge: null },
   { name: 'Walmart', total: 48.90, badge: 'Best Price' },
   { name: 'Amazon Fresh', total: 54.10, badge: null },
-  { name: 'Trader Joe\'s', total: 52.75, badge: null },
+  { name: "Trader Joe's", total: 52.75, badge: null },
   { name: 'Shipt', total: 56.30, badge: null },
 ];
 
@@ -112,35 +112,27 @@ export default function Landing() {
             </p>
 
             {/* Explainer Video */}
-            <div className="max-w-2xl mx-auto rounded-3xl overflow-hidden shadow-2xl shadow-blue-100 border border-slate-100 mb-4 bg-slate-900 aspect-video flex items-center justify-center">
-              <div className="w-full h-full relative">
-                <video
-                  controls
-                  className="w-full h-full object-cover"
-                  poster=""
-                  style={{ display: 'block' }}
-                >
-                  <source src="" type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center pointer-events-none">
-                  <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mb-3">
-                    <svg className="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                  </div>
-                  <p className="text-sm text-white/70">See how THRFT works in 60 seconds</p>
-                </div>
-              </div>
+            <div className="max-w-2xl mx-auto rounded-3xl overflow-hidden shadow-2xl shadow-blue-100 border border-slate-100 mb-2 aspect-video">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/O6I6KJGX7QA"
+                title="How THRFT Works"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              />
             </div>
+            <p className="text-sm text-slate-400 mb-6">See how THRFT works in 60 seconds</p>
 
             {/* CTA below video */}
             <div className="text-center mb-2">
               <Button onClick={handleCTA} className="h-13 px-10 text-base font-bold rounded-2xl shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
                 Get Started Free →
               </Button>
-              <p className="text-xs text-slate-400 mt-3">Free to join. 30-day free trial included.</p>
+              <p className="text-xs text-slate-400 mt-3">Free to join. 7-day free trial included.</p>
             </div>
-
-
           </motion.div>
 
           {/* Mock UI Card */}
@@ -302,14 +294,14 @@ export default function Landing() {
           <p className="text-slate-500 text-lg mb-10">Start free. Cancel anytime.</p>
           <div className="bg-white rounded-3xl border-2 border-blue-200 shadow-xl shadow-blue-100 p-8">
             <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-sm font-semibold mb-5">
-              <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" /> 30-Day Free Trial
+              <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" /> 7-Day Free Trial
             </div>
             <div className="mb-6">
-              <p className="text-5xl font-extrabold text-slate-900">$1.99<span className="text-xl font-semibold text-slate-400">/mo</span></p>
+              <p className="text-5xl font-extrabold text-slate-900">$3.99<span className="text-xl font-semibold text-slate-400">/mo</span></p>
               <p className="text-sm text-slate-400 mt-1">after your free trial</p>
             </div>
             <ul className="space-y-3 text-left mb-8">
-              {['Unlimited price comparisons', 'Unlimited grocery lists', 'Full store access', 'In-store, pickup & delivery'].map((f) => (
+              {['Unlimited price comparisons', 'Unlimited grocery lists', 'Full store access', 'In-store, pickup & delivery', 'Coupon scanner', 'Budget tracker'].map((f) => (
                 <li key={f} className="flex items-center gap-3 text-sm text-slate-700">
                   <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
                     <Check className="w-3 h-3 text-emerald-600" strokeWidth={3} />
@@ -319,9 +311,9 @@ export default function Landing() {
               ))}
             </ul>
             <Button onClick={handleCTA} className="w-full h-13 rounded-xl text-base font-bold shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
-              Start Free Trial
+              Start 7-Day Free Trial
             </Button>
-            <p className="text-xs text-slate-400 mt-3">No charge for 30 days. Cancel anytime.</p>
+            <p className="text-xs text-slate-400 mt-3">No charge for 7 days. Cancel anytime.</p>
           </div>
         </div>
       </section>
@@ -377,7 +369,7 @@ export default function Landing() {
               Start Saving Now
             </Button>
             <Button onClick={handleCTA} className="h-14 px-10 text-base font-bold rounded-2xl bg-white text-blue-700 border-2 border-white/80 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all">
-              Try It Free for 30 Days
+              Try It Free for 7 Days
             </Button>
           </div>
         </div>
