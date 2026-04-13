@@ -116,10 +116,10 @@ export default function Landing() {
               <iframe
                 width="100%"
                 height="100%"
-                src="https://www.youtube.com/embed/O6I6KJGX7QA"
+                src="https://drive.google.com/file/d/1SWScR4QiONWOYQsZjxpz54GbG6jL1tLY/preview"
                 title="How THRFT Works"
                 frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow="autoplay"
                 allowFullScreen
                 className="w-full h-full"
               />
