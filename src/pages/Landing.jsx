@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Check, ShoppingCart, MapPin, List, Zap, Truck, Star, Gift, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import PriceOptimizationDemo from '@/components/grocery/PriceOptimizationDemo';
 
 const THRFT_BLUE = '#4181ed';
 
@@ -211,7 +212,31 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* LIVE PRICE OPTIMIZATION DEMO */}
+      <section className="py-20 px-5 bg-gradient-to-br from-slate-50 via-blue-50/30 to-white">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="text-xs font-bold tracking-widest text-blue-500 uppercase mb-3">Live Price Optimization</p>
+              <h2 className="text-4xl font-extrabold text-slate-900 leading-tight mb-4">
+                See exactly how much<br />you'll save on every trip
+              </h2>
+              <p className="text-slate-500 text-lg mb-6">THRFT compares 50+ stores in seconds and shows you the cheapest option for your entire list — in-store, pickup, or delivery.</p>
+              <Button onClick={handleCTA} className="h-12 px-8 rounded-xl font-bold shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
+                Try It Free for 7 Days →
+              </Button>
+              <p className="text-xs text-slate-400 mt-3">No charge for 7 days. Cancel anytime.</p>
+            </div>
+            <div>
+              <PriceOptimizationDemo />
+              <p className="text-xs text-slate-400 mt-3 text-center">Live demo — prices updated in real time across 50+ stores</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 4. DEMO */}
+
       <section className="py-20 px-5 bg-gradient-to-br from-blue-50 to-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-extrabold text-slate-900 mb-3">See Price Differences Instantly</h2>
