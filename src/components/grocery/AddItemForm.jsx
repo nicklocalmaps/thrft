@@ -14,9 +14,9 @@ async function searchOpenFoodFacts(query) {
 
 export default function AddItemForm({ onAdd, listId }) {
   const navigate = useNavigate();
-  const [showBrowser, setShowBrowser] = useState(false);
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [showBrowser, setShowBrowser] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -82,10 +82,16 @@ export default function AddItemForm({ onAdd, listId }) {
     setShowDropdown(false);
   };
 
+  const handleBrowseAdd = (item) => {
+    onAdd(item);
+    setShowBrowser(false);
+  };
+
 
 
   return (
     <div ref={containerRef} className="relative">
+      {showBrowser && <ProductBrowser onAdd={handleBrowseAdd} onClose={() => setShowBrowser(false)} />}
       <form onSubmit={handleSubmit} className="flex gap-2">
         <div className="relative flex-1">
           <Input
@@ -114,11 +120,7 @@ export default function AddItemForm({ onAdd, listId }) {
           type="button"
           variant="outline"
           title="Browse by category or brand"
-          onClick={() => {
-            const params = new URLSearchParams();
-            if (listId) params.set('listId', listId);
-            navigate(`/Browse?${params.toString()}`);
-          }}
+          onClick={() => setShowBrowser(true)}
           className="h-12 px-3 rounded-xl border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-300"
         >
           <LayoutGrid className="w-5 h-5" />

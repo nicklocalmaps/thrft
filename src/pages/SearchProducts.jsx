@@ -142,8 +142,13 @@ export default function SearchProducts() {
 
       {/* Content */}
       {tab === 'browse' ? (
-        // Browse mode — navigate to dedicated Browse page
-        navigate(`/Browse?listId=${listId || ''}`) || null
+        // Browse mode — inline (not full-screen modal) since we're already on the page
+        <div className="flex-1">
+          <ProductBrowser
+            onAdd={handleBrowseAdd}
+            onClose={() => navigate(backUrl)}
+          />
+        </div>
       ) : (
         <div className="max-w-2xl mx-auto w-full px-4 py-6">
           {!loading && results.length === 0 && (
