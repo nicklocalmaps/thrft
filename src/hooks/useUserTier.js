@@ -8,7 +8,7 @@ import { base44 } from '@/api/base44Client';
  * Premium: active/trialing Stripe sub, lifetime access, or family plan
  */
 export const FREE_TIER_STORES = ['walmart', 'kroger', 'amazon'];
-export const FREE_TIER_LIST_LIMIT = 2;
+export const FREE_TIER_LIST_LIMIT = 5;
 
 export default function useUserTier() {
   const [state, setState] = useState({
