@@ -468,9 +468,9 @@ export default function ProductBrowser({ onAdd, onClose, isFullPage = false }) {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             <Input
               placeholder={
-                current.level === 'categories' ? 'Search all products…' :
-                current.level === 'brands' ? `Search brands in ${current.category?.label}…` :
-                `Search ${current.brand?.brand} products…`
+                current.level === 'browse' ? 'Search all products…' :
+                current.level === 'category' ? `Search brands in ${current.category?.label}…` :
+                'Search products…'
               }
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
