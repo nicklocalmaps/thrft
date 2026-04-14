@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import FreePremiumComparison from '@/components/landing/FreePremiumComparison';
 import HookCards from '@/components/landing/HookCards';
 import DeliveryAppsSection from '@/components/landing/DeliveryAppsSection';
+import PriceOptimizationDemo from '@/components/grocery/PriceOptimizationDemo';
 
 const THRFT_BLUE = '#4181ed';
 
@@ -134,6 +135,35 @@ export default function Landing() {
               </div>
             ))}
             <span className="text-sm text-slate-400">+ 44 more stores</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 1b. PRICE OPTIMIZATION ENGINE */}
+      <section className="py-20 px-5 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            {/* Left: copy */}
+            <div className="flex-1">
+              <p className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: THRFT_BLUE }}>Live Price Optimization</p>
+              <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-tight mb-5">
+                See exactly how much<br className="hidden sm:block" /> you'll save on every trip
+              </h2>
+              <p className="text-lg text-slate-500 mb-8">
+                THRFT compares 50+ stores in seconds and shows you the cheapest option for your entire list — in-store, pickup, or delivery.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button onClick={handleCTA} className="h-13 px-8 text-base font-bold rounded-2xl shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
+                  Create Your Free Account →
+                </Button>
+              </div>
+              <p className="text-xs text-slate-400 mt-3">No charge for 7 days. Cancel anytime.</p>
+            </div>
+            {/* Right: demo */}
+            <div className="flex-1 w-full max-w-md">
+              <PriceOptimizationDemo />
+              <p className="text-xs text-slate-400 text-center mt-3">Live demo · prices updated in real time across 50+ stores</p>
+            </div>
           </div>
         </div>
       </section>
