@@ -38,7 +38,7 @@ export default function InlineBrowseProducts({ onAddItem }) {
       <div className="grid grid-cols-2 gap-6">
         {/* Categories */}
         <div>
-          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">Product Categories</h4>
+          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">Product <br /> Categories</h4>
           <div className="grid grid-cols-1 gap-3">
             {CATEGORIES.map(cat => (
               <button
