@@ -33,8 +33,8 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, message: 'Already a member.' });
     }
 
-    if (members.filter(m => m.status === 'joined').length >= 4) {
-      return Response.json({ error: 'This family plan is full (4 members maximum).' }, { status: 403 });
+    if (members.filter(m => m.status === 'joined').length >= 5) {
+      return Response.json({ error: 'This family plan is full (5 members maximum).' }, { status: 403 });
     }
 
     // Update member status to joined
@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
     );
     // If member wasn't pre-invited, add them
     if (!existing) {
-      if (members.length >= 4) {
+      if (members.length >= 5) {
         return Response.json({ error: 'Family plan is full.' }, { status: 403 });
       }
       updatedMembers.push({ email: user.email, user_id: user.id, status: 'joined', invited_at: new Date().toISOString() });

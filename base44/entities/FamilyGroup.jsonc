@@ -16,7 +16,7 @@
     },
     "members": {
       "type": "array",
-      "description": "Up to 4 invited/joined family members",
+      "description": "Up to 5 invited/joined family members",
       "items": {
         "type": "object",
         "properties": {

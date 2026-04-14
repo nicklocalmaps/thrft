@@ -93,8 +93,8 @@ export default function FamilyInvite() {
   const sendInvite = async () => {
     if (!email.trim() || !familyGroup) return;
     const members = familyGroup.members || [];
-    if (members.length >= 4) {
-      setError('Your family plan is full (4 members maximum).');
+    if (members.length >= 5) {
+      setError('Your family plan is full (5 members maximum).');
       return;
     }
     if (members.some(m => m.email === email.trim())) {
@@ -206,12 +206,12 @@ export default function FamilyInvite() {
             <Crown className="w-5 h-5 text-emerald-600 shrink-0" />
             <div>
               <p className="text-sm font-bold text-emerald-800">You're the Family Admin</p>
-              <p className="text-xs text-emerald-600">{memberCount}/4 members invited · Slots remaining: {4 - memberCount}</p>
+              <p className="text-xs text-emerald-600">{memberCount}/5 members invited · Slots remaining: {5 - memberCount}</p>
             </div>
           </div>
 
           {/* Invite form */}
-          {memberCount < 4 && (
+          {memberCount < 5 && (
             <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm mb-4">
               <p className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
                 <UserPlus className="w-4 h-4 text-slate-400" /> Invite a Family Member
@@ -282,7 +282,7 @@ export default function FamilyInvite() {
       <div className="bg-blue-50 rounded-2xl border border-blue-100 p-5 text-sm text-blue-700">
         <p className="font-semibold mb-1">How it works:</p>
         <ul className="list-disc list-inside space-y-1 text-blue-600">
-          <li>Invite up to 4 family members by email</li>
+          <li>Invite up to 5 family members by email</li>
           <li>They click the link, create their own account, and get linked to your plan</li>
           <li>Everyone gets full premium access under one $6.99/mo subscription</li>
         </ul>
