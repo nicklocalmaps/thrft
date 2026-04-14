@@ -53,6 +53,10 @@ export default function Onboarding() {
   const validatePromo = () => {
     setPromoError('');
     const code = promoCode.trim().toUpperCase();
+    if (code === 'AIRDROP2026') {
+      setPromoApplied(true);
+      return;
+    }
     if (code !== 'EBT2026') {
       setPromoError('Invalid promo code. Please check and try again.');
       return;
@@ -281,7 +285,7 @@ export default function Onboarding() {
                     className="h-11 rounded-xl border-slate-200 text-base focus-visible:ring-blue-400"
                   />
                 </div>
-                {promoCode.trim().toUpperCase() === 'EBT2026' && (
+                {promoCode.trim().toUpperCase() === 'EBT2026' && promoCode.trim().toUpperCase() !== 'AIRDROP2026' && (
                   <div>
                     <label className="text-sm font-medium text-slate-700 mb-1.5 block">EBT Card Number (16–19 digits)</label>
                     <Input
