@@ -58,7 +58,7 @@ function BrowseHome({ onSelectCategory, onSelectBrand, searchQuery }) {
 
         {/* Brands Grid */}
         <div>
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 px-2">Popular Brands</h3>
+          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 px-2">Popular <br /> Brands</h3>
           <div className="grid grid-cols-1 gap-3">
             {filteredBrands.map(brand => (
               <button
