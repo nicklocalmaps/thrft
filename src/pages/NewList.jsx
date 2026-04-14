@@ -12,17 +12,23 @@ import ShoppingMethodPicker from '@/components/grocery/ShoppingMethodPicker';
 import SavedItemsDrawer from '@/components/grocery/SavedItemsDrawer';
 import TemplatesDrawer from '@/components/grocery/TemplatesDrawer';
 import PastListsDrawer from '@/components/grocery/PastListsDrawer';
+import useUserTier, { FREE_TIER_LIST_LIMIT } from '@/hooks/useUserTier';
+import FreePlanLimitModal from '@/components/subscription/FreePlanLimitModal';
+import PremiumTrialPrompt from '@/components/subscription/PremiumTrialPrompt';
 
 export default function NewList() {
   const navigate = useNavigate();
+  const { isPremium, isFree, listsThisMonth, canCreateList, loading: tierLoading } = useUserTier();
+
   const [name, setName] = useState('');
   const [items, setItems] = useState([]);
   const [saving, setSaving] = useState(false);
   const [shoppingMethod, setShoppingMethod] = useState('all');
   const [showMethodPicker, setShowMethodPicker] = useState(false);
   const [nameError, setNameError] = useState(false);
+  const [showLimitModal, setShowLimitModal] = useState(false);
+  const [showTrialPrompt, setShowTrialPrompt] = useState(false);
 
-  // Load user's saved preference + handle item passed back from SearchProducts
   useEffect(() => {
     base44.auth.me().then(user => {
       if (user?.shopping_method) setShoppingMethod(user.shopping_method);
@@ -44,13 +50,36 @@ export default function NewList() {
   const handleCreate = async () => {
     if (!name.trim()) { setNameError(true); return; }
     if (items.length === 0) return;
+
+    // Check free tier monthly limit
+    if (!canCreateList) {
+      setShowLimitModal(true);
+      return;
+    }
+
     setSaving(true);
     const list = await base44.entities.GroceryList.create({
       name: name.trim(),
       items,
       shopping_method: shoppingMethod,
     });
-    navigate(`/ListDetail?id=${list.id}`);
+    setSaving(false);
+
+    // Show premium trial prompt to free users after list creation
+    if (isFree) {
+      setShowTrialPrompt(true);
+      // Store list id so we navigate after prompt is dismissed
+      sessionStorage.setItem('pendingListId', list.id);
+    } else {
+      navigate(`/ListDetail?id=${list.id}`);
+    }
+  };
+
+  const handleTrialPromptClose = () => {
+    setShowTrialPrompt(false);
+    const listId = sessionStorage.getItem('pendingListId');
+    sessionStorage.removeItem('pendingListId');
+    if (listId) navigate(`/ListDetail?id=${listId}`);
   };
 
   const METHOD_LABELS = {
@@ -62,8 +91,26 @@ export default function NewList() {
 
   return (
     <div>
+      {showLimitModal && <FreePlanLimitModal onClose={() => setShowLimitModal(false)} />}
+      {showTrialPrompt && <PremiumTrialPrompt onClose={handleTrialPromptClose} />}
+
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight mb-2">New Grocery List</h1>
-      <p className="text-slate-900 mb-8">Add your items, then compare prices across stores.</p>
+      <p className="text-slate-900 mb-2">Add your items, then compare prices across stores.</p>
+
+      {/* Free tier usage indicator */}
+      {isFree && !tierLoading && (
+        <div className="mb-6 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between text-sm">
+          <span className="text-amber-800 font-medium">
+            Free plan: <strong>{listsThisMonth}/{FREE_TIER_LIST_LIMIT}</strong> lists used this month
+          </span>
+          <button
+            onClick={() => setShowLimitModal(true)}
+            className="text-xs font-semibold underline text-amber-700 hover:text-amber-900"
+          >
+            Upgrade →
+          </button>
+        </div>
+      )}
 
       <div className="space-y-6">
         {/* List Name */}

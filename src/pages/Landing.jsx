@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Check, ShoppingCart, MapPin, List, Zap, Truck, Star, Gift, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import PriceOptimizationDemo from '@/components/grocery/PriceOptimizationDemo';
+import FreePremiumComparison from '@/components/landing/FreePremiumComparison';
 
 const THRFT_BLUE = '#4181ed';
 
@@ -311,6 +312,9 @@ export default function Landing() {
           </Button>
         </div>
       </section>
+
+      {/* FREE VS PREMIUM COMPARISON */}
+      <FreePremiumComparison onCTA={handleCTA} />
 
       {/* 7. PRICING */}
       <section id="pricing" className="py-20 px-5 bg-white">

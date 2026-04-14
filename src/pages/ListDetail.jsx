@@ -13,7 +13,7 @@ import PriceHistoryChart from '@/components/grocery/PriceHistoryChart';
 import ListBudget from '@/components/grocery/ListBudget';
 import CouponListMatcher from '@/components/coupons/CouponListMatcher';
 import FreeTrialModal from '@/components/subscription/FreeTrialModal';
-import useUserTier from '@/hooks/useUserTier';
+import useUserTier, { FREE_TIER_STORES } from '@/hooks/useUserTier';
 import { ALL_STORES } from '@/lib/storeConfig';
 
 const METHOD_LABELS = {
@@ -63,13 +63,16 @@ export default function ListDetail() {
 
   useEffect(() => {
     base44.auth.me().then(user => {
-      if (user?.favorite_stores?.length) {
+      if (!isPremium) {
+        // Free users locked to the 3 fixed stores
+        setSelectedStores(FREE_TIER_STORES);
+      } else if (user?.favorite_stores?.length) {
         setSelectedStores(user.favorite_stores);
       } else {
         setSelectedStores(['kroger', 'walmart', 'amazon']);
       }
     }).catch(() => setSelectedStores(['kroger', 'walmart', 'amazon']));
-  }, []);
+  }, [isPremium]);
 
   const { data: coupons = [] } = useQuery({
     queryKey: ['coupons'],
@@ -128,11 +131,13 @@ export default function ListDetail() {
     if (items.length === 0 || selectedStores.length === 0) return;
     setComparing(true);
 
-    const includePickup = shoppingMethod === 'pickup' || shoppingMethod === 'all';
-    const includeDelivery = shoppingMethod === 'delivery' || shoppingMethod === 'all';
+    // Free users can only compare in-store prices for the 3 fixed stores
+    const effectiveStores = isPremium ? selectedStores : FREE_TIER_STORES;
+    const includePickup = isPremium && (shoppingMethod === 'pickup' || shoppingMethod === 'all');
+    const includeDelivery = isPremium && (shoppingMethod === 'delivery' || shoppingMethod === 'all');
 
-    const krogerStores = selectedStores.filter(k => KROGER_FAMILY.includes(k));
-    const aiStores = selectedStores.filter(k => !KROGER_FAMILY.includes(k));
+    const krogerStores = effectiveStores.filter(k => KROGER_FAMILY.includes(k));
+    const aiStores = effectiveStores.filter(k => !KROGER_FAMILY.includes(k));
 
     const storeSchema = (includePickup, includeDelivery) => ({
       type: 'object',
@@ -267,7 +272,7 @@ export default function ListDetail() {
     const now = new Date().toISOString();
     await base44.entities.GroceryList.update(listId, {
       price_data: finalData,
-      selected_stores: selectedStores,
+      selected_stores: effectiveStores,
       last_compared: now,
     });
 
@@ -425,30 +430,52 @@ export default function ListDetail() {
       {/* Store Selector */}
       {items.length > 0 && (
         <div className="mb-6 rounded-2xl border border-slate-100 bg-white overflow-hidden">
-          <button
-            onClick={() => setShowStorePicker(!showStorePicker)}
-            className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50 transition-colors"
-          >
-            <div className="flex items-center gap-2.5">
-              <Store className="w-4 h-4" style={{ color: '#4181ed' }} />
-              <span className="font-semibold text-slate-800">Stores to Compare</span>
-              <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
-                {selectedStores.length} selected
-              </span>
-            </div>
-            {showStorePicker ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
-          </button>
-
-          {showStorePicker && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              className="px-5 pb-5 border-t border-slate-100"
-            >
-              <div className="pt-4">
-                <StorePicker selected={selectedStores} onChange={saveStores} />
+          {!isPremium ? (
+            // Free tier: show locked store list with upgrade prompt
+            <div className="px-5 py-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2.5">
+                  <Store className="w-4 h-4" style={{ color: '#4181ed' }} />
+                  <span className="font-semibold text-slate-800">Stores to Compare</span>
+                </div>
+                <Link to="/Subscribe" className="text-xs font-semibold underline" style={{ color: '#4181ed' }}>
+                  Upgrade for 50+ stores →
+                </Link>
               </div>
-            </motion.div>
+              <div className="flex flex-wrap gap-2">
+                {['Walmart', 'Kroger', 'Amazon Fresh'].map(name => (
+                  <span key={name} className="px-3 py-1.5 rounded-full text-sm font-medium bg-blue-50 border border-blue-200 text-blue-700">{name}</span>
+                ))}
+              </div>
+              <p className="text-xs text-slate-400 mt-2">Free plan includes Walmart, Kroger & Amazon Fresh. Upgrade to compare 50+ stores.</p>
+            </div>
+          ) : (
+            <>
+              <button
+                onClick={() => setShowStorePicker(!showStorePicker)}
+                className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Store className="w-4 h-4" style={{ color: '#4181ed' }} />
+                  <span className="font-semibold text-slate-800">Stores to Compare</span>
+                  <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
+                    {selectedStores.length} selected
+                  </span>
+                </div>
+                {showStorePicker ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+              </button>
+              {showStorePicker && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="px-5 pb-5 border-t border-slate-100"
+                >
+                  <div className="pt-4">
+                    <StorePicker selected={selectedStores} onChange={saveStores} />
+                  </div>
+                </motion.div>
+              )}
+            </>
           )}
         </div>
       )}
