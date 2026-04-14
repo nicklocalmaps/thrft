@@ -174,7 +174,11 @@ export default function NewList() {
           <AddItemForm onAdd={addItem} />
         </div>
 
-
+        {/* Browse Products */}
+        <div>
+          <p className="text-xs text-slate-400 mb-4 leading-snug">Or browse by category and brand:</p>
+          <ProductBrowser onAdd={addItem} onClose={() => {}} isFullPage={false} />
+        </div>
 
         {items.length > 0 && (
           <div className="space-y-2">
@@ -183,13 +187,6 @@ export default function NewList() {
                 <GroceryItemRow key={`${item.name}-${i}`} item={item} index={i} onRemove={removeItem} onUpdateQuantity={updateQuantity} />
               ))}
             </AnimatePresence>
-          </div>
-        )}
-
-        {items.length === 0 && (
-          <div className="mt-8">
-            <p className="text-xs text-slate-400 mb-4 text-center">Browse categories or brands below to get started</p>
-            <ProductBrowser onAdd={addItem} onClose={() => {}} isFullPage={false} />
           </div>
         )}
 
