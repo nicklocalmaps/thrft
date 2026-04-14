@@ -130,7 +130,7 @@ export default function Landing() {
             {/* CTA below video */}
             <div className="text-center mb-2">
               <Button onClick={handleCTA} className="h-13 px-10 text-base font-bold rounded-2xl shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
-                Get Started Free →
+                Create Your Free Account →
               </Button>
               <p className="text-xs text-slate-400 mt-3">Free to join. 7-day free trial included.</p>
             </div>
