@@ -25,7 +25,7 @@ function BrowseHome({ onSelectCategory, onSelectBrand, searchQuery }) {
     : BRANDS;
 
   return (
-    <div className="px-4 pb-6 space-y-6">
+    <div className="px-4 pb-6 space-y-4">
       {/* Search Input */}
       {searchQuery === '' && (
         <div className="flex items-center justify-center py-4">
@@ -33,11 +33,12 @@ function BrowseHome({ onSelectCategory, onSelectBrand, searchQuery }) {
         </div>
       )}
 
-      <div className="space-y-6">
+      {/* Two-column layout: Categories left, Brands right */}
+      <div className="grid grid-cols-2 gap-6">
         {/* Categories Grid */}
         <div>
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 px-2">Product Categories</h3>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3">
             {filteredCategories.map(cat => (
               <button
                 key={cat.key}
@@ -58,7 +59,7 @@ function BrowseHome({ onSelectCategory, onSelectBrand, searchQuery }) {
         {/* Brands Grid */}
         <div>
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 px-2">Popular Brands</h3>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3">
             {filteredBrands.map(brand => (
               <button
                 key={brand.key}
