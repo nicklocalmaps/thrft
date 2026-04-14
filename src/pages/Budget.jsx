@@ -96,9 +96,7 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
     );
   }
 
-  if (!isPremium) {
-    return <UpgradePrompt feature="Budget Planner" description="Set spending targets, track your grocery trips, and get AI-powered saving tips." />;
-  }
+  // Budget is available to all users including free trial
 
   // --- Data calculations ---
   const now = new Date();
