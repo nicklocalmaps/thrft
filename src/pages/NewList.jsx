@@ -7,7 +7,6 @@ import { AnimatePresence } from 'framer-motion';
 import { ArrowRight, Settings2 } from 'lucide-react';
 import AddItemForm from '@/components/grocery/AddItemForm';
 import GroceryItemRow from '@/components/grocery/GroceryItemRow';
-import EmptyState from '@/components/grocery/EmptyState';
 import ShoppingMethodPicker from '@/components/grocery/ShoppingMethodPicker';
 import SavedItemsDrawer from '@/components/grocery/SavedItemsDrawer';
 import TemplatesDrawer from '@/components/grocery/TemplatesDrawer';
@@ -178,7 +177,7 @@ export default function NewList() {
         {/* Search & Browse Products */}
         <ProductSearchBrowser onAddItem={addItem} />
 
-        {items.length > 0 ? (
+        {items.length > 0 && (
           <div className="space-y-2">
             <AnimatePresence>
               {items.map((item, i) => (
@@ -186,8 +185,6 @@ export default function NewList() {
               ))}
             </AnimatePresence>
           </div>
-        ) : (
-          <EmptyState />
         )}
 
         {items.length > 0 && (
