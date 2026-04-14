@@ -66,18 +66,13 @@ export default function FreePremiumComparison({ onCTA }) {
           ))}
 
           {/* CTA row */}
-          <div className="grid grid-cols-3 bg-white border-t border-slate-100">
-            <div className="p-5" />
-            <div className="p-5 border-l border-slate-100 flex items-center justify-center">
-              <Button onClick={onCTA} variant="outline" className="w-full h-10 rounded-xl text-sm font-bold border-slate-200">
-                Create Free Account
-              </Button>
-            </div>
-            <div className="p-5 border-l border-slate-100 flex items-center justify-center">
-              <Button onClick={onCTA} className="w-full h-10 rounded-xl text-sm font-bold shadow-md shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
-                Start Free Trial →
-              </Button>
-            </div>
+          <div className="bg-white border-t border-slate-100 p-5 flex flex-col gap-3">
+            <Button onClick={onCTA} className="w-full h-12 rounded-xl text-sm font-bold shadow-md shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
+              Start Free Trial →
+            </Button>
+            <Button onClick={onCTA} variant="outline" className="w-full h-12 rounded-xl text-sm font-bold border-slate-200">
+              Create Free Account
+            </Button>
           </div>
         </div>
 

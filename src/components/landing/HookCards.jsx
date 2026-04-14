@@ -61,10 +61,10 @@ export default function HookCards({ onCTA }) {
             <div className={`w-13 h-13 w-12 h-12 rounded-2xl ${hook.color} flex items-center justify-center mb-4`}>
               <Icon className={`w-6 h-6 ${hook.iconColor}`} />
             </div>
-            <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-lg font-bold text-slate-900">{hook.title}</h3>
-              <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${hook.badgeColor}`}>{hook.badge}</span>
+            <div className="mb-1">
+              <span className={`inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full ${hook.badgeColor} mb-1.5`}>{hook.badge}</span>
             </div>
+            <h3 className="text-lg font-bold text-slate-900 mb-2">{hook.title}</h3>
             <p className="text-slate-500 text-sm leading-relaxed flex-1">{hook.desc}</p>
           </motion.div>
         );
