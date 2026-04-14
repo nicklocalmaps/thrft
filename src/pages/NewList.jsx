@@ -11,7 +11,7 @@ import ShoppingMethodPicker from '@/components/grocery/ShoppingMethodPicker';
 import SavedItemsDrawer from '@/components/grocery/SavedItemsDrawer';
 import TemplatesDrawer from '@/components/grocery/TemplatesDrawer';
 import PastListsDrawer from '@/components/grocery/PastListsDrawer';
-import ProductSearchBrowser from '@/components/grocery/ProductSearchBrowser';
+import InlineBrowseProducts from '@/components/grocery/InlineBrowseProducts';
 import useUserTier, { FREE_TIER_LIST_LIMIT } from '@/hooks/useUserTier';
 import FreePlanLimitModal from '@/components/subscription/FreePlanLimitModal';
 import PremiumTrialPrompt from '@/components/subscription/PremiumTrialPrompt';
@@ -174,8 +174,8 @@ export default function NewList() {
           <AddItemForm onAdd={addItem} />
         </div>
 
-        {/* Search & Browse Products */}
-        <ProductSearchBrowser onAddItem={addItem} />
+        {/* Browse Products */}
+        <InlineBrowseProducts onAddItem={addItem} />
 
         {items.length > 0 && (
           <div className="space-y-2">
