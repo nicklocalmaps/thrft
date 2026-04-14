@@ -7,11 +7,12 @@ import { AnimatePresence } from 'framer-motion';
 import { ArrowRight, Settings2 } from 'lucide-react';
 import AddItemForm from '@/components/grocery/AddItemForm';
 import GroceryItemRow from '@/components/grocery/GroceryItemRow';
+import EmptyState from '@/components/grocery/EmptyState';
 import ShoppingMethodPicker from '@/components/grocery/ShoppingMethodPicker';
 import SavedItemsDrawer from '@/components/grocery/SavedItemsDrawer';
 import TemplatesDrawer from '@/components/grocery/TemplatesDrawer';
 import PastListsDrawer from '@/components/grocery/PastListsDrawer';
-import ProductBrowser from '@/components/grocery/ProductBrowser';
+import ProductSearchBrowser from '@/components/grocery/ProductSearchBrowser';
 import useUserTier, { FREE_TIER_LIST_LIMIT } from '@/hooks/useUserTier';
 import FreePlanLimitModal from '@/components/subscription/FreePlanLimitModal';
 import PremiumTrialPrompt from '@/components/subscription/PremiumTrialPrompt';
@@ -174,13 +175,10 @@ export default function NewList() {
           <AddItemForm onAdd={addItem} />
         </div>
 
-        {/* Browse Products */}
-        <div>
-          <p className="text-xs text-slate-400 mb-4 leading-snug">Or browse by category and brand:</p>
-          <ProductBrowser onAdd={addItem} onClose={() => {}} isFullPage={false} />
-        </div>
+        {/* Search & Browse Products */}
+        <ProductSearchBrowser onAddItem={addItem} />
 
-        {items.length > 0 && (
+        {items.length > 0 ? (
           <div className="space-y-2">
             <AnimatePresence>
               {items.map((item, i) => (
@@ -188,6 +186,8 @@ export default function NewList() {
               ))}
             </AnimatePresence>
           </div>
+        ) : (
+          <EmptyState />
         )}
 
         {items.length > 0 && (
