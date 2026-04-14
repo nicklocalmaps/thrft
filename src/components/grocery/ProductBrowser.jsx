@@ -16,6 +16,9 @@ const THRFT_BLUE = '#4181ed';
 
 // ── Level 1: Categories & Brands Grid ────────────────────────────────────
 function BrowseHome({ onSelectCategory, onSelectBrand, searchQuery }) {
+  const [categoryCount, setCategoryCount] = React.useState(20);
+  const [brandCount, setBrandCount] = React.useState(20);
+
   const filteredCategories = searchQuery
     ? CATEGORIES.filter(c => c.label.toLowerCase().includes(searchQuery.toLowerCase()))
     : CATEGORIES;
@@ -39,7 +42,7 @@ function BrowseHome({ onSelectCategory, onSelectBrand, searchQuery }) {
         <div>
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 px-2">Product Categories</h3>
           <div className="grid grid-cols-1 gap-3">
-            {filteredCategories.map(cat => (
+            {filteredCategories.slice(0, categoryCount).map(cat => (
               <button
                 key={cat.key}
                 onClick={() => onSelectCategory(cat)}
@@ -54,13 +57,21 @@ function BrowseHome({ onSelectCategory, onSelectBrand, searchQuery }) {
               </button>
             ))}
           </div>
+          {categoryCount < filteredCategories.length && (
+            <button
+              onClick={() => setCategoryCount(prev => prev + 20)}
+              className="w-full mt-3 py-2 text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center justify-center gap-1.5"
+            >
+              <RefreshCw className="w-3.5 h-3.5" /> Load more categories
+            </button>
+          )}
         </div>
 
         {/* Brands Grid */}
         <div>
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 px-2">Popular <br /> Brands</h3>
           <div className="grid grid-cols-1 gap-3">
-            {filteredBrands.map(brand => (
+            {filteredBrands.slice(0, brandCount).map(brand => (
               <button
                 key={brand.key}
                 onClick={() => onSelectBrand(brand)}
@@ -75,6 +86,14 @@ function BrowseHome({ onSelectCategory, onSelectBrand, searchQuery }) {
               </button>
             ))}
           </div>
+          {brandCount < filteredBrands.length && (
+            <button
+              onClick={() => setBrandCount(prev => prev + 20)}
+              className="w-full mt-3 py-2 text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center justify-center gap-1.5"
+            >
+              <RefreshCw className="w-3.5 h-3.5" /> Load more brands
+            </button>
+          )}
         </div>
       </div>
     </div>

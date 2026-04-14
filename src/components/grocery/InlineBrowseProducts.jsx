@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { CATEGORIES, BRANDS } from '@/lib/productCatalog';
+import { RefreshCw } from 'lucide-react';
 import ProductBrowser from '@/components/grocery/ProductBrowser';
 
 export default function InlineBrowseProducts({ onAddItem }) {
   const [showBrowser, setShowBrowser] = useState(false);
   const [browserState, setBrowserState] = useState(null);
+  const [categoryCount, setCategoryCount] = useState(20);
+  const [brandCount, setBrandCount] = useState(20);
 
   const handleSelectCategory = (category) => {
     setBrowserState({ level: 'category', category });
@@ -40,7 +43,7 @@ export default function InlineBrowseProducts({ onAddItem }) {
         <div>
           <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">Product <br /> Categories</h4>
           <div className="grid grid-cols-1 gap-3">
-            {CATEGORIES.map(cat => (
+            {CATEGORIES.slice(0, categoryCount).map(cat => (
               <button
                 key={cat.key}
                 onClick={() => handleSelectCategory(cat)}
@@ -55,13 +58,21 @@ export default function InlineBrowseProducts({ onAddItem }) {
               </button>
             ))}
           </div>
+          {categoryCount < CATEGORIES.length && (
+            <button
+              onClick={() => setCategoryCount(prev => prev + 20)}
+              className="w-full mt-3 py-2 text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center justify-center gap-1.5"
+            >
+              <RefreshCw className="w-3 h-3" /> Load more categories
+            </button>
+          )}
         </div>
 
         {/* Brands */}
         <div>
           <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">Popular <br /> Brands</h4>
           <div className="grid grid-cols-1 gap-3">
-            {BRANDS.map(brand => (
+            {BRANDS.slice(0, brandCount).map(brand => (
               <button
                 key={brand.key}
                 onClick={() => handleSelectBrand(brand)}
@@ -76,6 +87,14 @@ export default function InlineBrowseProducts({ onAddItem }) {
               </button>
             ))}
           </div>
+          {brandCount < BRANDS.length && (
+            <button
+              onClick={() => setBrandCount(prev => prev + 20)}
+              className="w-full mt-3 py-2 text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center justify-center gap-1.5"
+            >
+              <RefreshCw className="w-3 h-3" /> Load more brands
+            </button>
+          )}
         </div>
       </div>
     </div>
