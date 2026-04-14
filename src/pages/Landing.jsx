@@ -223,7 +223,7 @@ export default function Landing() {
               </h2>
               <p className="text-slate-500 text-lg mb-6">THRFT compares 50+ stores in seconds and shows you the cheapest option for your entire list — in-store, pickup, or delivery.</p>
               <Button onClick={handleCTA} className="h-12 px-8 rounded-xl font-bold shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
-                Try It Free for 7 Days →
+                Create Your Free Account →
               </Button>
               <p className="text-xs text-slate-400 mt-3">No charge for 7 days. Cancel anytime.</p>
             </div>
@@ -394,7 +394,7 @@ export default function Landing() {
               Start Saving Now
             </Button>
             <Button onClick={handleCTA} className="h-14 px-10 text-base font-bold rounded-2xl bg-white text-blue-700 border-2 border-white/80 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all">
-              Try It Free for 7 Days
+              Create Your Free Account
             </Button>
           </div>
         </div>
