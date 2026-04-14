@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { X, ChevronLeft, Plus, Search, Loader2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { CATEGORIES } from '@/lib/productCatalog';
+import { CATEGORIES, BRANDS } from '@/lib/productCatalog';
 import {
   fetchCategoryProducts,
   searchProducts,
@@ -14,28 +14,68 @@ import {
 
 const THRFT_BLUE = '#4181ed';
 
-// ── Level 1: Category Grid ────────────────────────────────────────────────
-function CategoryGrid({ onSelect, searchQuery }) {
-  const filtered = searchQuery
+// ── Level 1: Categories & Brands Grid ────────────────────────────────────
+function BrowseHome({ onSelectCategory, onSelectBrand, searchQuery }) {
+  const filteredCategories = searchQuery
     ? CATEGORIES.filter(c => c.label.toLowerCase().includes(searchQuery.toLowerCase()))
     : CATEGORIES;
 
+  const filteredBrands = searchQuery
+    ? BRANDS.filter(b => b.label.toLowerCase().includes(searchQuery.toLowerCase()) || b.search.toLowerCase().includes(searchQuery.toLowerCase()))
+    : BRANDS;
+
   return (
-    <div className="grid grid-cols-2 gap-3 px-4 pb-6">
-      {filtered.map(cat => (
-        <button
-          key={cat.key}
-          onClick={() => onSelect(cat)}
-          className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-slate-100 hover:border-blue-200 hover:shadow-sm transition-all text-left"
-        >
-          <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-2xl shrink-0">
-            {cat.emoji}
+    <div className="px-4 pb-6 space-y-6">
+      {/* Search Input */}
+      {searchQuery === '' && (
+        <div className="flex items-center justify-center py-4">
+          <p className="text-xs text-slate-400 text-center">Type to search categories or brands, or browse below →</p>
+        </div>
+      )}
+
+      <div className="grid grid-cols-2 gap-6">
+        {/* Left Column: Categories */}
+        <div>
+          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 px-2">Product Categories</h3>
+          <div className="space-y-2">
+            {filteredCategories.map(cat => (
+              <button
+                key={cat.key}
+                onClick={() => onSelectCategory(cat)}
+                className="w-full flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-100 hover:border-blue-200 hover:shadow-sm transition-all text-left"
+              >
+                <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-lg shrink-0">
+                  {cat.emoji}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-slate-900 text-xs leading-snug">{cat.label}</p>
+                </div>
+              </button>
+            ))}
           </div>
-          <div>
-            <p className="font-semibold text-slate-900 text-sm leading-snug">{cat.label}</p>
+        </div>
+
+        {/* Right Column: Brands */}
+        <div>
+          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 px-2">Popular Brands</h3>
+          <div className="space-y-2">
+            {filteredBrands.map(brand => (
+              <button
+                key={brand.key}
+                onClick={() => onSelectBrand(brand)}
+                className="w-full flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-100 hover:border-blue-200 hover:shadow-sm transition-all text-left"
+              >
+                <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-lg shrink-0">
+                  {brand.emoji}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-slate-900 text-xs leading-snug truncate">{brand.label}</p>
+                </div>
+              </button>
+            ))}
           </div>
-        </button>
-      ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -116,6 +156,80 @@ function BrandGrid({ category, onSelectBrand, searchQuery }) {
         </button>
       )}
       {loading && brands.length > 0 && <div className="flex justify-center mt-4"><Loader2 className="w-5 h-5 animate-spin text-blue-400" /></div>}
+    </div>
+  );
+}
+
+// ── Level 2b: Brand Products ──────────────────────────────────────────────
+function BrandVariants({ brand, onAdd, added, searchQuery }) {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      // Search for products from this brand
+      const results = await searchProducts(brand.label);
+      setProducts(results);
+      setLoading(false);
+    };
+    load();
+  }, [brand.label]);
+
+  const filtered = searchQuery
+    ? products.filter(p => p.product_name?.toLowerCase().includes(searchQuery.toLowerCase()))
+    : products;
+
+  if (loading) return <LoadingSpinner />;
+
+  return (
+    <div className="px-4 pb-6 space-y-2">
+      {filtered.map((product, i) => {
+        const searchHint = [product.product_name, product.brands, product.quantity].filter(Boolean).join(' ');
+        const isAdded = added.has(searchHint);
+        return (
+          <div
+            key={i}
+            className="flex items-center gap-3 bg-white rounded-2xl border border-slate-100 px-4 py-3 hover:border-blue-200 transition-all"
+          >
+            <div className="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden shrink-0 flex items-center justify-center">
+              {product.image_front_small_url ? (
+                <img
+                  src={product.image_front_small_url}
+                  alt={product.product_name}
+                  className="w-full h-full object-cover"
+                  onError={e => { e.target.style.display = 'none'; }}
+                />
+              ) : (
+                <span className="text-xl">{brand.emoji}</span>
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-slate-900 text-sm leading-snug">{product.product_name}</p>
+              <p className="text-xs text-slate-400 truncate">
+                {[product.brands, product.quantity].filter(Boolean).join(' · ')}
+              </p>
+            </div>
+            <Button
+              size="sm"
+              onClick={() => onAdd({
+                name: product.product_name,
+                search_hint: searchHint,
+                is_branded: true,
+                quantity: 1,
+                unit: 'each',
+              })}
+              className={`h-8 w-8 p-0 rounded-xl shrink-0 transition-all ${isAdded ? 'bg-emerald-500 hover:bg-emerald-500' : ''}`}
+              style={!isAdded ? { backgroundColor: THRFT_BLUE } : {}}
+            >
+              {isAdded ? '✓' : <Plus className="w-4 h-4" />}
+            </Button>
+          </div>
+        );
+      })}
+      {filtered.length === 0 && (
+        <p className="text-center text-sm text-slate-400 py-12">No products found for this brand.</p>
+      )}
     </div>
   );
 }
@@ -285,8 +399,8 @@ function LoadingSpinner() {
 
 // ── Main ProductBrowser ───────────────────────────────────────────────────
 export default function ProductBrowser({ onAdd, onClose }) {
-  // Navigation stack: each entry is { level: 'categories'|'brands'|'variants', category?, brand? }
-  const [nav, setNav] = useState([{ level: 'categories' }]);
+  // Navigation stack: each entry is { level: 'browse'|'category'|'brand'|'variants', category?, brand? }
+  const [nav, setNav] = useState([{ level: 'browse' }]);
   const [searchQuery, setSearchQuery] = useState('');
   const [added, setAdded] = useState(new Set());
 
@@ -310,15 +424,17 @@ export default function ProductBrowser({ onAdd, onClose }) {
 
   // Header breadcrumb label
   const getTitle = () => {
-    if (current.level === 'categories') return 'Browse Products';
-    if (current.level === 'brands') return current.category.label;
-    if (current.level === 'variants') return current.brand.brand;
+    if (current.level === 'browse') return 'Browse Products';
+    if (current.level === 'category') return current.category.label;
+    if (current.level === 'brand') return current.brand.label;
+    if (current.level === 'variants') return current.brand.brand || current.brand.label;
     return 'Browse Products';
   };
 
   const getSubtitle = () => {
-    if (current.level === 'brands') return 'Select a brand';
-    if (current.level === 'variants') return `${current.category.label} · Pick a size or flavor`;
+    if (current.level === 'category') return 'Select a brand';
+    if (current.level === 'brand') return `${current.brand.label} · Browse products`;
+    if (current.level === 'variants') return `${current.category?.label || ''} · Pick a size or flavor`;
     return null;
   };
 
@@ -387,16 +503,20 @@ export default function ProductBrowser({ onAdd, onClose }) {
             </motion.div>
           )}
 
-          {/* Level 1: Category grid */}
-          {!isSearching && current.level === 'categories' && (
-            <motion.div key="cats" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}>
-              <CategoryGrid onSelect={cat => pushNav({ level: 'brands', category: cat })} searchQuery="" />
+          {/* Level 1: Browse Home (Categories + Brands) */}
+          {!isSearching && current.level === 'browse' && (
+            <motion.div key="browse" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}>
+              <BrowseHome
+                onSelectCategory={cat => pushNav({ level: 'category', category: cat })}
+                onSelectBrand={brand => pushNav({ level: 'brand', brand })}
+                searchQuery={searchQuery}
+              />
             </motion.div>
           )}
 
-          {/* Level 2: Brand grid */}
-          {!isSearching && current.level === 'brands' && (
-            <motion.div key={`brands-${current.category.key}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}>
+          {/* Level 2: Category - Brand picker */}
+          {!isSearching && current.level === 'category' && (
+            <motion.div key={`category-${current.category.key}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}>
               <BrandGrid
                 category={current.category}
                 onSelectBrand={brand => pushNav({ level: 'variants', category: current.category, brand })}
@@ -405,9 +525,21 @@ export default function ProductBrowser({ onAdd, onClose }) {
             </motion.div>
           )}
 
+          {/* Level 2b: Brand - Product variants */}
+          {!isSearching && current.level === 'brand' && (
+            <motion.div key={`brand-${current.brand.key}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}>
+              <BrandVariants
+                brand={current.brand}
+                onAdd={handleAdd}
+                added={added}
+                searchQuery={searchQuery}
+              />
+            </motion.div>
+          )}
+
           {/* Level 3: Variant list */}
           {current.level === 'variants' && (
-            <motion.div key={`variants-${current.brand.brand}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}>
+            <motion.div key={`variants-${current.brand.key}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}>
               <VariantList
                 category={current.category}
                 brand={current.brand}
