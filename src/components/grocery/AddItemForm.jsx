@@ -93,7 +93,7 @@ export default function AddItemForm({ onAdd, listId }) {
       <form onSubmit={handleSubmit} className="flex gap-2">
         <div className="relative flex-1">
           <Input
-            placeholder="Add an item..."
+            placeholder=""
             value={name}
             onChange={(e) => setName(e.target.value)}
             onFocus={() => suggestions.length > 0 && setShowDropdown(true)}
