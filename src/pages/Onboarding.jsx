@@ -17,7 +17,7 @@ export default function Onboarding() {
   const [saving, setSaving] = useState(false);
   const [storeQuery, setStoreQuery] = useState('');
   const [promoCode, setPromoCode] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
+
   const [promoError, setPromoError] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
   const [userCount, setUserCount] = useState(11483);
@@ -50,23 +50,16 @@ export default function Onboarding() {
     );
   };
 
+  const VALID_PROMO_CODES = ['EBT2026', 'AIRDROP2026'];
+
   const validatePromo = () => {
     setPromoError('');
     const code = promoCode.trim().toUpperCase();
-    if (code === 'AIRDROP2026') {
+    if (VALID_PROMO_CODES.includes(code)) {
       setPromoApplied(true);
       return;
     }
-    if (code !== 'EBT2026') {
-      setPromoError('Invalid promo code. Please check and try again.');
-      return;
-    }
-    const digits = cardNumber.replace(/\D/g, '');
-    if (digits.length < 16 || digits.length > 19) {
-      setPromoError('Please enter a valid EBT card number (16–19 digits).');
-      return;
-    }
-    setPromoApplied(true);
+    setPromoError('Invalid promo code. Please check and try again.');
   };
 
   const completeOnboarding = async () => {
@@ -285,19 +278,7 @@ export default function Onboarding() {
                     className="h-11 rounded-xl border-slate-200 text-base focus-visible:ring-blue-400"
                   />
                 </div>
-                {promoCode.trim().toUpperCase() === 'EBT2026' && promoCode.trim().toUpperCase() !== 'AIRDROP2026' && (
-                  <div>
-                    <label className="text-sm font-medium text-slate-700 mb-1.5 block">EBT Card Number (16–19 digits)</label>
-                    <Input
-                      placeholder="Card number"
-                      value={cardNumber}
-                      onChange={e => { setCardNumber(e.target.value.replace(/\D/g, '').slice(0, 19)); setPromoError(''); }}
-                      className="h-11 rounded-xl border-slate-200 text-base focus-visible:ring-blue-400"
-                      maxLength={19}
-                    />
-                    <p className="text-xs text-slate-400 mt-1">Your card number is not stored — only used to verify eligibility.</p>
-                  </div>
-                )}
+
                 {promoError && <p className="text-sm text-red-500">{promoError}</p>}
                 {promoCode.trim() && (
                   <Button onClick={validatePromo} className="w-full h-11 rounded-xl" style={{ backgroundColor: '#4181ed' }}>
