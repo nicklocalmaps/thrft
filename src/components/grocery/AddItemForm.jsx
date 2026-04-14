@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Loader2, Search, ExternalLink } from 'lucide-react';
+import { Plus, Loader2, Search, ExternalLink, LayoutGrid } from 'lucide-react';
+import ProductBrowser from '@/components/grocery/ProductBrowser';
 
 async function searchOpenFoodFacts(query) {
   const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=6&fields=product_name,brands,image_front_small_url,quantity`;
@@ -15,6 +16,7 @@ export default function AddItemForm({ onAdd, listId }) {
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [showBrowser, setShowBrowser] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -80,8 +82,14 @@ export default function AddItemForm({ onAdd, listId }) {
     setShowDropdown(false);
   };
 
+  const handleBrowseAdd = (item) => {
+    onAdd(item);
+    setShowBrowser(false);
+  };
+
   return (
     <div ref={containerRef} className="relative">
+      {showBrowser && <ProductBrowser onAdd={handleBrowseAdd} onClose={() => setShowBrowser(false)} />}
       <form onSubmit={handleSubmit} className="flex gap-2">
         <div className="relative flex-1">
           <Input
@@ -109,7 +117,16 @@ export default function AddItemForm({ onAdd, listId }) {
         <Button
           type="button"
           variant="outline"
-          title="Browse product search"
+          title="Browse by category or brand"
+          onClick={() => setShowBrowser(true)}
+          className="h-12 px-3 rounded-xl border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-300"
+        >
+          <LayoutGrid className="w-5 h-5" />
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          title="Search product database"
           onClick={() => {
             const q = name.trim();
             const params = new URLSearchParams();
