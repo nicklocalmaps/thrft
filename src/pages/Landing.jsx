@@ -84,9 +84,16 @@ export default function Landing() {
               </div>
             </div>
 
-            <h1 className="text-5xl sm:text-6xl font-extrabold text-slate-900 leading-tight tracking-tight mb-4">
-              Know What You'll Spend<br className="hidden sm:block" /> Before You Leave Home
-            </h1>
+            <div className="flex flex-col items-center mb-4">
+              <h1 className="text-5xl sm:text-6xl font-extrabold text-slate-900 leading-tight tracking-tight mb-4">
+                Manage Your Grocery<br className="hidden sm:block" /> Budget Wisely
+              </h1>
+              <img
+                src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/917ff5331_OwlCharacterPointingUpLeft.jpg"
+                alt="Willie the Savings Owl"
+                className="w-40 sm:w-48 drop-shadow-lg"
+              />
+            </div>
             <p className="text-xl text-slate-500 max-w-2xl mx-auto mb-4">
               THRFT compares grocery prices across 50+ stores — in-store, pickup & delivery — so your family always gets the best deal.
             </p>
