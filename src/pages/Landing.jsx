@@ -145,7 +145,7 @@ export default function Landing() {
           <div className="flex flex-col lg:flex-row items-center gap-12">
             {/* Left: copy */}
             <div className="flex-1">
-              <p className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: THRFT_BLUE }}>Live Price Optimization</p>
+              <p className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: THRFT_BLUE }}>Live Price Optimization Engine</p>
               <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-tight mb-5">
                 See exactly how much<br className="hidden sm:block" /> you'll save on every trip
               </h2>
