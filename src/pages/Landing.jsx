@@ -103,9 +103,7 @@ export default function Landing() {
               <Button onClick={handleCTA} className="h-14 px-10 text-base font-bold rounded-2xl shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
                 Create Free Account →
               </Button>
-              <Button onClick={handleCTA} variant="outline" className="h-14 px-8 text-base font-semibold rounded-2xl border-slate-200">
-                Start 7-Day Free Trial
-              </Button>
+
             </div>
             <p className="text-xs text-slate-400">Free forever plan available. No credit card required to start.</p>
           </motion.div>
