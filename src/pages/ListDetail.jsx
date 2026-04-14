@@ -15,6 +15,7 @@ import CouponListMatcher from '@/components/coupons/CouponListMatcher';
 import FreeTrialModal from '@/components/subscription/FreeTrialModal';
 import useUserTier, { FREE_TIER_STORES } from '@/hooks/useUserTier';
 import { ALL_STORES } from '@/lib/storeConfig';
+import NearbyStoresMap from '@/components/grocery/NearbyStoresMap';
 
 const METHOD_LABELS = {
   instore: '🏪 In-Store',
@@ -488,6 +489,13 @@ export default function ListDetail() {
             priceData={list?.price_data}
             onUpdate={() => queryClient.invalidateQueries({ queryKey: ['grocery-list', listId] })}
           />
+        </div>
+      )}
+
+      {/* Nearby Stores Map */}
+      {items.length > 0 && (
+        <div className="mb-6">
+          <NearbyStoresMap priceData={list?.price_data} listName={list?.name} />
         </div>
       )}
 
