@@ -89,7 +89,7 @@ export default function Landing() {
                 Manage Your Grocery<br className="hidden sm:block" /> Budget Wisely
               </h1>
               <img
-                src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/917ff5331_OwlCharacterPointingUpLeft.jpg"
+                src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/a3d564b94_OwlCharacterPointingUp_edited.png"
                 alt="Willie the Savings Owl"
                 className="w-40 sm:w-48 drop-shadow-lg"
               />
