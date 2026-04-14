@@ -51,10 +51,10 @@ export default function AppLayout() {
         </div>
 
         {/* Mobile header — 2 rows of 4, full width */}
-        <div className="flex md:hidden flex-col w-full py-1">
+        <div className="flex md:hidden flex-col w-full py-1 px-1">
           {/* Row 1: THRFT logo + first 3 nav items */}
-          <div className="grid grid-cols-4 w-full">
-            <Link to="/Home" className="flex flex-col items-center justify-center py-2 px-1 w-full min-h-[48px] rounded-xl cursor-pointer hover:opacity-80">
+          <div className="grid grid-cols-4 w-full gap-1">
+            <Link to="/Home" className="flex flex-col items-center justify-center py-2 px-1 w-full min-h-[48px] rounded-xl cursor-pointer hover:opacity-80 pointer-events-auto">
               <div className="w-8 h-8 rounded-lg overflow-hidden pointer-events-none">
                 <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" className="w-full h-full object-cover" />
               </div>
@@ -65,7 +65,7 @@ export default function AppLayout() {
                 <Link
                   key={path}
                   to={path}
-                  className="flex flex-col items-center justify-center gap-0.5 py-2 px-1 w-full min-h-[48px] rounded-xl text-xs font-medium transition-all duration-200 select-none cursor-pointer hover:opacity-80"
+                  className="flex flex-col items-center justify-center gap-0.5 py-2 px-1 w-full min-h-[48px] rounded-xl text-xs font-medium transition-all duration-200 select-none cursor-pointer hover:opacity-80 pointer-events-auto"
                   style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
                 >
                   <Icon className="w-4 h-4 shrink-0 pointer-events-none" />
@@ -75,7 +75,7 @@ export default function AppLayout() {
             })}
           </div>
           {/* Row 2: last 4 nav items */}
-          <div className="grid grid-cols-4 w-full">
+          <div className="grid grid-cols-4 w-full gap-1">
             {navItems.slice(3).map(({ path, label, icon: Icon }) => {
               const isActive = location.pathname === path;
               return (
