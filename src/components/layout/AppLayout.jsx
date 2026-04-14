@@ -65,11 +65,11 @@ export default function AppLayout() {
                 <Link
                   key={path}
                   to={path}
-                  className="flex flex-col items-center justify-center gap-0.5 py-2 w-full min-h-[48px] rounded-xl text-xs font-medium transition-all duration-200 select-none"
+                  className="flex flex-col items-center justify-center gap-0.5 py-2 px-1 w-full min-h-[48px] rounded-xl text-xs font-medium transition-all duration-200 select-none cursor-pointer hover:opacity-80"
                   style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
                 >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  <span className="text-[10px] leading-none">{label}</span>
+                  <Icon className="w-4 h-4 shrink-0 pointer-events-none" />
+                  <span className="text-[10px] leading-none pointer-events-none">{label}</span>
                 </Link>
               );
             })}
@@ -82,11 +82,11 @@ export default function AppLayout() {
                 <Link
                   key={path}
                   to={path}
-                  className="flex flex-col items-center justify-center gap-0.5 py-2 w-full min-h-[48px] rounded-xl text-xs font-medium transition-all duration-200 select-none"
+                  className="flex flex-col items-center justify-center gap-0.5 py-2 px-1 w-full min-h-[48px] rounded-xl text-xs font-medium transition-all duration-200 select-none cursor-pointer hover:opacity-80"
                   style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
                 >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  <span className="text-[10px] leading-none">{label}</span>
+                  <Icon className="w-4 h-4 shrink-0 pointer-events-none" />
+                  <span className="text-[10px] leading-none pointer-events-none">{label}</span>
                 </Link>
               );
             })}
