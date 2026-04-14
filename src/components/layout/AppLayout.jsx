@@ -54,8 +54,8 @@ export default function AppLayout() {
         <div className="flex md:hidden flex-col w-full py-1">
           {/* Row 1: THRFT logo + first 3 nav items */}
           <div className="grid grid-cols-4 w-full">
-            <Link to="/Home" className="flex flex-col items-center justify-center py-2 w-full min-h-[48px] rounded-xl">
-              <div className="w-8 h-8 rounded-lg overflow-hidden">
+            <Link to="/Home" className="flex flex-col items-center justify-center py-2 px-1 w-full min-h-[48px] rounded-xl cursor-pointer hover:opacity-80">
+              <div className="w-8 h-8 rounded-lg overflow-hidden pointer-events-none">
                 <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" className="w-full h-full object-cover" />
               </div>
             </Link>
