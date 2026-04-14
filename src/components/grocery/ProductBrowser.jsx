@@ -33,16 +33,16 @@ function BrowseHome({ onSelectCategory, onSelectBrand, searchQuery }) {
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-6">
-        {/* Left Column: Categories */}
+      <div className="space-y-6">
+        {/* Categories Grid */}
         <div>
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 px-2">Product Categories</h3>
-          <div className="space-y-2">
+          <div className="grid grid-cols-2 gap-3">
             {filteredCategories.map(cat => (
               <button
                 key={cat.key}
                 onClick={() => onSelectCategory(cat)}
-                className="w-full flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-100 hover:border-blue-200 hover:shadow-sm transition-all text-left"
+                className="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-100 hover:border-blue-200 hover:shadow-sm transition-all text-left"
               >
                 <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-lg shrink-0">
                   {cat.emoji}
@@ -55,15 +55,15 @@ function BrowseHome({ onSelectCategory, onSelectBrand, searchQuery }) {
           </div>
         </div>
 
-        {/* Right Column: Brands */}
+        {/* Brands Grid */}
         <div>
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 px-2">Popular Brands</h3>
-          <div className="space-y-2">
+          <div className="grid grid-cols-2 gap-3">
             {filteredBrands.map(brand => (
               <button
                 key={brand.key}
                 onClick={() => onSelectBrand(brand)}
-                className="w-full flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-100 hover:border-blue-200 hover:shadow-sm transition-all text-left"
+                className="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-100 hover:border-blue-200 hover:shadow-sm transition-all text-left"
               >
                 <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-lg shrink-0">
                   {brand.emoji}
@@ -398,7 +398,7 @@ function LoadingSpinner() {
 }
 
 // ── Main ProductBrowser ───────────────────────────────────────────────────
-export default function ProductBrowser({ onAdd, onClose }) {
+export default function ProductBrowser({ onAdd, onClose, isFullPage = false }) {
   // Navigation stack: each entry is { level: 'browse'|'category'|'brand'|'variants', category?, brand? }
   const [nav, setNav] = useState([{ level: 'browse' }]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -439,7 +439,7 @@ export default function ProductBrowser({ onAdd, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-slate-50">
+    <div className={`${isFullPage ? 'flex flex-col flex-1' : 'fixed inset-0 z-50 flex flex-col'} bg-slate-50`}>
       {/* Header */}
       <div className="bg-white border-b border-slate-100 sticky top-0 z-10">
         <div className="flex items-center gap-3 px-4 py-3">

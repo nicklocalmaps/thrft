@@ -15,6 +15,7 @@ import ListDetail from '@/pages/ListDetail';
 import Onboarding from '@/pages/Onboarding';
 import StoreAccounts from '@/pages/StoreAccounts';
 import SearchProducts from '@/pages/SearchProducts';
+import Browse from '@/pages/Browse';
 import Subscribe from '@/pages/Subscribe';
 import Profile from '@/pages/Profile';
 import SubscriptionGate from '@/components/subscription/SubscriptionGate';
@@ -94,6 +95,7 @@ const AuthenticatedApp = () => {
         <Route path="/StoreAccounts" element={<SubscriptionGate><StoreAccounts /></SubscriptionGate>} />
         <Route path="/Profile" element={<SubscriptionGate><Profile /></SubscriptionGate>} />
         <Route path="/SearchProducts" element={<SubscriptionGate><SearchProducts /></SubscriptionGate>} />
+        <Route path="/Browse" element={<SubscriptionGate><Browse /></SubscriptionGate>} />
         <Route path="/Rewards" element={<SubscriptionGate><Rewards /></SubscriptionGate>} />
         <Route path="/InviteFriends" element={<SubscriptionGate><InviteFriends /></SubscriptionGate>} />
         <Route path="/Budget" element={<SubscriptionGate><Budget /></SubscriptionGate>} />
