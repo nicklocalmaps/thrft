@@ -27,7 +27,7 @@ import Terms from '@/pages/Terms';
 import Privacy from '@/pages/Privacy';
 import Budget from '@/pages/Budget';
 import Coupons from '@/pages/Coupons';
-import FamilyInvite from '@/pages/FamilyInvite';
+import FamilyInvite from '@/pages/FamilyInvite.jsx';
 
 const OnboardingGate = () => {
   const [checking, setChecking] = React.useState(true);

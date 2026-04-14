@@ -1,0 +1,57 @@
+{
+  "name": "FamilyGroup",
+  "type": "object",
+  "properties": {
+    "admin_user_id": {
+      "type": "string",
+      "description": "User ID of the family admin (the subscriber)"
+    },
+    "admin_email": {
+      "type": "string",
+      "description": "Email of the family admin"
+    },
+    "stripe_subscription_id": {
+      "type": "string",
+      "description": "Stripe subscription ID for this family plan"
+    },
+    "members": {
+      "type": "array",
+      "description": "Up to 4 invited/joined family members",
+      "items": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "invited",
+              "joined"
+            ],
+            "default": "invited"
+          },
+          "invited_at": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "canceled",
+        "past_due"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "admin_user_id",
+    "admin_email"
+  ]
+}

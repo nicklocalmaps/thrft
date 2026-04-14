@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { TrendingDown, PackageX, Store, Car, Truck } from 'lucide-react';
 import { COLOR_MAP } from '@/lib/storeConfig';
 import ShopButtons from '@/components/grocery/ShopButtons';
+import UpgradePriceRow from '@/components/grocery/UpgradePriceRow';
 
 function PriceRow({ icon: Icon, label, total, fee, available, isBaseline }) {
   if (!available && !isBaseline) return null;
@@ -21,7 +22,7 @@ function PriceRow({ icon: Icon, label, total, fee, available, isBaseline }) {
   );
 }
 
-export default function StoreCard({ storeKey, storeName, storeColor = 'blue', storeData, isCheapest, index, shoppingMethod }) {
+export default function StoreCard({ storeKey, storeName, storeColor = 'blue', storeData, isCheapest, index, shoppingMethod, isPremium = false }) {
   const colors = COLOR_MAP[storeColor] || COLOR_MAP.blue;
 
   // Support both old format (array) and new format (object with items)
@@ -85,13 +86,17 @@ export default function StoreCard({ storeKey, storeName, storeColor = 'blue', st
         <div className="space-y-1.5 mb-3">
           <PriceRow icon={Store} label="In-Store" total={instoreTotal} available isBaseline />
           {showPickup && (
-            <PriceRow icon={Car} label="Curbside Pickup" total={pickupTotal} available={pickupAvailable} />
+            isPremium
+              ? <PriceRow icon={Car} label="Curbside Pickup" total={pickupTotal} available={pickupAvailable} />
+              : <UpgradePriceRow label="Curbside Pickup" />
           )}
           {showDelivery && (
-            <>
-              <PriceRow icon={Truck} label="Instacart" total={instacartTotal} fee={instacartFee} available={instacartAvailable} />
-              <PriceRow icon={Truck} label="Shipt" total={shiptTotal} fee={shiptFee} available={shiptAvailable} />
-            </>
+            isPremium
+              ? <>
+                  <PriceRow icon={Truck} label="Instacart" total={instacartTotal} fee={instacartFee} available={instacartAvailable} />
+                  <PriceRow icon={Truck} label="Shipt" total={shiptTotal} fee={shiptFee} available={shiptAvailable} />
+                </>
+              : <UpgradePriceRow label="Pickup & Delivery" />
           )}
         </div>
 

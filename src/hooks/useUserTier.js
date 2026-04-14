@@ -14,6 +14,8 @@ export default function useUserTier() {
       const stripeActive = activeStatuses.includes(user?.subscription_status);
       const hasLifetime = !!user?.has_lifetime_access;
       const isFamily = user?.account_type === 'family';
+      // Premium = active/trialing Stripe sub, lifetime access, explicit premium/family account type,
+      // OR is a family member (linked via family_group_id with account_type=family)
       const isPremium = hasLifetime || stripeActive || user?.account_type === 'premium' || isFamily;
       setState({ isPremium, isFamily, hasLifetime, loading: false, user });
     }).catch(() => setState(s => ({ ...s, loading: false })));

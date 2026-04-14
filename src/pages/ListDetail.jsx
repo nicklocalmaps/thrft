@@ -13,6 +13,7 @@ import PriceHistoryChart from '@/components/grocery/PriceHistoryChart';
 import ListBudget from '@/components/grocery/ListBudget';
 import CouponListMatcher from '@/components/coupons/CouponListMatcher';
 import FreeTrialModal from '@/components/subscription/FreeTrialModal';
+import useUserTier from '@/hooks/useUserTier';
 import { ALL_STORES } from '@/lib/storeConfig';
 
 const METHOD_LABELS = {
@@ -26,6 +27,7 @@ export default function ListDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const listId = urlParams.get('id');
   const queryClient = useQueryClient();
+  const { isPremium } = useUserTier();
 
   const [comparing, setComparing] = useState(false);
   const [localItems, setLocalItems] = useState(null);
@@ -525,6 +527,7 @@ export default function ListDetail() {
                   isCheapest={cheapestStore === storeKey}
                   index={i}
                   shoppingMethod={shoppingMethod}
+                  isPremium={isPremium}
                 />
               );
             })}

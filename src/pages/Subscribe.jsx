@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Check, Loader2, Star, AlertCircle } from 'lucide-react';
+import { Check, Loader2, Star, AlertCircle, Users } from 'lucide-react';
 import PriceOptimizationDemo from '@/components/grocery/PriceOptimizationDemo';
 
 const FEATURES = [
   'Unlimited Grocery Lists',
   'AI Pricing Optimization Engine — Compare 50+ Stores Instantly',
-  'In-Store | Curbside Pickup | Delivery Pricing',
+  'In-Store, Curbside Pickup & Delivery Pricing',
   'Coupon Scanner — Photograph Coupons & Leave The Paper At Home',
   'Grocery Budget Tool — Set Limits & Stay On Track',
   'Price History Tracking',
@@ -176,6 +176,22 @@ export default function Subscribe() {
               Having trouble?{' '}
               <Link to="/ContactUs" className="underline text-blue-500 hover:text-blue-700">Contact us</Link>
             </p>
+
+            {/* Family plan CTA */}
+            <div className="mt-5 pt-5 border-t border-slate-100">
+              <Link to="/FamilyInvite">
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-purple-50 border border-purple-100 hover:bg-purple-100 transition-colors cursor-pointer">
+                  <div className="w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center shrink-0">
+                    <Users className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-bold text-slate-900">Family Plan — $6.99/mo</p>
+                    <p className="text-xs text-slate-500">5 accounts · All premium features · 7-day trial</p>
+                  </div>
+                  <span className="text-xs font-semibold text-purple-600">View →</span>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

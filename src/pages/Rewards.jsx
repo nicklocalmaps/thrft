@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import useUserTier from '@/hooks/useUserTier';
-import UpgradePrompt from '@/components/subscription/UpgradePrompt';
 import WillieOwl from '@/components/WillieOwl';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
@@ -39,7 +37,6 @@ const GIVEAWAY_TIERS = [
 ];
 
 export default function Rewards() {
-  const { isPremium } = useUserTier();
   const [profile, setProfile] = useState(null);
   const [referrals, setReferrals] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -99,10 +96,7 @@ export default function Rewards() {
     );
   }
 
-  if (!isPremium) {
-    return <UpgradePrompt feature="Rewards" description="Earn points, win weekly $50 gift cards, and get free months by inviting friends — all with a Premium account." />;
-  }
-
+  // Rewards is free for all users
   const totalPoints = profile?.total_points || 0;
   const weeklyPoints = totalPoints; // simplified — in prod you'd track weekly separately
   const giveawayEntries = weeklyPoints >= 200 ? 3 : weeklyPoints >= 100 ? 2 : weeklyPoints >= 50 ? 1 : 0;
