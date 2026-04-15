@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, X } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 export default function InstructionModal({ instructionKey, slides, onClose }) {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -48,45 +48,48 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
   const isLastSlide = currentSlide === slides.length - 1;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col">
-      {/* Image fills entire screen */}
-      <div className="absolute inset-0">
-        <img src={slide.imageUrl} alt="Instruction" className="w-full h-full object-cover" />
-      </div>
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col">
 
-      {/* Buttons pinned to bottom, overlaying the image */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 pt-20 bg-gradient-to-t from-black/70 via-black/40 to-transparent">
-        {/* Slide indicator */}
+        {/* Image area — fixed aspect ratio so it never grows too tall */}
+        <div className="w-full bg-slate-100" style={{ aspectRatio: '4/3' }}>
+          <img
+            src={slide.imageUrl}
+            alt="Instruction"
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        {/* Slide dots */}
         {slides.length > 1 && (
-          <div className="flex gap-1 justify-center mb-4">
+          <div className="flex gap-1.5 justify-center pt-4 pb-1">
             {slides.map((_, idx) => (
               <div
                 key={idx}
-                className={`h-1.5 rounded-full transition-all ${
-                  idx === currentSlide ? 'bg-white w-6' : 'bg-white/40 w-1.5'
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  idx === currentSlide ? 'bg-blue-500 w-6' : 'bg-slate-200 w-1.5'
                 }`}
               />
             ))}
           </div>
         )}
 
-        {/* Buttons */}
-        <div className="space-y-2">
+        {/* Buttons — always visible in white panel */}
+        <div className="px-5 pb-5 pt-3 space-y-2.5">
           <Button
             onClick={handleNext}
             className="w-full h-12 rounded-xl text-base font-bold gap-2"
             style={{ backgroundColor: '#4181ed' }}
           >
-            {isLastSlide ? 'Got It' : 'Next'}
+            {isLastSlide ? 'Got It ✓' : 'Next'}
             {!isLastSlide && <ChevronRight className="w-4 h-4" />}
           </Button>
           <Button
             onClick={handleDontShowAgain}
-            variant="outline"
-            className="w-full h-12 rounded-xl text-base font-bold border-white/40 gap-2 bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+            variant="ghost"
+            className="w-full h-11 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-600 hover:bg-slate-50"
           >
             Don't Show Again
-            <ChevronRight className="w-4 h-4" />
           </Button>
         </div>
       </div>
