@@ -51,50 +51,73 @@ export default function AppLayout() {
         </div>
 
         {/* Mobile header — 2 rows of 4, full width buttons */}
-        <div className="flex md:hidden flex-col w-full border-b border-slate-100">
-          {/* Row 1: Logo | My Lists | New List | Budget */}
-          <div className="grid grid-cols-4 w-full divide-x divide-slate-100">
-            {/* Logo cell */}
-            <div className="relative flex flex-col items-center justify-center min-h-[52px]">
-              <Link to="/Home" className="absolute inset-0 z-10" aria-label="Home" />
-              <div className="w-8 h-8 rounded-lg overflow-hidden pointer-events-none">
-                <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" className="w-full h-full object-cover" />
+        {(() => {
+          const row1 = [
+            { path: '/Home', label: null, isLogo: true },
+            { path: '/Home', label: 'My Lists', icon: ShoppingCart },
+            { path: '/NewList', label: 'New List', icon: Plus },
+            { path: '/Budget', label: 'Budget', icon: DollarSign },
+          ];
+          const row2 = [
+            { path: '/Coupons', label: 'Coupons', icon: Ticket },
+            { path: '/StoreAccounts', label: 'Store Accounts', icon: Store },
+            { path: '/Rewards', label: 'Rewards', icon: Gift },
+            { path: '/Profile', label: 'Profile', icon: UserCircle },
+          ];
+          const renderCell = (item, idx) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <div
+                key={idx}
+                style={{
+                  position: 'relative',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: 52,
+                  gap: 4,
+                  backgroundColor: (!item.isLogo && isActive) ? THRFT_BLUE : 'transparent',
+                  color: (!item.isLogo && isActive) ? 'white' : '#475569',
+                  borderRight: '1px solid #f1f5f9',
+                }}
+              >
+                {/* Transparent clickable link ON TOP of everything */}
+                <Link
+                  to={item.path}
+                  style={{
+                    position: 'absolute',
+                    top: 0, left: 0, right: 0, bottom: 0,
+                    zIndex: 20,
+                    display: 'block',
+                  }}
+                  aria-label={item.label || 'Home'}
+                />
+                {/* Visual content below the link */}
+                {item.isLogo ? (
+                  <div style={{ width: 32, height: 32, borderRadius: 8, overflow: 'hidden', pointerEvents: 'none' }}>
+                    <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                ) : (
+                  <>
+                    <item.icon style={{ width: 20, height: 20, pointerEvents: 'none', flexShrink: 0 }} />
+                    <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500, pointerEvents: 'none' }}>{item.label}</span>
+                  </>
+                )}
+              </div>
+            );
+          };
+          return (
+            <div className="flex md:hidden flex-col w-full border-b border-slate-100">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', width: '100%' }}>
+                {row1.map(renderCell)}
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', width: '100%', borderTop: '1px solid #f1f5f9' }}>
+                {row2.map(renderCell)}
               </div>
             </div>
-            {/* My Lists, New List, Budget */}
-            {navItems.slice(0, 3).map(({ path, label, icon: Icon }) => {
-              const isActive = location.pathname === path;
-              return (
-                <div
-                  key={path}
-                  className="relative flex flex-col items-center justify-center gap-1 min-h-[52px]"
-                  style={{ backgroundColor: isActive ? THRFT_BLUE : 'transparent', color: isActive ? 'white' : '#475569' }}
-                >
-                  <Link to={path} className="absolute inset-0 z-10" aria-label={label} />
-                  <Icon className="w-5 h-5 shrink-0 pointer-events-none" />
-                  <span className="text-[10px] leading-none font-medium pointer-events-none">{label}</span>
-                </div>
-              );
-            })}
-          </div>
-          {/* Row 2: Coupons | Store Accounts | Rewards | Profile */}
-          <div className="grid grid-cols-4 w-full divide-x divide-slate-100 border-t border-slate-100">
-            {navItems.slice(3).map(({ path, label, icon: Icon }) => {
-              const isActive = location.pathname === path;
-              return (
-                <div
-                  key={path}
-                  className="relative flex flex-col items-center justify-center gap-1 min-h-[52px]"
-                  style={{ backgroundColor: isActive ? THRFT_BLUE : 'transparent', color: isActive ? 'white' : '#475569' }}
-                >
-                  <Link to={path} className="absolute inset-0 z-10" aria-label={label} />
-                  <Icon className="w-5 h-5 shrink-0 pointer-events-none" />
-                  <span className="text-[10px] leading-none font-medium pointer-events-none">{label}</span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+          );
+        })()}
       </header>
 
       {/* Referral Banner */}
