@@ -48,48 +48,46 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
   const isLastSlide = currentSlide === slides.length - 1;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-3xl shadow-xl max-w-md w-full overflow-hidden relative flex flex-col" style={{ maxHeight: 'calc(100vh - 32px)' }}>
-        {/* Image - scrollable if needed */}
-        <div className="relative w-full bg-slate-100 overflow-y-auto flex-1 min-h-0">
-          <img src={slide.imageUrl} alt="Instruction" className="w-full h-auto block" />
-        </div>
+    <div className="fixed inset-0 z-50 flex flex-col">
+      {/* Image fills entire screen */}
+      <div className="absolute inset-0">
+        <img src={slide.imageUrl} alt="Instruction" className="w-full h-full object-cover" />
+      </div>
 
-        {/* Buttons - fixed at bottom, overlapping image with gradient */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 pt-16 bg-gradient-to-t from-white via-white to-transparent">
-          {/* Slide indicator */}
-          {slides.length > 1 && (
-            <div className="flex gap-1 justify-center mb-4">
-              {slides.map((_, idx) => (
-                <div
-                  key={idx}
-                  className={`h-1.5 rounded-full transition-all ${
-                    idx === currentSlide ? 'bg-blue-500 w-6' : 'bg-slate-200 w-1.5'
-                  }`}
-                />
-              ))}
-            </div>
-          )}
-
-          {/* Buttons */}
-          <div className="space-y-2">
-            <Button
-              onClick={handleNext}
-              className="w-full h-11 rounded-xl text-base font-bold gap-2"
-              style={{ backgroundColor: '#4181ed' }}
-            >
-              {isLastSlide ? 'Got It' : 'Next'}
-              {!isLastSlide && <ChevronRight className="w-4 h-4" />}
-            </Button>
-            <Button
-              onClick={handleDontShowAgain}
-              variant="outline"
-              className="w-full h-11 rounded-xl text-base font-bold border-slate-200 gap-2 bg-white"
-            >
-              Don't Show Again
-              <ChevronRight className="w-4 h-4" />
-            </Button>
+      {/* Buttons pinned to bottom, overlaying the image */}
+      <div className="absolute bottom-0 left-0 right-0 p-6 pt-20 bg-gradient-to-t from-black/70 via-black/40 to-transparent">
+        {/* Slide indicator */}
+        {slides.length > 1 && (
+          <div className="flex gap-1 justify-center mb-4">
+            {slides.map((_, idx) => (
+              <div
+                key={idx}
+                className={`h-1.5 rounded-full transition-all ${
+                  idx === currentSlide ? 'bg-white w-6' : 'bg-white/40 w-1.5'
+                }`}
+              />
+            ))}
           </div>
+        )}
+
+        {/* Buttons */}
+        <div className="space-y-2">
+          <Button
+            onClick={handleNext}
+            className="w-full h-12 rounded-xl text-base font-bold gap-2"
+            style={{ backgroundColor: '#4181ed' }}
+          >
+            {isLastSlide ? 'Got It' : 'Next'}
+            {!isLastSlide && <ChevronRight className="w-4 h-4" />}
+          </Button>
+          <Button
+            onClick={handleDontShowAgain}
+            variant="outline"
+            className="w-full h-12 rounded-xl text-base font-bold border-white/40 gap-2 bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+          >
+            Don't Show Again
+            <ChevronRight className="w-4 h-4" />
+          </Button>
         </div>
       </div>
     </div>
