@@ -20,6 +20,7 @@ const AVG_SPEND_PER_PERSON = 300; // avg monthly grocery spend per person (USD)
 
 export default function Budget() {
   const { isPremium, loading: tierLoading } = useUserTier();
+  const [showInstructions, setShowInstructions] = useState(true);
   const [user, setUser] = useState(null);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
