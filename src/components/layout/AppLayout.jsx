@@ -1,14 +1,13 @@
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingCart, Plus, Store, UserCircle, Gift, DollarSign, Ticket } from 'lucide-react';
 import ReferralBanner from '@/components/rewards/ReferralBanner';
 import { base44 } from '@/api/base44Client';
 
 const THRFT_BLUE = '#4181ed';
 
-
-
 export default function AppLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { path: '/Home', label: 'My Lists', icon: ShoppingCart },
@@ -50,62 +49,46 @@ export default function AppLayout() {
           </nav>
         </div>
 
-        {/* Mobile header — 2 rows of 4 */}
+        {/* Mobile header — 2 rows of 4, each cell is a native button that calls navigate() */}
         <div className="flex md:hidden flex-col w-full">
           {/* Row 1 */}
-          <div className="grid grid-cols-4 w-full" style={{ height: 52 }}>
-            {/* Logo */}
-            <div style={{ position: 'relative', height: 52, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRight: '1px solid #f1f5f9' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', height: 52 }}>
+            <button onClick={() => navigate('/Home')} style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRight: '1px solid #f1f5f9', background: 'none', border: 'none', borderRight: '1px solid #f1f5f9', cursor: 'pointer', padding: 0 }}>
               <div style={{ width: 32, height: 32, borderRadius: 8, overflow: 'hidden' }}>
                 <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
-              <Link to="/Home" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="Home" />
-            </div>
-            {/* My Lists */}
-            <div style={{ position: 'relative', height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRight: '1px solid #f1f5f9', backgroundColor: location.pathname === '/Home' ? THRFT_BLUE : 'transparent', color: location.pathname === '/Home' ? 'white' : '#475569' }}>
+            </button>
+            <button onClick={() => navigate('/Home')} style={{ height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRight: '1px solid #f1f5f9', backgroundColor: location.pathname === '/Home' ? THRFT_BLUE : 'transparent', color: location.pathname === '/Home' ? 'white' : '#475569', cursor: 'pointer', border: 'none', borderRight: '1px solid #f1f5f9', padding: 0 }}>
               <ShoppingCart style={{ width: 20, height: 20 }} />
               <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>My Lists</span>
-              <Link to="/Home" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="My Lists" />
-            </div>
-            {/* New List */}
-            <div style={{ position: 'relative', height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRight: '1px solid #f1f5f9', backgroundColor: location.pathname === '/NewList' ? THRFT_BLUE : 'transparent', color: location.pathname === '/NewList' ? 'white' : '#475569' }}>
+            </button>
+            <button onClick={() => navigate('/NewList')} style={{ height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRight: '1px solid #f1f5f9', backgroundColor: location.pathname === '/NewList' ? THRFT_BLUE : 'transparent', color: location.pathname === '/NewList' ? 'white' : '#475569', cursor: 'pointer', border: 'none', borderRight: '1px solid #f1f5f9', padding: 0 }}>
               <Plus style={{ width: 20, height: 20 }} />
               <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>New List</span>
-              <Link to="/NewList" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="New List" />
-            </div>
-            {/* Budget */}
-            <div style={{ position: 'relative', height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, backgroundColor: location.pathname === '/Budget' ? THRFT_BLUE : 'transparent', color: location.pathname === '/Budget' ? 'white' : '#475569' }}>
+            </button>
+            <button onClick={() => navigate('/Budget')} style={{ height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, backgroundColor: location.pathname === '/Budget' ? THRFT_BLUE : 'transparent', color: location.pathname === '/Budget' ? 'white' : '#475569', cursor: 'pointer', border: 'none', padding: 0 }}>
               <DollarSign style={{ width: 20, height: 20 }} />
               <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>Budget</span>
-              <Link to="/Budget" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="Budget" />
-            </div>
+            </button>
           </div>
           {/* Row 2 */}
-          <div className="grid grid-cols-4 w-full" style={{ height: 52, borderTop: '1px solid #f1f5f9' }}>
-            {/* Coupons */}
-            <div style={{ position: 'relative', height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRight: '1px solid #f1f5f9', backgroundColor: location.pathname === '/Coupons' ? THRFT_BLUE : 'transparent', color: location.pathname === '/Coupons' ? 'white' : '#475569' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', height: 52, borderTop: '1px solid #f1f5f9' }}>
+            <button onClick={() => navigate('/Coupons')} style={{ height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRight: '1px solid #f1f5f9', backgroundColor: location.pathname === '/Coupons' ? THRFT_BLUE : 'transparent', color: location.pathname === '/Coupons' ? 'white' : '#475569', cursor: 'pointer', border: 'none', borderRight: '1px solid #f1f5f9', padding: 0 }}>
               <Ticket style={{ width: 20, height: 20 }} />
               <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>Coupons</span>
-              <Link to="/Coupons" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="Coupons" />
-            </div>
-            {/* Store Accounts */}
-            <div style={{ position: 'relative', height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRight: '1px solid #f1f5f9', backgroundColor: location.pathname === '/StoreAccounts' ? THRFT_BLUE : 'transparent', color: location.pathname === '/StoreAccounts' ? 'white' : '#475569' }}>
+            </button>
+            <button onClick={() => navigate('/StoreAccounts')} style={{ height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRight: '1px solid #f1f5f9', backgroundColor: location.pathname === '/StoreAccounts' ? THRFT_BLUE : 'transparent', color: location.pathname === '/StoreAccounts' ? 'white' : '#475569', cursor: 'pointer', border: 'none', borderRight: '1px solid #f1f5f9', padding: 0 }}>
               <Store style={{ width: 20, height: 20 }} />
               <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>Store Accounts</span>
-              <Link to="/StoreAccounts" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="Store Accounts" />
-            </div>
-            {/* Rewards */}
-            <div style={{ position: 'relative', height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRight: '1px solid #f1f5f9', backgroundColor: location.pathname === '/Rewards' ? THRFT_BLUE : 'transparent', color: location.pathname === '/Rewards' ? 'white' : '#475569' }}>
+            </button>
+            <button onClick={() => navigate('/Rewards')} style={{ height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRight: '1px solid #f1f5f9', backgroundColor: location.pathname === '/Rewards' ? THRFT_BLUE : 'transparent', color: location.pathname === '/Rewards' ? 'white' : '#475569', cursor: 'pointer', border: 'none', borderRight: '1px solid #f1f5f9', padding: 0 }}>
               <Gift style={{ width: 20, height: 20 }} />
               <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>Rewards</span>
-              <Link to="/Rewards" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="Rewards" />
-            </div>
-            {/* Profile */}
-            <div style={{ position: 'relative', height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, backgroundColor: location.pathname === '/Profile' ? THRFT_BLUE : 'transparent', color: location.pathname === '/Profile' ? 'white' : '#475569' }}>
+            </button>
+            <button onClick={() => navigate('/Profile')} style={{ height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, backgroundColor: location.pathname === '/Profile' ? THRFT_BLUE : 'transparent', color: location.pathname === '/Profile' ? 'white' : '#475569', cursor: 'pointer', border: 'none', padding: 0 }}>
               <UserCircle style={{ width: 20, height: 20 }} />
               <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>Profile</span>
-              <Link to="/Profile" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="Profile" />
-            </div>
+            </button>
           </div>
         </div>
       </header>
