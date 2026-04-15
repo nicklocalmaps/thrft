@@ -51,9 +51,9 @@ export default function AppLayout() {
       {/* Mobile header */}
       <header className="md:hidden sticky top-0 z-50 bg-white border-b border-slate-100 flex items-center px-4" style={{ height: 56 }}>
         <img
-          src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/ef0e8a3c9_THRFTbanner.jpg"
+          src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/ac0f23609_THRFTappheader.png"
           alt="THRFT"
-          style={{ height: 36, width: 'auto' }}
+          style={{ height: 40, width: 'auto' }}
         />
       </header>
 
