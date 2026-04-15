@@ -23,9 +23,9 @@ Deno.serve(async (req) => {
           
           <!-- Header -->
           <tr>
-            <td style="background-color:#4181ed;padding:28px 40px;text-align:center;">
+            <td style="background-color:#ffffff;padding:28px 40px;text-align:center;border-bottom:1px solid #e5e7eb;">
               <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/ac0f23609_THRFTappheader.png" alt="THRFT" style="height:48px;width:auto;display:block;margin:0 auto;" />
-              <p style="margin:12px 0 0;color:rgba(255,255,255,0.85);font-size:14px;">Smarter Grocery Shopping</p>
+              <p style="margin:12px 0 0;color:#333333;font-size:14px;">Smarter Grocery Shopping</p>
             </td>
           </tr>
 
