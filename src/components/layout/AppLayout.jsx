@@ -55,12 +55,12 @@ export default function AppLayout() {
           alt="THRFT"
           style={{ height: 40, width: 'auto' }}
         />
-        <button
-          onClick={() => navigate('/NewList')}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 10, backgroundColor: THRFT_BLUE, border: 'none', cursor: 'pointer' }}
+        <Link
+          to="/NewList"
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 10, backgroundColor: THRFT_BLUE, flexShrink: 0 }}
         >
           <Plus style={{ width: 20, height: 20, color: 'white' }} />
-        </button>
+        </Link>
       </header>
 
       {/* Referral Banner */}
