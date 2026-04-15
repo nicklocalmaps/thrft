@@ -55,29 +55,25 @@ export default function AppLayout() {
           {/* Row 1: Logo | My Lists | New List | Budget */}
           <div className="grid grid-cols-4 w-full divide-x divide-slate-100">
             {/* Logo cell */}
-            <Link to="/Home" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 52, cursor: 'pointer' }}>
-              <div className="w-8 h-8 rounded-lg overflow-hidden" style={{ pointerEvents: 'none' }}>
+            <div className="relative flex flex-col items-center justify-center min-h-[52px]">
+              <div className="w-8 h-8 rounded-lg overflow-hidden">
                 <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" className="w-full h-full object-cover" />
               </div>
-            </Link>
+              <Link to="/Home" className="absolute inset-0" aria-label="Home" />
+            </div>
             {/* My Lists, New List, Budget */}
             {navItems.slice(0, 3).map(({ path, label, icon: Icon }) => {
               const isActive = location.pathname === path;
               return (
-                <Link
+                <div
                   key={path}
-                  to={path}
-                  style={{
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                    gap: 4, minHeight: 52, fontWeight: 500, cursor: 'pointer', userSelect: 'none',
-                    backgroundColor: isActive ? THRFT_BLUE : 'transparent',
-                    color: isActive ? 'white' : '#475569',
-                    textDecoration: 'none',
-                  }}
+                  className="relative flex flex-col items-center justify-center gap-1 min-h-[52px]"
+                  style={{ backgroundColor: isActive ? THRFT_BLUE : 'transparent', color: isActive ? 'white' : '#475569' }}
                 >
-                  <Icon style={{ width: 20, height: 20, flexShrink: 0, pointerEvents: 'none' }} />
-                  <span style={{ fontSize: 10, lineHeight: 1, pointerEvents: 'none' }}>{label}</span>
-                </Link>
+                  <Icon className="w-5 h-5 shrink-0" />
+                  <span className="text-[10px] leading-none font-medium">{label}</span>
+                  <Link to={path} className="absolute inset-0" aria-label={label} />
+                </div>
               );
             })}
           </div>
@@ -86,20 +82,15 @@ export default function AppLayout() {
             {navItems.slice(3).map(({ path, label, icon: Icon }) => {
               const isActive = location.pathname === path;
               return (
-                <Link
+                <div
                   key={path}
-                  to={path}
-                  style={{
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                    gap: 4, minHeight: 52, fontWeight: 500, cursor: 'pointer', userSelect: 'none',
-                    backgroundColor: isActive ? THRFT_BLUE : 'transparent',
-                    color: isActive ? 'white' : '#475569',
-                    textDecoration: 'none',
-                  }}
+                  className="relative flex flex-col items-center justify-center gap-1 min-h-[52px]"
+                  style={{ backgroundColor: isActive ? THRFT_BLUE : 'transparent', color: isActive ? 'white' : '#475569' }}
                 >
-                  <Icon style={{ width: 20, height: 20, flexShrink: 0, pointerEvents: 'none' }} />
-                  <span style={{ fontSize: 10, lineHeight: 1, pointerEvents: 'none' }}>{label}</span>
-                </Link>
+                  <Icon className="w-5 h-5 shrink-0" />
+                  <span className="text-[10px] leading-none font-medium">{label}</span>
+                  <Link to={path} className="absolute inset-0" aria-label={label} />
+                </div>
               );
             })}
           </div>
