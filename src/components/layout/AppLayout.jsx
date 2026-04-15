@@ -55,8 +55,8 @@ export default function AppLayout() {
           {/* Row 1: Logo | My Lists | New List | Budget */}
           <div className="grid grid-cols-4 w-full divide-x divide-slate-100">
             {/* Logo cell */}
-            <Link to="/Home" className="flex flex-col items-center justify-center py-2.5 w-full min-h-[52px]">
-              <div className="w-8 h-8 rounded-lg overflow-hidden">
+            <Link to="/Home" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 52, cursor: 'pointer' }}>
+              <div className="w-8 h-8 rounded-lg overflow-hidden" style={{ pointerEvents: 'none' }}>
                 <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" className="w-full h-full object-cover" />
               </div>
             </Link>
@@ -67,11 +67,16 @@ export default function AppLayout() {
                 <Link
                   key={path}
                   to={path}
-                  className="flex flex-col items-center justify-center gap-1 py-2.5 w-full min-h-[52px] font-medium transition-all duration-200 select-none"
-                  style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
+                  style={{
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                    gap: 4, minHeight: 52, fontWeight: 500, cursor: 'pointer', userSelect: 'none',
+                    backgroundColor: isActive ? THRFT_BLUE : 'transparent',
+                    color: isActive ? 'white' : '#475569',
+                    textDecoration: 'none',
+                  }}
                 >
-                  <Icon className="w-5 h-5 shrink-0" />
-                  <span className="text-[10px] leading-none">{label}</span>
+                  <Icon style={{ width: 20, height: 20, flexShrink: 0, pointerEvents: 'none' }} />
+                  <span style={{ fontSize: 10, lineHeight: 1, pointerEvents: 'none' }}>{label}</span>
                 </Link>
               );
             })}
@@ -84,11 +89,16 @@ export default function AppLayout() {
                 <Link
                   key={path}
                   to={path}
-                  className="flex flex-col items-center justify-center gap-1 py-2.5 w-full min-h-[52px] font-medium transition-all duration-200 select-none"
-                  style={isActive ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}
+                  style={{
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                    gap: 4, minHeight: 52, fontWeight: 500, cursor: 'pointer', userSelect: 'none',
+                    backgroundColor: isActive ? THRFT_BLUE : 'transparent',
+                    color: isActive ? 'white' : '#475569',
+                    textDecoration: 'none',
+                  }}
                 >
-                  <Icon className="w-5 h-5 shrink-0" />
-                  <span className="text-[10px] leading-none">{label}</span>
+                  <Icon style={{ width: 20, height: 20, flexShrink: 0, pointerEvents: 'none' }} />
+                  <span style={{ fontSize: 10, lineHeight: 1, pointerEvents: 'none' }}>{label}</span>
                 </Link>
               );
             })}
