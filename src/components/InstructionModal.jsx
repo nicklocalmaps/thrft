@@ -57,7 +57,7 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
             src={slide.imageUrl}
             alt="Instruction"
             className="w-full h-auto"
-            style={{ maxHeight: '60vh', objectFit: 'contain', borderRadius: '5px' }}
+            style={{ maxHeight: '60vh', objectFit: 'contain', borderRadius: '10px' }}
           />
         </div>
 
