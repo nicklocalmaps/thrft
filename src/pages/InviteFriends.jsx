@@ -23,7 +23,7 @@ export default function InviteFriends() {
     });
   }, []);
 
-  const referralLink = profile ? `${window.location.origin}/?ref=${profile.referral_code}` : '';
+  const referralLink = profile ? `https://thrft.app/?ref=${profile.referral_code}` : '';
 
   const copyLink = () => {
     navigator.clipboard.writeText(referralLink);
