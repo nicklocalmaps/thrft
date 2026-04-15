@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, CreditCard, CheckCircle2, Clock, XCircle, User, Mail, Edit2, Check, X } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 
 const STATUS_CONFIG = {
   trialing: { label: 'Free Trial', color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200', icon: Clock },
@@ -18,11 +19,14 @@ export default function Profile() {
   const [editingEmail, setEditingEmail] = useState(false);
   const [emailValue, setEmailValue] = useState('');
   const [savingEmail, setSavingEmail] = useState(false);
+  const [willieEnabled, setWillieEnabled] = useState(true);
+  const [savingWillie, setSavingWillie] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then((u) => {
       setUser(u);
       setEmailValue(u?.email || '');
+      setWillieEnabled(u?.willie_enabled !== false);
       setLoading(false);
     });
   }, []);
@@ -54,6 +58,15 @@ export default function Profile() {
     setUser(prev => ({ ...prev, email: emailValue.trim() }));
     setSavingEmail(false);
     setEditingEmail(false);
+  };
+
+  const toggleWillie = async () => {
+    setSavingWillie(true);
+    const newValue = !willieEnabled;
+    setWillieEnabled(newValue);
+    await base44.auth.updateMe({ willie_enabled: newValue });
+    setUser(prev => ({ ...prev, willie_enabled: newValue }));
+    setSavingWillie(false);
   };
 
   if (loading) {
@@ -160,6 +173,29 @@ export default function Profile() {
               Start Free Trial
             </Button>
           )}
+        </div>
+
+        {/* Willie Preference */}
+        <div className="bg-white rounded-2xl border border-slate-100 p-6">
+          <h2 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+            <span className="text-xl">🦉</span>
+            Willie the Wise Savings Owl
+          </h2>
+
+          <p className="text-sm text-slate-600 mb-4">
+            Willie appears throughout THRFT to help guide you and celebrate your savings wins.
+          </p>
+
+          <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+            <span className="text-sm font-medium text-slate-900">
+              {willieEnabled ? 'Show Willie' : 'Hide Willie'}
+            </span>
+            <Switch
+              checked={willieEnabled}
+              onCheckedChange={toggleWillie}
+              disabled={savingWillie}
+            />
+          </div>
         </div>
       </div>
     </div>
