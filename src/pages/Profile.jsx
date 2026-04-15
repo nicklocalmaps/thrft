@@ -133,8 +133,8 @@ export default function Profile() {
             <div>
               <p className={`font-semibold ${statusCfg.color}`}>{statusCfg.label}</p>
               <p className="text-xs text-slate-500">
-                {status === 'trialing' && 'You are on a 30-day free trial — $1.99/month after trial ends.'}
-                {status === 'active' && 'Your subscription is active at $1.99/month.'}
+                {status === 'trialing' && 'You are on a 30-day free trial — $3.99/month after trial ends.'}
+                {status === 'active' && 'Your subscription is active at $3.99/month.'}
                 {(status === 'canceled' || status === 'past_due') && 'Your subscription is not active.'}
                 {!status && 'No active subscription found.'}
               </p>
