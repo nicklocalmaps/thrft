@@ -56,10 +56,10 @@ export default function AppLayout() {
           <div className="grid grid-cols-4 w-full divide-x divide-slate-100">
             {/* Logo cell */}
             <div className="relative flex flex-col items-center justify-center min-h-[52px]">
-              <div className="w-8 h-8 rounded-lg overflow-hidden">
+              <Link to="/Home" className="absolute inset-0 z-10" aria-label="Home" />
+              <div className="w-8 h-8 rounded-lg overflow-hidden pointer-events-none">
                 <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" className="w-full h-full object-cover" />
               </div>
-              <Link to="/Home" className="absolute inset-0" aria-label="Home" />
             </div>
             {/* My Lists, New List, Budget */}
             {navItems.slice(0, 3).map(({ path, label, icon: Icon }) => {
@@ -70,9 +70,9 @@ export default function AppLayout() {
                   className="relative flex flex-col items-center justify-center gap-1 min-h-[52px]"
                   style={{ backgroundColor: isActive ? THRFT_BLUE : 'transparent', color: isActive ? 'white' : '#475569' }}
                 >
-                  <Icon className="w-5 h-5 shrink-0" />
-                  <span className="text-[10px] leading-none font-medium">{label}</span>
-                  <Link to={path} className="absolute inset-0" aria-label={label} />
+                  <Link to={path} className="absolute inset-0 z-10" aria-label={label} />
+                  <Icon className="w-5 h-5 shrink-0 pointer-events-none" />
+                  <span className="text-[10px] leading-none font-medium pointer-events-none">{label}</span>
                 </div>
               );
             })}
@@ -87,9 +87,9 @@ export default function AppLayout() {
                   className="relative flex flex-col items-center justify-center gap-1 min-h-[52px]"
                   style={{ backgroundColor: isActive ? THRFT_BLUE : 'transparent', color: isActive ? 'white' : '#475569' }}
                 >
-                  <Icon className="w-5 h-5 shrink-0" />
-                  <span className="text-[10px] leading-none font-medium">{label}</span>
-                  <Link to={path} className="absolute inset-0" aria-label={label} />
+                  <Link to={path} className="absolute inset-0 z-10" aria-label={label} />
+                  <Icon className="w-5 h-5 shrink-0 pointer-events-none" />
+                  <span className="text-[10px] leading-none font-medium pointer-events-none">{label}</span>
                 </div>
               );
             })}
