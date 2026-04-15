@@ -53,43 +53,59 @@ export default function AppLayout() {
         {/* Mobile header — 2 rows of 4 */}
         <div className="flex md:hidden flex-col w-full">
           {/* Row 1 */}
-          <div className="grid grid-cols-4 w-full">
-            <Link to="/Home" className="flex flex-col items-center justify-center h-[52px] border-r border-slate-100">
-              <div className="w-8 h-8 rounded-lg overflow-hidden">
-                <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" className="w-full h-full object-cover" />
+          <div className="grid grid-cols-4 w-full" style={{ height: 52 }}>
+            {/* Logo */}
+            <div style={{ position: 'relative', height: 52, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRight: '1px solid #f1f5f9' }}>
+              <div style={{ width: 32, height: 32, borderRadius: 8, overflow: 'hidden' }}>
+                <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
-            </Link>
-            <Link to="/Home" className="flex flex-col items-center justify-center h-[52px] gap-1 border-r border-slate-100" style={location.pathname === '/Home' ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}>
-              <ShoppingCart className="w-5 h-5 shrink-0" />
-              <span className="text-[10px] leading-none font-medium">My Lists</span>
-            </Link>
-            <Link to="/NewList" className="flex flex-col items-center justify-center h-[52px] gap-1 border-r border-slate-100" style={location.pathname === '/NewList' ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}>
-              <Plus className="w-5 h-5 shrink-0" />
-              <span className="text-[10px] leading-none font-medium">New List</span>
-            </Link>
-            <Link to="/Budget" className="flex flex-col items-center justify-center h-[52px] gap-1" style={location.pathname === '/Budget' ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}>
-              <DollarSign className="w-5 h-5 shrink-0" />
-              <span className="text-[10px] leading-none font-medium">Budget</span>
-            </Link>
+              <Link to="/Home" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="Home" />
+            </div>
+            {/* My Lists */}
+            <div style={{ position: 'relative', height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRight: '1px solid #f1f5f9', backgroundColor: location.pathname === '/Home' ? THRFT_BLUE : 'transparent', color: location.pathname === '/Home' ? 'white' : '#475569' }}>
+              <ShoppingCart style={{ width: 20, height: 20 }} />
+              <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>My Lists</span>
+              <Link to="/Home" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="My Lists" />
+            </div>
+            {/* New List */}
+            <div style={{ position: 'relative', height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRight: '1px solid #f1f5f9', backgroundColor: location.pathname === '/NewList' ? THRFT_BLUE : 'transparent', color: location.pathname === '/NewList' ? 'white' : '#475569' }}>
+              <Plus style={{ width: 20, height: 20 }} />
+              <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>New List</span>
+              <Link to="/NewList" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="New List" />
+            </div>
+            {/* Budget */}
+            <div style={{ position: 'relative', height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, backgroundColor: location.pathname === '/Budget' ? THRFT_BLUE : 'transparent', color: location.pathname === '/Budget' ? 'white' : '#475569' }}>
+              <DollarSign style={{ width: 20, height: 20 }} />
+              <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>Budget</span>
+              <Link to="/Budget" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="Budget" />
+            </div>
           </div>
           {/* Row 2 */}
-          <div className="grid grid-cols-4 w-full border-t border-slate-100">
-            <Link to="/Coupons" className="flex flex-col items-center justify-center h-[52px] gap-1 border-r border-slate-100" style={location.pathname === '/Coupons' ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}>
-              <Ticket className="w-5 h-5 shrink-0" />
-              <span className="text-[10px] leading-none font-medium">Coupons</span>
-            </Link>
-            <Link to="/StoreAccounts" className="flex flex-col items-center justify-center h-[52px] gap-1 border-r border-slate-100" style={location.pathname === '/StoreAccounts' ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}>
-              <Store className="w-5 h-5 shrink-0" />
-              <span className="text-[10px] leading-none font-medium">Store Accounts</span>
-            </Link>
-            <Link to="/Rewards" className="flex flex-col items-center justify-center h-[52px] gap-1 border-r border-slate-100" style={location.pathname === '/Rewards' ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}>
-              <Gift className="w-5 h-5 shrink-0" />
-              <span className="text-[10px] leading-none font-medium">Rewards</span>
-            </Link>
-            <Link to="/Profile" className="flex flex-col items-center justify-center h-[52px] gap-1" style={location.pathname === '/Profile' ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}>
-              <UserCircle className="w-5 h-5 shrink-0" />
-              <span className="text-[10px] leading-none font-medium">Profile</span>
-            </Link>
+          <div className="grid grid-cols-4 w-full" style={{ height: 52, borderTop: '1px solid #f1f5f9' }}>
+            {/* Coupons */}
+            <div style={{ position: 'relative', height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRight: '1px solid #f1f5f9', backgroundColor: location.pathname === '/Coupons' ? THRFT_BLUE : 'transparent', color: location.pathname === '/Coupons' ? 'white' : '#475569' }}>
+              <Ticket style={{ width: 20, height: 20 }} />
+              <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>Coupons</span>
+              <Link to="/Coupons" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="Coupons" />
+            </div>
+            {/* Store Accounts */}
+            <div style={{ position: 'relative', height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRight: '1px solid #f1f5f9', backgroundColor: location.pathname === '/StoreAccounts' ? THRFT_BLUE : 'transparent', color: location.pathname === '/StoreAccounts' ? 'white' : '#475569' }}>
+              <Store style={{ width: 20, height: 20 }} />
+              <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>Store Accounts</span>
+              <Link to="/StoreAccounts" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="Store Accounts" />
+            </div>
+            {/* Rewards */}
+            <div style={{ position: 'relative', height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRight: '1px solid #f1f5f9', backgroundColor: location.pathname === '/Rewards' ? THRFT_BLUE : 'transparent', color: location.pathname === '/Rewards' ? 'white' : '#475569' }}>
+              <Gift style={{ width: 20, height: 20 }} />
+              <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>Rewards</span>
+              <Link to="/Rewards" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="Rewards" />
+            </div>
+            {/* Profile */}
+            <div style={{ position: 'relative', height: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, backgroundColor: location.pathname === '/Profile' ? THRFT_BLUE : 'transparent', color: location.pathname === '/Profile' ? 'white' : '#475569' }}>
+              <UserCircle style={{ width: 20, height: 20 }} />
+              <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>Profile</span>
+              <Link to="/Profile" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block', opacity: 0, zIndex: 10 }} aria-label="Profile" />
+            </div>
           </div>
         </div>
       </header>
