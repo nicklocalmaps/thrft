@@ -50,11 +50,13 @@ export default function AppLayout() {
 
       {/* Mobile header */}
       <header className="md:hidden sticky top-0 z-50 bg-white border-b border-slate-100 flex items-center justify-between px-4" style={{ height: 56 }}>
-        <img
-          src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/ac0f23609_THRFTappheader.png"
-          alt="THRFT"
-          style={{ height: 40, width: 'auto' }}
-        />
+        <Link to="/Home">
+          <img
+            src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/ac0f23609_THRFTappheader.png"
+            alt="THRFT"
+            style={{ height: 40, width: 'auto' }}
+          />
+        </Link>
         <Link
           to="/NewList"
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 10, backgroundColor: THRFT_BLUE, flexShrink: 0 }}
