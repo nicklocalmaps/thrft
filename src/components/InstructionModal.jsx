@@ -49,17 +49,17 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-3xl shadow-xl max-w-md w-full overflow-hidden">
-        {/* Image */}
-        <div className="relative w-full bg-slate-100">
+      <div className="bg-white rounded-3xl shadow-xl max-w-md w-full overflow-hidden relative flex flex-col" style={{ maxHeight: 'calc(100vh - 32px)' }}>
+        {/* Image - scrollable if needed */}
+        <div className="relative w-full bg-slate-100 overflow-y-auto flex-1 min-h-0">
           <img src={slide.imageUrl} alt="Instruction" className="w-full h-auto block" />
         </div>
 
-        {/* Content */}
-        <div className="p-6 space-y-4">
+        {/* Buttons - fixed at bottom, overlapping image with gradient */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 pt-16 bg-gradient-to-t from-white via-white to-transparent">
           {/* Slide indicator */}
           {slides.length > 1 && (
-            <div className="flex gap-1 justify-center">
+            <div className="flex gap-1 justify-center mb-4">
               {slides.map((_, idx) => (
                 <div
                   key={idx}
@@ -72,7 +72,7 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
           )}
 
           {/* Buttons */}
-          <div className="space-y-2 pt-2">
+          <div className="space-y-2">
             <Button
               onClick={handleNext}
               className="w-full h-11 rounded-xl text-base font-bold gap-2"
@@ -84,7 +84,7 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
             <Button
               onClick={handleDontShowAgain}
               variant="outline"
-              className="w-full h-11 rounded-xl text-base font-bold border-slate-200 gap-2"
+              className="w-full h-11 rounded-xl text-base font-bold border-slate-200 gap-2 bg-white"
             >
               Don't Show Again
               <ChevronRight className="w-4 h-4" />
