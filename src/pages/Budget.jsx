@@ -151,7 +151,6 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
     monthlyTrend.push({ month: format(d, 'MMM'), spent: parseFloat(total.toFixed(2)), budget: mBudget || null });
   }
 
-  const [showInstructions, setShowInstructions] = useState(true);
 
   return (
     <div className="max-w-2xl mx-auto">
