@@ -26,7 +26,7 @@ export default function Onboarding() {
 
   const onboardingInstructions = [
     {
-      imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/3318540f4_Screenshot141_edited.jpg',
+      imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/d73e81baa_Onboarding1.jpg',
     },
   ];
 
