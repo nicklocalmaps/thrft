@@ -1,4 +1,48 @@
 import { base44 } from '@/api/base44Client';
+import { BRANDS } from '@/lib/productCatalog';
+
+// Build a set of known popular brand names (normalized to lowercase) from our curated catalog
+const POPULAR_BRAND_NAMES = new Set(
+  BRANDS.flatMap(b => [
+    b.label.toLowerCase(),
+    b.search?.toLowerCase(),
+    // also split multi-word brand labels to catch partial matches
+    ...b.label.toLowerCase().split(/[\s,&]+/),
+  ]).filter(Boolean)
+);
+
+/**
+ * Returns true if the product's brand is in our popular brands catalog.
+ * If `searchQuery` is provided and closely matches the brand, we allow it through
+ * even if it's not in the catalog (user specifically searched for it).
+ */
+function isPopularBrand(product, searchQuery = '') {
+  const rawBrands = (product.brands || '').split(',').map(b => b.trim().toLowerCase());
+  const queryLower = searchQuery.toLowerCase();
+
+  for (const brand of rawBrands) {
+    if (!brand) continue;
+    // Brand is in our popular catalog
+    if (POPULAR_BRAND_NAMES.has(brand)) return true;
+    // Brand words are all in our catalog (handles slight variations)
+    const words = brand.split(/\s+/);
+    if (words.some(w => w.length > 3 && POPULAR_BRAND_NAMES.has(w))) return true;
+    // User specifically searched for this brand name
+    if (queryLower.length >= 3 && brand.includes(queryLower)) return true;
+    if (queryLower.length >= 3 && queryLower.includes(brand)) return true;
+  }
+  return false;
+}
+
+/**
+ * Filter a list of OFF products to only include popular/known brands.
+ * If no popular brands are found, returns top results as fallback (avoid empty state).
+ */
+export function filterByPopularity(products, searchQuery = '') {
+  const popular = products.filter(p => isPopularBrand(p, searchQuery));
+  // Fallback: if nothing passes the filter, return top 8 results so the UI isn't empty
+  return popular.length > 0 ? popular : products.slice(0, 8);
+}
 
 // Map our category keys to OpenFoodFacts category tags + search terms
 export const CATEGORY_SEARCH_CONFIG = {
@@ -43,7 +87,7 @@ export async function fetchCategoryProducts(categoryKey, page = 1) {
     const res = await fetch(url);
     const data = await res.json();
     const products = (data.products || []).filter(p => p.product_name && p.brands);
-    return products;
+    return filterByPopularity(products);
   } catch {
     return [];
   }
@@ -55,7 +99,8 @@ export async function searchProducts(query, page = 1) {
     const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page=${page}&page_size=48&fields=product_name,brands,image_front_small_url,quantity,_id`;
     const res = await fetch(url);
     const data = await res.json();
-    return (data.products || []).filter(p => p.product_name);
+    const products = (data.products || []).filter(p => p.product_name);
+    return filterByPopularity(products, query);
   } catch {
     return [];
   }
@@ -68,7 +113,9 @@ export async function fetchProductVariants(brandName, productBaseName) {
     const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=30&fields=product_name,brands,image_front_small_url,quantity,_id`;
     const res = await fetch(url);
     const data = await res.json();
-    return (data.products || []).filter(p => p.product_name && p.brands);
+    const products = (data.products || []).filter(p => p.product_name && p.brands);
+    // For variant fetches the user knows the brand, so pass brand name as query to allow it through
+    return filterByPopularity(products, brandName);
   } catch {
     return [];
   }

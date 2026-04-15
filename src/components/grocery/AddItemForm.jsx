@@ -2,13 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus, Loader2, Search } from 'lucide-react';
-
+import { filterByPopularity } from '@/lib/productSearch';
 
 async function searchOpenFoodFacts(query) {
-  const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=6&fields=product_name,brands,image_front_small_url,quantity`;
+  const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=24&fields=product_name,brands,image_front_small_url,quantity`;
   const res = await fetch(url);
   const data = await res.json();
-  return (data.products || []).filter(p => p.product_name);
+  const products = (data.products || []).filter(p => p.product_name);
+  return filterByPopularity(products, query).slice(0, 6);
 }
 
 export default function AddItemForm({ onAdd }) {
