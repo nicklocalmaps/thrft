@@ -59,14 +59,14 @@ export default function Rewards() {
   };
 
   const copyReferralLink = () => {
-    const link = `${window.location.origin}/?ref=${profile?.referral_code}`;
+    const link = `https://thrft.app/?ref=${profile?.referral_code}`;
     navigator.clipboard.writeText(link);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleShare = async () => {
-    const url = `${window.location.origin}/?ref=${profile?.referral_code}`;
+    const url = `https://thrft.app/?ref=${profile?.referral_code}`;
     const text = 'I use THRFT to compare grocery prices across every store and save money every trip! Try it free:';
     if (navigator.share) {
       navigator.share({ title: 'Save money on groceries with THRFT', text, url });
@@ -160,7 +160,7 @@ export default function Rewards() {
 
         <div className="flex items-center gap-2 bg-white rounded-xl border border-slate-200 px-4 py-2.5 mb-3">
           <span className="text-sm text-slate-600 flex-1 truncate font-mono">
-            {window.location.origin}/?ref={profile?.referral_code}
+            https://thrft.app/?ref={profile?.referral_code}
           </span>
           <button onClick={copyReferralLink} className="shrink-0 flex items-center gap-1.5 text-sm font-semibold transition-colors" style={{ color: THRFT_BLUE }}>
             {copied ? <><Check className="w-4 h-4 text-emerald-500" /> Copied!</> : <><Copy className="w-4 h-4" /> Copy</>}
