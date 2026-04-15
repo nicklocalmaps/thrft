@@ -48,21 +48,22 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
   const isLastSlide = currentSlide === slides.length - 1;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" style={{ maxHeight: '100vh', overflowY: 'auto' }}>
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col" style={{ maxHeight: 'calc(100vh - 32px)' }}>
 
-        {/* Image area — fixed aspect ratio so it never grows too tall */}
-        <div className="w-full bg-slate-100" style={{ aspectRatio: '4/3' }}>
+        {/* Image area — constrained to fit screen with all content visible */}
+        <div className="w-full bg-white flex items-center justify-center" style={{ maxHeight: '60vh', overflow: 'hidden' }}>
           <img
             src={slide.imageUrl}
             alt="Instruction"
-            className="w-full h-full object-cover"
+            className="w-full h-auto"
+            style={{ maxHeight: '60vh', objectFit: 'contain' }}
           />
         </div>
 
         {/* Slide dots */}
         {slides.length > 1 && (
-          <div className="flex gap-1.5 justify-center pt-4 pb-1">
+          <div className="flex gap-1.5 justify-center pt-3 pb-2">
             {slides.map((_, idx) => (
               <div
                 key={idx}
@@ -75,10 +76,10 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
         )}
 
         {/* Buttons — always visible in white panel */}
-        <div className="px-5 pb-5 pt-3 space-y-2.5">
+        <div className="px-5 pb-5 pt-2 space-y-2.5 border-t border-slate-100">
           <Button
             onClick={handleNext}
-            className="w-full h-12 rounded-xl text-base font-bold gap-2"
+            className="w-full h-11 rounded-xl text-base font-bold gap-2"
             style={{ backgroundColor: '#4181ed' }}
           >
             {isLastSlide ? 'Got It ✓' : 'Next'}
@@ -87,7 +88,7 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
           <Button
             onClick={handleDontShowAgain}
             variant="ghost"
-            className="w-full h-11 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-600 hover:bg-slate-50"
+            className="w-full h-10 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-600 hover:bg-slate-50"
           >
             Don't Show Again
           </Button>
