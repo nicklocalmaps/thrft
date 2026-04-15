@@ -52,7 +52,7 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col" style={{ maxHeight: 'calc(100vh - 32px)' }}>
 
         {/* Image area — constrained to fit screen with all content visible */}
-        <div className="w-full bg-white flex items-center justify-center pt-4 px-4" style={{ maxHeight: '60vh', overflow: 'hidden' }}>
+        <div className="w-full bg-white flex items-center justify-center pt-4 px-4 rounded-2xl" style={{ maxHeight: '60vh', overflow: 'hidden' }}>
           <img
             src={slide.imageUrl}
             alt="Instruction"
