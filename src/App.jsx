@@ -26,6 +26,7 @@ import InviteFriends from '@/pages/InviteFriends';
 import FAQ from '@/pages/FAQ';
 import Terms from '@/pages/Terms';
 import Privacy from '@/pages/Privacy';
+import Refund from '@/pages/Refund';
 import Budget from '@/pages/Budget';
 import Coupons from '@/pages/Coupons';
 import FamilyInvite from '@/pages/FamilyInvite.jsx';
@@ -87,6 +88,7 @@ const AuthenticatedApp = () => {
       <Route path="/FAQ" element={<FAQ />} />
       <Route path="/Terms" element={<Terms />} />
       <Route path="/Privacy" element={<Privacy />} />
+      <Route path="/Refund" element={<Refund />} />
       <Route element={<AppLayout />}>
         <Route path="/app" element={<OnboardingGate />} />
         <Route path="/Home" element={<SubscriptionGate><Home /></SubscriptionGate>} />
