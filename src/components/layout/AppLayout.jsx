@@ -67,44 +67,34 @@ export default function AppLayout() {
           const renderCell = (item, idx) => {
             const isActive = location.pathname === item.path;
             return (
-              <div
+              <Link
                 key={idx}
+                to={item.path}
+                aria-label={item.label || 'Home'}
                 style={{
-                  position: 'relative',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  minHeight: 52,
+                  height: 52,
                   gap: 4,
                   backgroundColor: (!item.isLogo && isActive) ? THRFT_BLUE : 'transparent',
                   color: (!item.isLogo && isActive) ? 'white' : '#475569',
                   borderRight: '1px solid #f1f5f9',
+                  textDecoration: 'none',
                 }}
               >
-                {/* Transparent clickable link ON TOP of everything */}
-                <Link
-                  to={item.path}
-                  style={{
-                    position: 'absolute',
-                    top: 0, left: 0, right: 0, bottom: 0,
-                    zIndex: 20,
-                    display: 'block',
-                  }}
-                  aria-label={item.label || 'Home'}
-                />
-                {/* Visual content below the link */}
                 {item.isLogo ? (
-                  <div style={{ width: 32, height: 32, borderRadius: 8, overflow: 'hidden', pointerEvents: 'none' }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 8, overflow: 'hidden' }}>
                     <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                 ) : (
                   <>
-                    <item.icon style={{ width: 20, height: 20, pointerEvents: 'none', flexShrink: 0 }} />
-                    <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500, pointerEvents: 'none' }}>{item.label}</span>
+                    <item.icon style={{ width: 20, height: 20, flexShrink: 0 }} />
+                    <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>{item.label}</span>
                   </>
                 )}
-              </div>
+              </Link>
             );
           };
           return (
