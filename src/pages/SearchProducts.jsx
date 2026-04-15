@@ -5,6 +5,12 @@ import { Input } from '@/components/ui/input';
 import { ArrowLeft, Search, Loader2, Plus, ShoppingCart, LayoutGrid } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProductBrowser from '@/components/grocery/ProductBrowser';
+import InstructionModal from '@/components/InstructionModal';
+
+const SEARCH_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/ea2c667ed_SearchProducts1.jpg' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/4650fa6c8_SearchProducts2.jpg' },
+];
 
 async function searchOpenFoodFacts(query) {
   const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=20&fields=product_name,brands,image_front_small_url,quantity,categories_tags`;
@@ -25,6 +31,7 @@ export default function SearchProducts() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [addedItems, setAddedItems] = useState(new Set());
+  const [showInstructions, setShowInstructions] = useState(true);
 
   useEffect(() => {
     if (initialQuery.length >= 3) {
@@ -82,6 +89,13 @@ export default function SearchProducts() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
+      {showInstructions && (
+        <InstructionModal
+          instructionKey="searchproducts"
+          slides={SEARCH_SLIDES}
+          onClose={() => setShowInstructions(false)}
+        />
+      )}
       {/* Header */}
       <div className="bg-white border-b border-slate-100 px-4 py-3 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto flex items-center gap-3">

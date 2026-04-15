@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import InstructionModal from '@/components/InstructionModal';
+
+const STORE_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/260104d90_StoreAccounts1.jpg' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/d8365d22f_StoreAccounts2.jpg' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/f0d726bb5_StoreAccounts3.jpg' },
+];
 import { base44 } from '@/api/base44Client';
 import { ALL_STORES, COLOR_MAP } from '@/lib/storeConfig';
 import { getStoreLink } from '@/lib/storeLinks';
@@ -21,6 +28,7 @@ export default function StoreAccounts() {
   const [savingZip, setSavingZip] = useState(false);
   const [refreshingStores, setRefreshingStores] = useState(false);
   const [refreshMessage, setRefreshMessage] = useState('');
+  const [showInstructions, setShowInstructions] = useState(true);
 
   useEffect(() => {
     base44.auth.me().then(u => {
@@ -92,6 +100,13 @@ export default function StoreAccounts() {
 
   return (
     <div>
+      {showInstructions && (
+        <InstructionModal
+          instructionKey="storeaccounts"
+          slides={STORE_SLIDES}
+          onClose={() => setShowInstructions(false)}
+        />
+      )}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Store Accounts</h1>
         <p className="text-slate-500 mt-1">Save your loyalty card numbers and manage your shopping preferences.</p>

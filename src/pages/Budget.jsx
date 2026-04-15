@@ -3,8 +3,12 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import useUserTier from '@/hooks/useUserTier';
 import UpgradePrompt from '@/components/subscription/UpgradePrompt';
-import WillieOwl from '@/components/WillieOwl';
+import InstructionModal from '@/components/InstructionModal';
 import { Input } from '@/components/ui/input';
+
+const BUDGET_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/b2583bb8e_Budget1.jpg' },
+];
 import { Loader2, DollarSign, Target, Users, TrendingDown, Lightbulb, AlertTriangle, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
@@ -146,9 +150,17 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
     monthlyTrend.push({ month: format(d, 'MMM'), spent: parseFloat(total.toFixed(2)), budget: mBudget || null });
   }
 
+  const [showInstructions, setShowInstructions] = useState(true);
+
   return (
     <div className="max-w-2xl mx-auto">
-      <WillieOwl pageKey="budget" hint="Set a monthly budget and THRFT will alert you when you're getting close. Compare prices first to keep each trip on track!" />
+      {showInstructions && (
+        <InstructionModal
+          instructionKey="budget"
+          slides={BUDGET_SLIDES}
+          onClose={() => setShowInstructions(false)}
+        />
+      )}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
           <DollarSign className="w-7 h-7" style={{ color: THRFT_BLUE }} />

@@ -10,13 +10,19 @@ import { Button } from '@/components/ui/button';
 import { AnimatePresence } from 'framer-motion';
 import ListCard from '@/components/grocery/ListCard';
 import FeatureTour from '@/components/onboarding/FeatureTour';
-import WillieOwl from '@/components/WillieOwl';
 import StorePriceDashboard from '@/components/grocery/StorePriceDashboard';
 import ReferralBanner from '@/components/rewards/ReferralBanner';
+import InstructionModal from '@/components/InstructionModal';
+
+const HOME_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/7c84eff32_Home1.jpg' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/2ba33ce85_Home2.jpg' },
+];
 
 export default function Home() {
   const queryClient = useQueryClient();
   const [showTour, setShowTour] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(true);
 
   useEffect(() => {
     base44.auth.me().then(user => {
@@ -52,7 +58,13 @@ export default function Home() {
   return (
     <div>
       {showTour && <FeatureTour onComplete={handleTourComplete} />}
-      <WillieOwl pageKey="home" hint="Create a grocery list, select your stores, then hit Compare Prices to instantly see which store saves you the most money!" />
+      {showInstructions && (
+        <InstructionModal
+          instructionKey="home"
+          slides={HOME_SLIDES}
+          onClose={() => setShowInstructions(false)}
+        />
+      )}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 tracking-tight">My Grocery Lists</h1>
         <p className="text-slate-900 mt-1">Compare prices across all of your favorite local grocery stores</p>

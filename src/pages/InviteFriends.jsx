@@ -5,6 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, Copy, Check, Mail, MessageSquare, Share2, Loader2, Users, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
+import InstructionModal from '@/components/InstructionModal';
+
+const INVITE_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/ca36c51b9_InviteFriends1.jpg' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/a4c99c129_InviteFriends2.jpg' },
+];
 
 const THRFT_BLUE = '#4181ed';
 
@@ -15,6 +21,7 @@ export default function InviteFriends() {
   const [emailInput, setEmailInput] = useState('');
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(true);
 
   useEffect(() => {
     base44.functions.invoke('referralTracker', { action: 'getMyRewards' }).then(res => {
@@ -73,6 +80,13 @@ export default function InviteFriends() {
 
   return (
     <div className="max-w-lg mx-auto">
+      {showInstructions && (
+        <InstructionModal
+          instructionKey="invitefriends"
+          slides={INVITE_SLIDES}
+          onClose={() => setShowInstructions(false)}
+        />
+      )}
       {/* Back */}
       <Link to="/Rewards" className="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-700 transition-colors mb-5">
         <ArrowLeft className="w-4 h-4" /> Back to Rewards
