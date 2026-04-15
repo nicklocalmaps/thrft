@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Loader2, Search, ExternalLink, LayoutGrid } from 'lucide-react';
-import ProductBrowser from '@/components/grocery/ProductBrowser';
+import { Plus, Loader2, Search } from 'lucide-react';
+
 
 async function searchOpenFoodFacts(query) {
   const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=6&fields=product_name,brands,image_front_small_url,quantity`;
@@ -12,11 +11,9 @@ async function searchOpenFoodFacts(query) {
   return (data.products || []).filter(p => p.product_name);
 }
 
-export default function AddItemForm({ onAdd, listId }) {
-  const navigate = useNavigate();
+export default function AddItemForm({ onAdd }) {
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [showBrowser, setShowBrowser] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -82,24 +79,16 @@ export default function AddItemForm({ onAdd, listId }) {
     setShowDropdown(false);
   };
 
-  const handleBrowseAdd = (item) => {
-    onAdd(item);
-    setShowBrowser(false);
-  };
-
-
-
   return (
     <div ref={containerRef} className="relative">
-      {showBrowser && <ProductBrowser onAdd={handleBrowseAdd} onClose={() => setShowBrowser(false)} />}
       <form onSubmit={handleSubmit} className="flex gap-2">
         <div className="relative flex-1">
           <Input
-            placeholder=""
+            placeholder="Search products..."
             value={name}
             onChange={(e) => setName(e.target.value)}
             onFocus={() => suggestions.length > 0 && setShowDropdown(true)}
-            className="w-full h-12 rounded-xl border-slate-200 bg-white text-base placeholder:text-slate-600 focus-visible:ring-blue-400 pr-10"
+            className="w-full h-12 rounded-xl border-slate-200 bg-white text-base placeholder:text-slate-400 focus-visible:ring-blue-400 pr-10"
             autoComplete="off"
           />
           <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -114,32 +103,8 @@ export default function AddItemForm({ onAdd, listId }) {
           min="1"
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
-          className="w-20 h-12 rounded-xl border-slate-200 bg-white text-center text-base focus-visible:ring-blue-400"
+          className="w-14 h-12 rounded-xl border-slate-200 bg-white text-center text-base focus-visible:ring-blue-400"
         />
-        <Button
-          type="button"
-          variant="outline"
-          title="Browse by category or brand"
-          onClick={() => setShowBrowser(true)}
-          className="h-12 px-3 rounded-xl border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-300"
-        >
-          <LayoutGrid className="w-5 h-5" />
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          title="Search product database"
-          onClick={() => {
-            const q = name.trim();
-            const params = new URLSearchParams();
-            if (q) params.set('q', q);
-            if (listId) params.set('listId', listId);
-            navigate(`/SearchProducts?${params.toString()}`);
-          }}
-          className="h-12 px-3 rounded-xl border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-300"
-        >
-          <ExternalLink className="w-5 h-5" />
-        </Button>
         <Button
           type="submit"
           className="h-12 px-5 rounded-xl shadow-md shadow-blue-200 transition-all"
