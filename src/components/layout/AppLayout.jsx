@@ -48,6 +48,15 @@ export default function AppLayout() {
         </div>
       </header>
 
+      {/* Mobile header */}
+      <header className="md:hidden sticky top-0 z-50 bg-white border-b border-slate-100 flex items-center px-4" style={{ height: 56 }}>
+        <img
+          src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/ef0e8a3c9_THRFTbanner.jpg"
+          alt="THRFT"
+          style={{ height: 36, width: 'auto' }}
+        />
+      </header>
+
       {/* Referral Banner */}
       <ReferralBanner variant="banner" />
 
