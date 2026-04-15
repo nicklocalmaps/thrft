@@ -22,7 +22,7 @@ export default function AppLayout() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50/30">
       {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-blue-100/50">
+      <header className="sticky top-0 z-50 bg-white border-b border-blue-100/50">
         {/* Desktop header */}
         <div className="hidden md:flex max-w-5xl mx-auto px-6 items-center justify-between h-16">
           <Link to="/Home" className="flex items-center gap-2.5">
