@@ -50,64 +50,48 @@ export default function AppLayout() {
           </nav>
         </div>
 
-        {/* Mobile header — 2 rows of 4, full width buttons */}
-        {(() => {
-          const row1 = [
-            { path: '/Home', label: null, isLogo: true },
-            { path: '/Home', label: 'My Lists', icon: ShoppingCart },
-            { path: '/NewList', label: 'New List', icon: Plus },
-            { path: '/Budget', label: 'Budget', icon: DollarSign },
-          ];
-          const row2 = [
-            { path: '/Coupons', label: 'Coupons', icon: Ticket },
-            { path: '/StoreAccounts', label: 'Store Accounts', icon: Store },
-            { path: '/Rewards', label: 'Rewards', icon: Gift },
-            { path: '/Profile', label: 'Profile', icon: UserCircle },
-          ];
-          const renderCell = (item, idx) => {
-            const isActive = location.pathname === item.path;
-            return (
-              <Link
-                key={idx}
-                to={item.path}
-                aria-label={item.label || 'Home'}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: 52,
-                  gap: 4,
-                  backgroundColor: (!item.isLogo && isActive) ? THRFT_BLUE : 'transparent',
-                  color: (!item.isLogo && isActive) ? 'white' : '#475569',
-                  borderRight: '1px solid #f1f5f9',
-                  textDecoration: 'none',
-                }}
-              >
-                {item.isLogo ? (
-                  <div style={{ width: 32, height: 32, borderRadius: 8, overflow: 'hidden' }}>
-                    <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  </div>
-                ) : (
-                  <>
-                    <item.icon style={{ width: 20, height: 20, flexShrink: 0 }} />
-                    <span style={{ fontSize: 10, lineHeight: 1, fontWeight: 500 }}>{item.label}</span>
-                  </>
-                )}
-              </Link>
-            );
-          };
-          return (
-            <div className="flex md:hidden flex-col w-full border-b border-slate-100">
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', width: '100%' }}>
-                {row1.map(renderCell)}
+        {/* Mobile header — 2 rows of 4 */}
+        <div className="flex md:hidden flex-col w-full">
+          {/* Row 1 */}
+          <div className="grid grid-cols-4 w-full">
+            <Link to="/Home" className="flex flex-col items-center justify-center h-[52px] border-r border-slate-100">
+              <div className="w-8 h-8 rounded-lg overflow-hidden">
+                <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT" className="w-full h-full object-cover" />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', width: '100%', borderTop: '1px solid #f1f5f9' }}>
-                {row2.map(renderCell)}
-              </div>
-            </div>
-          );
-        })()}
+            </Link>
+            <Link to="/Home" className="flex flex-col items-center justify-center h-[52px] gap-1 border-r border-slate-100" style={location.pathname === '/Home' ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}>
+              <ShoppingCart className="w-5 h-5 shrink-0" />
+              <span className="text-[10px] leading-none font-medium">My Lists</span>
+            </Link>
+            <Link to="/NewList" className="flex flex-col items-center justify-center h-[52px] gap-1 border-r border-slate-100" style={location.pathname === '/NewList' ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}>
+              <Plus className="w-5 h-5 shrink-0" />
+              <span className="text-[10px] leading-none font-medium">New List</span>
+            </Link>
+            <Link to="/Budget" className="flex flex-col items-center justify-center h-[52px] gap-1" style={location.pathname === '/Budget' ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}>
+              <DollarSign className="w-5 h-5 shrink-0" />
+              <span className="text-[10px] leading-none font-medium">Budget</span>
+            </Link>
+          </div>
+          {/* Row 2 */}
+          <div className="grid grid-cols-4 w-full border-t border-slate-100">
+            <Link to="/Coupons" className="flex flex-col items-center justify-center h-[52px] gap-1 border-r border-slate-100" style={location.pathname === '/Coupons' ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}>
+              <Ticket className="w-5 h-5 shrink-0" />
+              <span className="text-[10px] leading-none font-medium">Coupons</span>
+            </Link>
+            <Link to="/StoreAccounts" className="flex flex-col items-center justify-center h-[52px] gap-1 border-r border-slate-100" style={location.pathname === '/StoreAccounts' ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}>
+              <Store className="w-5 h-5 shrink-0" />
+              <span className="text-[10px] leading-none font-medium">Store Accounts</span>
+            </Link>
+            <Link to="/Rewards" className="flex flex-col items-center justify-center h-[52px] gap-1 border-r border-slate-100" style={location.pathname === '/Rewards' ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}>
+              <Gift className="w-5 h-5 shrink-0" />
+              <span className="text-[10px] leading-none font-medium">Rewards</span>
+            </Link>
+            <Link to="/Profile" className="flex flex-col items-center justify-center h-[52px] gap-1" style={location.pathname === '/Profile' ? { backgroundColor: THRFT_BLUE, color: 'white' } : { color: '#475569' }}>
+              <UserCircle className="w-5 h-5 shrink-0" />
+              <span className="text-[10px] leading-none font-medium">Profile</span>
+            </Link>
+          </div>
+        </div>
       </header>
 
       {/* Referral Banner */}
