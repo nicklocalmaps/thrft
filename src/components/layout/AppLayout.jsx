@@ -13,7 +13,7 @@ export default function AppLayout() {
     { path: '/NewList', label: 'New List', icon: Plus },
     { path: '/Budget', label: 'Budget', icon: DollarSign },
     { path: '/Coupons', label: 'Coupons', icon: Ticket },
-    { path: '/StoreAccounts', label: 'Stores', icon: Store },
+    { path: '/Stores', label: 'Stores', icon: Store },
     { path: '/Rewards', label: 'Rewards', icon: Gift },
     { path: '/Profile', label: 'Profile', icon: UserCircle },
   ];
