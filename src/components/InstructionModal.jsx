@@ -22,20 +22,28 @@ export default function InstructionModal({ slides, onClose }) {
 
   const slide = slides[currentSlide];
 
-  const tapZoneStyle = {
+  // Two tap zones per slide:
+  // Zone 1 (Next): top 5–15%
+  // Zone 2 (Don't Show Again): top 20–25%
+  const nextZoneStyle = {
     position: 'absolute',
     left: '5%',
     width: '90%',
-    height: '9%',
+    top: slide.nextTop ?? '5%',
+    height: '10%',
     cursor: 'pointer',
-    // Debug tap zone — remove when done tuning:
     backgroundColor: 'rgba(255,0,0,0.3)',
   };
 
-  // Determine vertical placement
-  const positionStyle = slide.tapTop !== undefined
-    ? { top: slide.tapTop }
-    : { bottom: slide.tapBottom ?? '18%' };
+  const dismissZoneStyle = {
+    position: 'absolute',
+    left: '5%',
+    width: '90%',
+    top: slide.dismissTop ?? '20%',
+    height: '7%',
+    cursor: 'pointer',
+    backgroundColor: 'rgba(0,0,255,0.3)',
+  };
 
   return (
     <div className="fixed inset-0 z-[9999]">
@@ -52,10 +60,17 @@ export default function InstructionModal({ slides, onClose }) {
           objectPosition: 'top',
         }}
       />
+      {/* Next button zone (red) */}
       <div
-        style={{ ...tapZoneStyle, ...positionStyle }}
+        style={nextZoneStyle}
         onClick={handleNext}
         aria-label="Next"
+      />
+      {/* Don't Show Again zone (blue) */}
+      <div
+        style={dismissZoneStyle}
+        onClick={() => onClose?.()}
+        aria-label="Don't Show Again"
       />
     </div>
   );
