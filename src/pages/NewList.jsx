@@ -15,13 +15,6 @@ import InlineBrowseProducts from '@/components/grocery/InlineBrowseProducts';
 import useUserTier, { FREE_TIER_LIST_LIMIT } from '@/hooks/useUserTier';
 import FreePlanLimitModal from '@/components/subscription/FreePlanLimitModal';
 import PremiumTrialPrompt from '@/components/subscription/PremiumTrialPrompt';
-import InstructionModal from '@/components/InstructionModal';
-
-const NEWLIST_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/44208963e_NewList1.jpg' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/2567bcad5_NewList2.jpg' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/a3a27add9_NewList3.jpg' },
-];
 
 export default function NewList() {
   const navigate = useNavigate();
@@ -35,8 +28,6 @@ export default function NewList() {
   const [nameError, setNameError] = useState(false);
   const [showLimitModal, setShowLimitModal] = useState(false);
   const [showTrialPrompt, setShowTrialPrompt] = useState(false);
-  const [showInstructions, setShowInstructions] = useState(true);
-
   useEffect(() => {
     base44.auth.me().then(user => {
       if (user?.shopping_method) setShoppingMethod(user.shopping_method);
@@ -101,13 +92,7 @@ export default function NewList() {
     <div>
       {showLimitModal && <FreePlanLimitModal onClose={() => setShowLimitModal(false)} />}
       {showTrialPrompt && <PremiumTrialPrompt onClose={handleTrialPromptClose} />}
-      {showInstructions && (
-        <InstructionModal
-          instructionKey="newlist"
-          slides={NEWLIST_SLIDES}
-          onClose={() => setShowInstructions(false)}
-        />
-      )}
+
 
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight mb-2">New Grocery List</h1>
       <p className="text-slate-900 mb-2">Add your items, then compare prices across stores.</p>

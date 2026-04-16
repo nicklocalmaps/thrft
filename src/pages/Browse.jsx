@@ -4,19 +4,14 @@ import { X, Search, ChevronLeft } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import ProductBrowser from '@/components/grocery/ProductBrowser';
-import InstructionModal from '@/components/InstructionModal';
 
-const BROWSE_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/72d67b3cb_BrowseProducts1.jpg' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/09fd5ca9f_BrowseProducts2.jpg' },
-];
+
+
 
 export default function Browse() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const listId = searchParams.get('listId');
-  const [showInstructions, setShowInstructions] = useState(true);
-
   const handleAdd = (item) => {
     const encoded = encodeURIComponent(JSON.stringify(item));
     if (listId) {
@@ -36,13 +31,7 @@ export default function Browse() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
-      {showInstructions && (
-        <InstructionModal
-          instructionKey="browse"
-          slides={BROWSE_SLIDES}
-          onClose={() => setShowInstructions(false)}
-        />
-      )}
+
       <div className="sticky top-0 z-10 bg-white border-b border-slate-100">
         <div className="flex items-center justify-between px-4 py-3">
           <button

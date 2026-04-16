@@ -6,8 +6,6 @@ import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Loader2, Check, ShoppingCart, ArrowRight, Star, Search } from 'lucide-react';
 import { ALL_STORES } from '@/lib/storeConfig';
-import InstructionModal from '@/components/InstructionModal';
-
 export default function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState('zip'); // 'zip' | 'stores' | 'promo' | 'saving'
@@ -22,14 +20,6 @@ export default function Onboarding() {
   const [promoError, setPromoError] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
   const [userCount, setUserCount] = useState(11483);
-  const [showInstructions, setShowInstructions] = useState(true);
-
-  const onboardingInstructions = [
-    {
-      imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/d73e81baa_Onboarding1.jpg',
-    },
-  ];
-
   useEffect(() => {
     base44.functions.invoke('getUserCount', {}).then(res => {
       if (res.data?.count) setUserCount(res.data.count);
@@ -92,13 +82,7 @@ export default function Onboarding() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50/30 flex items-center justify-center px-4">
-      {showInstructions && (
-        <InstructionModal
-          instructionKey="onboarding"
-          slides={onboardingInstructions}
-          onClose={() => setShowInstructions(false)}
-        />
-      )}
+
       <div className="w-full max-w-xl">
 
         {/* Logo */}
