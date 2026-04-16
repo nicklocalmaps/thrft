@@ -7,19 +7,8 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkDismissal = async () => {
-      try {
-        const user = await base44.auth.me();
-        if (user?.[`instruction_${instructionKey}_dismissed`]) {
-          setDismissed(true);
-        }
-      } catch (err) {
-        // not logged in or error — still show
-      } finally {
-        setLoading(false);
-      }
-    };
-    checkDismissal();
+    // TEMP: always show for testing
+    setLoading(false);
   }, [instructionKey]);
 
   const handleDontShowAgain = async () => {
