@@ -40,7 +40,7 @@ export default function InstructionModal({ slides, onClose }) {
     left: '5%',
     width: '90%',
     top: slide.dismissTop ?? '20%',
-    height: '7%',
+    height: '10%',
     cursor: 'pointer',
     backgroundColor: 'rgba(0,0,255,0.3)',
   };
