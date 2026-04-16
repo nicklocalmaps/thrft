@@ -46,20 +46,21 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
     ...tapZoneStyle,
     ...(buttonPosition === 'bottom'
       ? { bottom: '18%' }
-      : { top: '4%' }),
+      : { top: '2%' }),
   };
 
   const dontShowTapStyle = {
     ...tapZoneStyle,
     ...(buttonPosition === 'bottom'
       ? { bottom: '9%' }
-      : { top: '13%' }),
+      : { top: '11%' }),
   };
 
   return (
     <div className="fixed inset-0 z-[9999]">
       {/* Full-screen image */}
       <img
+        key={slide.imageUrl}
         src={slide.imageUrl}
         alt="Instruction"
         style={{
