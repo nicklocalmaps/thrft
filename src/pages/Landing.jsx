@@ -62,8 +62,8 @@ export default function Landing() {
           <div className="flex items-center gap-3">
             <a href="#features" className="text-sm text-slate-500 hover:text-slate-800 transition-colors hidden sm:block">Features</a>
             <a href="#pricing" className="text-sm text-slate-500 hover:text-slate-800 transition-colors hidden sm:block">Pricing</a>
-            <Button onClick={handleCTA} className="h-9 rounded-xl px-5 text-sm font-semibold" style={{ backgroundColor: THRFT_BLUE }}>
-              Start Free
+            <Button onClick={handleCTA} className="h-10 rounded-xl px-6 text-sm font-semibold whitespace-nowrap" style={{ backgroundColor: THRFT_BLUE }}>
+              Free Sign Up
             </Button>
           </div>
         </div>
