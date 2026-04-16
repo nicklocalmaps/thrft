@@ -7,8 +7,8 @@ import InstructionModal from '@/components/InstructionModal';
 import { Input } from '@/components/ui/input';
 
 const BUDGET_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/e304df701_Budget1.jpg', nextTop: '5%', dismissTop: '20%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/6557429b2_Budget2.jpg', nextTop: '5%', dismissTop: '20%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/e304df701_Budget1.jpg', nextTop: '5%', dismissTop: '17%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/6557429b2_Budget2.jpg', nextTop: '76%', dismissTop: '85%' },
 ];
 import { Loader2, DollarSign, Target, Users, TrendingDown, Lightbulb, AlertTriangle, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';

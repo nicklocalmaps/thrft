@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import InstructionModal from '@/components/InstructionModal';
 
 const ONBOARDING_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c2b98c125_Onboarding1.jpg', nextTop: '5%', dismissTop: '20%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c2b98c125_Onboarding1.jpg', nextTop: '5%', dismissTop: '17%' },
   { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/81ac9ce9a_Onboarding2.jpg', nextTop: '5%', dismissTop: '20%' },
 ];
 import { Button } from '@/components/ui/button';
