@@ -4,12 +4,7 @@ import { base44 } from '@/api/base44Client';
 export default function InstructionModal({ instructionKey, slides, onClose }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [dismissed, setDismissed] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // TEMP: always show for testing
-    setLoading(false);
-  }, [instructionKey]);
+  const [loading, setLoading] = useState(false);
 
   const handleDontShowAgain = async () => {
     try {
@@ -62,7 +57,7 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-[9999]">
       {/* Full-screen image */}
       <img
         src={slide.imageUrl}
