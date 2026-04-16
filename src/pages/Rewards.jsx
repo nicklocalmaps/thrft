@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import WillieOwl from '@/components/WillieOwl';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Loader2, Gift, Star, Zap, Trophy, Copy, Check, Users, Coins, Crown, Flame, Target, Share2 } from 'lucide-react';
@@ -103,7 +102,6 @@ export default function Rewards() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <WillieOwl pageKey="rewards" hint="Earn points by using THRFT daily — and win a $50 Visa gift card every week! Invite friends to level up faster." />
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
