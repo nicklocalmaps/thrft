@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import InstructionModal from '@/components/InstructionModal';
+
+const ONBOARDING_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c2b98c125_Onboarding1.jpg', buttonPosition: 'top' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/81ac9ce9a_Onboarding2.jpg', buttonPosition: 'top' },
+];
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,6 +26,7 @@ export default function Onboarding() {
   const [promoError, setPromoError] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
   const [userCount, setUserCount] = useState(11483);
+  const [showInstructions, setShowInstructions] = useState(true);
   useEffect(() => {
     base44.functions.invoke('getUserCount', {}).then(res => {
       if (res.data?.count) setUserCount(res.data.count);
@@ -82,6 +89,13 @@ export default function Onboarding() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50/30 flex items-center justify-center px-4">
+      {showInstructions && (
+        <InstructionModal
+          instructionKey="onboarding"
+          slides={ONBOARDING_SLIDES}
+          onClose={() => setShowInstructions(false)}
+        />
+      )}
 
       <div className="w-full max-w-xl">
 

@@ -13,6 +13,13 @@ import TemplatesDrawer from '@/components/grocery/TemplatesDrawer';
 import PastListsDrawer from '@/components/grocery/PastListsDrawer';
 import InlineBrowseProducts from '@/components/grocery/InlineBrowseProducts';
 import useUserTier, { FREE_TIER_LIST_LIMIT } from '@/hooks/useUserTier';
+import InstructionModal from '@/components/InstructionModal';
+
+const NEWLIST_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/3f9b2db30_NewList1.jpg', buttonPosition: 'top' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/a2a628e97_NewList2.jpg', buttonPosition: 'bottom' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/ee504c4f0_NewList3.jpg', buttonPosition: 'bottom' },
+];
 import FreePlanLimitModal from '@/components/subscription/FreePlanLimitModal';
 import PremiumTrialPrompt from '@/components/subscription/PremiumTrialPrompt';
 
@@ -28,6 +35,7 @@ export default function NewList() {
   const [nameError, setNameError] = useState(false);
   const [showLimitModal, setShowLimitModal] = useState(false);
   const [showTrialPrompt, setShowTrialPrompt] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(true);
   useEffect(() => {
     base44.auth.me().then(user => {
       if (user?.shopping_method) setShoppingMethod(user.shopping_method);
@@ -92,6 +100,13 @@ export default function NewList() {
     <div>
       {showLimitModal && <FreePlanLimitModal onClose={() => setShowLimitModal(false)} />}
       {showTrialPrompt && <PremiumTrialPrompt onClose={handleTrialPromptClose} />}
+      {showInstructions && (
+        <InstructionModal
+          instructionKey="newlist"
+          slides={NEWLIST_SLIDES}
+          onClose={() => setShowInstructions(false)}
+        />
+      )}
 
 
       <h1 className="text-3xl font-bold text-slate-900 tracking-tight mb-2">New Grocery List</h1>
