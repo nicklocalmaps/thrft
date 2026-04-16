@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, CreditCard, CheckCircle2, Clock, XCircle, User, Mail, Edit2, Check, X } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 
 const STATUS_CONFIG = {
   trialing: { label: 'Free Trial', color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200', icon: Clock },
@@ -15,6 +16,8 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [willieEnabled, setWillieEnabled] = useState(true);
+  const [savingWillie, setSavingWillie] = useState(false);
   const [editingEmail, setEditingEmail] = useState(false);
   const [emailValue, setEmailValue] = useState('');
   const [savingEmail, setSavingEmail] = useState(false);
@@ -23,9 +26,19 @@ export default function Profile() {
     base44.auth.me().then((u) => {
       setUser(u);
       setEmailValue(u?.email || '');
+      setWillieEnabled(u?.willie_enabled !== false);
       setLoading(false);
     });
   }, []);
+
+  const toggleWillie = async () => {
+    setSavingWillie(true);
+    const newValue = !willieEnabled;
+    setWillieEnabled(newValue);
+    await base44.auth.updateMe({ willie_enabled: newValue });
+    setUser(prev => ({ ...prev, willie_enabled: newValue }));
+    setSavingWillie(false);
+  };
 
   const handleManageBilling = async () => {
     if (window.self !== window.top) {
@@ -163,6 +176,17 @@ export default function Profile() {
         </div>
 
 
+        {/* Willie Preference */}
+        <div className="bg-white rounded-2xl border border-slate-100 p-6">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-slate-900">Show Willie the Wise Savings Owl</span>
+            <Switch
+              checked={willieEnabled}
+              onCheckedChange={toggleWillie}
+              disabled={savingWillie}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
