@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { base44 } from '@/api/base44Client';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ArrowLeft, Copy, Check, Mail, MessageSquare, Share2, Loader2, Users, Star } from 'lucide-react';
+import { motion } from 'framer-motion';
 import InstructionModal from '@/components/InstructionModal';
 
 const INVITEFRIENDS_SLIDES = [
   { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/InviteFriends.1.jpg', nextTop: '76%', dismissTop: '85%' },
   { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/InviteFriends.2.jpg', nextTop: '5%', dismissTop: '20%' },
 ];
-import { base44 } from '@/api/base44Client';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ArrowLeft, Copy, Check, Mail, MessageSquare, Share2, Loader2, Users, Star } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 
 
