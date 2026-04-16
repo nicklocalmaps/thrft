@@ -15,8 +15,8 @@ import ReferralBanner from '@/components/rewards/ReferralBanner';
 import InstructionModal from '@/components/InstructionModal';
 
 const HOME_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/7c84eff32_Home1.jpg' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/2ba33ce85_Home2.jpg' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c592b5fa1_Home1.jpg', buttonPosition: 'bottom' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/2e0cb8c2f_Home2.jpg', buttonPosition: 'top' },
 ];
 
 export default function Home() {
