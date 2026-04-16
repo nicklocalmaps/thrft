@@ -1,20 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 
-export default function InstructionModal({ instructionKey, slides, onClose }) {
+export default function InstructionModal({ instructionKey, slides, onClose, headerOffset = 0 }) {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [dismissed, setDismissed] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleDontShowAgain = async () => {
-    try {
-      await base44.auth.updateMe({ [`instruction_${instructionKey}_dismissed`]: true });
-    } catch (err) {
-      // ignore
-    }
-    setDismissed(true);
-    onClose?.();
-  };
 
   const handleNext = () => {
     if (currentSlide < slides.length - 1) {
@@ -24,21 +12,19 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
     }
   };
 
-  if (loading || dismissed) return null;
-
   const slide = slides[currentSlide];
-  // buttonPosition: 'top' | 'bottom' — defaults to 'bottom'
   const buttonPosition = slide.buttonPosition || 'bottom';
 
-  // Tap zone height as % of screen for each button
-  // Next button is always above Don't Show Again
+  // Tap zone covers the "Next" button drawn in the image.
+  // For 'top' positions, we offset from the top of the image (below any header).
+  // For 'bottom' positions, we offset from the bottom of the viewport.
   const tapZoneStyle = {
     position: 'absolute',
     left: '5%',
     width: '90%',
-    height: '8%',
+    height: '9%',
     cursor: 'pointer',
-    // uncomment below to debug tap zones:
+    // Uncomment to debug:
     // backgroundColor: 'rgba(255,0,0,0.3)',
   };
 
@@ -46,14 +32,14 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
     ...tapZoneStyle,
     ...(buttonPosition === 'bottom'
       ? { bottom: '18%' }
-      : { top: '2%' }),
+      : { top: `calc(${headerOffset}px + 2%)` }),
   };
 
   const dontShowTapStyle = {
     ...tapZoneStyle,
     ...(buttonPosition === 'bottom'
       ? { bottom: '9%' }
-      : { top: '11%' }),
+      : { top: `calc(${headerOffset}px + 11%)` }),
   };
 
   return (
@@ -75,7 +61,7 @@ export default function InstructionModal({ instructionKey, slides, onClose }) {
 
       {/* Invisible tap zones over the drawn buttons */}
       <div style={nextTapStyle} onClick={handleNext} aria-label="Next" />
-      <div style={dontShowTapStyle} onClick={handleDontShowAgain} aria-label="Don't Show Again" />
+      <div style={dontShowTapStyle} onClick={onClose} aria-label="Close" />
     </div>
   );
 }

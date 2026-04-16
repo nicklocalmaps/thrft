@@ -63,6 +63,7 @@ export default function Home() {
           instructionKey="home"
           slides={HOME_SLIDES}
           onClose={() => setShowInstructions(false)}
+          headerOffset={110}
         />
       )}
       <div className="mb-8">

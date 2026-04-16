@@ -160,6 +160,7 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
           instructionKey="budget"
           slides={BUDGET_SLIDES}
           onClose={() => setShowInstructions(false)}
+          headerOffset={110}
         />
       )}
       <div className="mb-6">
