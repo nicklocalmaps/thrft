@@ -16,9 +16,9 @@ import useUserTier, { FREE_TIER_LIST_LIMIT } from '@/hooks/useUserTier';
 import InstructionModal from '@/components/InstructionModal';
 
 const NEWLIST_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/3f9b2db30_NewList1.jpg', buttonPosition: 'top' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/a2a628e97_NewList2.jpg', buttonPosition: 'bottom' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/ee504c4f0_NewList3.jpg', buttonPosition: 'bottom' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/3f9b2db30_NewList1.jpg', tapTop: '75%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/a2a628e97_NewList2.jpg', tapBottom: '18%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/ee504c4f0_NewList3.jpg', tapBottom: '18%' },
 ];
 import FreePlanLimitModal from '@/components/subscription/FreePlanLimitModal';
 import PremiumTrialPrompt from '@/components/subscription/PremiumTrialPrompt';
