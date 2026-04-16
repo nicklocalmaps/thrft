@@ -101,7 +101,6 @@ export default function StoreAccounts() {
     <div>
       {showInstructions && (
         <InstructionModal
-          instructionKey="stores"
           slides={STORES_SLIDES}
           onClose={() => setShowInstructions(false)}
         />

@@ -93,7 +93,6 @@ export default function SearchProducts() {
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {showInstructions && (
         <InstructionModal
-          instructionKey="searchproducts"
           slides={SEARCHPRODUCTS_SLIDES}
           onClose={() => setShowInstructions(false)}
         />

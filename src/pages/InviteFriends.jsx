@@ -84,7 +84,6 @@ export default function InviteFriends() {
     <div className="max-w-lg mx-auto">
       {showInstructions && (
         <InstructionModal
-          instructionKey="invitefriends"
           slides={INVITEFRIENDS_SLIDES}
           onClose={() => setShowInstructions(false)}
         />
