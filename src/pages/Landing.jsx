@@ -95,9 +95,14 @@ export default function Landing() {
                 className="w-40 sm:w-48 drop-shadow-lg"
               />
             </div>
-            <p className="text-xl text-slate-500 max-w-2xl mx-auto mb-4">
+            <p className="text-xl text-slate-500 max-w-2xl mx-auto mb-2">
               THRFT compares grocery prices across 50+ stores — in-store, pickup & delivery — so your family always gets the best deal.
             </p>
+            <ul className="text-base text-slate-500 mb-4 space-y-0.5">
+              <li>· In-Store</li>
+              <li>· Curbside Pickup</li>
+              <li>· Delivery</li>
+            </ul>
             <p className="text-sm font-semibold text-blue-600 mb-8">Price Compare · Shared Family Lists · Budget Tool · Coupon Scanner · Delivery Finder</p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-4">

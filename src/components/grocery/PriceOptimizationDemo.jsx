@@ -78,6 +78,9 @@ export default function PriceOptimizationDemo() {
                   className={`flex items-center justify-between px-2 py-0.5 rounded-md ${store.best ? 'bg-emerald-50' : ''}`}
                 >
                   <div className="flex items-center gap-1.5">
+                    {store.best && (
+                      <span className="text-xs font-semibold bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full whitespace-nowrap">Best ✓</span>
+                    )}
                     <span className="text-xs" style={{ color: store.color }}>{store.icon}</span>
                     <span className={`text-xs ${store.best ? 'font-semibold text-emerald-700' : 'text-slate-600'}`}>{store.name}</span>
                   </div>
@@ -86,11 +89,6 @@ export default function PriceOptimizationDemo() {
                   </span>
                 </div>
               ))}
-            </div>
-            <div className="flex items-start pt-0.5 shrink-0">
-              {item.stores.some(s => s.best) && (
-                <span className="text-xs font-semibold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full whitespace-nowrap">Best Price ✓</span>
-              )}
             </div>
           </div>
         ))}

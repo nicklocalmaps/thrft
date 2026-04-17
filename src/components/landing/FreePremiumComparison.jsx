@@ -34,7 +34,9 @@ export default function FreePremiumComparison({ onCTA }) {
         <div className="rounded-3xl border border-slate-100 overflow-hidden shadow-lg">
           {/* Header */}
           <div className="grid grid-cols-3 bg-slate-50 border-b border-slate-100">
-            <div className="p-5" />
+            <div className="p-5 flex items-end">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Feature</p>
+            </div>
             <div className="p-5 text-center border-l border-slate-100">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Free</p>
               <p className="text-2xl font-extrabold text-slate-900">$0</p>
@@ -42,7 +44,8 @@ export default function FreePremiumComparison({ onCTA }) {
             </div>
             <div className="p-5 text-center border-l border-slate-100" style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%)' }}>
               <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: THRFT_BLUE }}>Premium</p>
-              <p className="text-2xl font-extrabold text-slate-900">$3.99<span className="text-base font-semibold text-slate-400">/mo</span></p>
+              <p className="text-2xl font-extrabold text-slate-900">$3.99</p>
+              <p className="text-xs text-slate-400">Per Month</p>
               <p className="text-xs text-slate-400 mt-0.5">7-day free trial</p>
             </div>
           </div>

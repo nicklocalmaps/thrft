@@ -22,12 +22,17 @@ export default function DeliveryAppsSection({ onCTA }) {
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-900/50 border border-blue-700/50 text-blue-300 text-sm font-semibold mb-4">
-            <Truck className="w-4 h-4" /> Delivery Price Comparison
+            <Truck className="w-4 h-4" /> Grocery List Price Comparison
           </div>
           <h2 className="text-4xl font-extrabold text-white mb-3">Find The Cheapest Price For Your Grocery List Every Time</h2>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            THRFT compares delivery fees, service charges, and total costs across all major delivery apps so you always know the true price before ordering.
+          <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-4">
+            THRFT compares individual item costs, delivery fees, service charges, and any other total costs across all major grocery store websites and grocery delivery apps so you always know the true price before ordering.
           </p>
+          <ul className="text-slate-400 text-base space-y-1">
+            <li>· Shared Family Lists</li>
+            <li>· Budget Tool</li>
+            <li>· Coupon Scanner</li>
+          </ul>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
