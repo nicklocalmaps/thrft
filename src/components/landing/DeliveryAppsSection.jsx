@@ -29,9 +29,9 @@ export default function DeliveryAppsSection({ onCTA }) {
             THRFT compares individual item costs, delivery fees, service charges, and any other total costs across all major grocery store websites and grocery delivery apps so you always know the true price before ordering.
           </p>
           <ul className="text-slate-400 text-base space-y-1">
-            <li>· Shared Family Lists</li>
-            <li>· Budget Tool</li>
-            <li>· Coupon Scanner</li>
+            <li>· In-Store</li>
+            <li>· Curbside Pickup</li>
+            <li>· Delivery</li>
           </ul>
         </div>
 

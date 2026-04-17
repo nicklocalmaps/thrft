@@ -34,7 +34,7 @@ export default function FreePremiumComparison({ onCTA }) {
         <div className="rounded-3xl border border-slate-100 overflow-hidden shadow-lg">
           {/* Header */}
           <div className="grid grid-cols-3 bg-slate-50 border-b border-slate-100">
-            <div className="p-5 flex items-end">
+            <div className="p-5 flex items-center">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Feature</p>
             </div>
             <div className="p-5 text-center border-l border-slate-100">
