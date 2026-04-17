@@ -102,7 +102,7 @@ export default function Landing() {
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-4">
               <Button onClick={handleCTA} className="h-14 px-10 text-base font-bold rounded-2xl shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
-                Create Free Account →
+                Create Your Free Account →
               </Button>
 
             </div>

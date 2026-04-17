@@ -24,7 +24,7 @@ export default function DeliveryAppsSection({ onCTA }) {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-900/50 border border-blue-700/50 text-blue-300 text-sm font-semibold mb-4">
             <Truck className="w-4 h-4" /> Delivery Price Comparison
           </div>
-          <h2 className="text-4xl font-extrabold text-white mb-3">Find the Cheapest Delivery — Automatically</h2>
+          <h2 className="text-4xl font-extrabold text-white mb-3">Find The Cheapest Price For Your Grocery List Every Time</h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
             THRFT compares delivery fees, service charges, and total costs across all major delivery apps so you always know the true price before ordering.
           </p>
@@ -50,8 +50,8 @@ export default function DeliveryAppsSection({ onCTA }) {
         <div className="bg-gradient-to-r from-blue-900/60 to-blue-800/40 rounded-3xl border border-blue-700/40 p-8 text-center">
           <p className="text-white text-xl font-bold mb-2">Stop paying hidden delivery fees</p>
           <p className="text-blue-300 mb-6">THRFT shows you the all-in total — groceries + fees + tips — across every delivery option so you pick the real winner.</p>
-          <Button onClick={onCTA} className="h-12 px-8 rounded-xl font-bold text-slate-900 bg-white hover:bg-blue-50 transition-all">
-            Compare Delivery Prices Free →
+          <Button onClick={onCTA} className="h-12 px-8 rounded-xl font-bold text-slate-900 bg-white hover:bg-blue-50 transition-all mx-auto block">
+            Compare Grocery Prices Free →
           </Button>
         </div>
       </div>
