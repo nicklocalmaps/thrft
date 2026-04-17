@@ -56,9 +56,7 @@ export default function DeliveryAppsSection({ onCTA }) {
           <div className="text-center">
             <p className="text-white text-xl font-bold mb-2">Stop paying too much for your groceries</p>
             <p className="text-blue-300 mb-6">THRFT shows you the all-in total — groceries + fees + tips — across every delivery option so you pick the real winner.</p>
-            <Button onClick={onCTA} className="h-12 px-8 rounded-xl font-bold text-slate-900 bg-white hover:bg-blue-50 transition-all mx-auto block">
-              Compare Grocery Prices Free →
-            </Button>
+
           </div>
         </div>
       </div>
