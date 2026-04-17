@@ -53,9 +53,9 @@ export default function DeliveryAppsSection({ onCTA }) {
         </div>
 
         <div className="bg-gradient-to-r from-blue-900/60 to-blue-800/40 rounded-3xl border border-blue-700/40 p-8 text-center">
-          <p className="text-white text-xl font-bold mb-2">Stop paying hidden delivery fees</p>
+          <p className="text-white text-xl font-bold mb-2">Stop paying too much for your groceries</p>
           <p className="text-blue-300 mb-6">THRFT shows you the all-in total — groceries + fees + tips — across every delivery option so you pick the real winner.</p>
-          <Button onClick={onCTA} className="h-12 px-8 rounded-xl font-bold text-slate-900 bg-white hover:bg-blue-50 transition-all mx-auto block">
+          <Button onClick={onCTA} className="h-12 px-8 rounded-xl font-bold text-slate-900 bg-white hover:bg-blue-50 transition-all mx-auto">
             Compare Grocery Prices Free →
           </Button>
         </div>
