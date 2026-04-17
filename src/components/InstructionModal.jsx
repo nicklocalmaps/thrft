@@ -19,7 +19,7 @@ export default function InstructionModal({ slides, onClose }) {
         .instruction-modal-overlay {
           display: block;
         }
-        @media (min-width: 768px) {
+        @media (min-width: 431px) {
           .instruction-modal-overlay {
             display: none !important;
           }
