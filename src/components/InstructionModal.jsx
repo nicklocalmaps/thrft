@@ -12,6 +12,11 @@ import React, { useState } from 'react';
 export default function InstructionModal({ slides, onClose }) {
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Only show on mobile devices (width < 768px)
+  if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+    return null;
+  }
+
   const handleNext = () => {
     if (currentSlide < slides.length - 1) {
       setCurrentSlide(currentSlide + 1);
