@@ -6,9 +6,9 @@ const MOCK_ITEMS = [
     sub: '1 loaf',
     emoji: '🍞',
     stores: [
-      { name: 'Walmart', price: 45.20, icon: '✦', color: '#0071CE' },
-      { name: 'Kroger', price: 28.99, icon: '●', color: '#CC0000' },
-      { name: 'Safeway', price: 17.99, icon: '◆', color: '#E31837', best: true },
+      { name: 'Walmart', price: 3.48, icon: '✦', color: '#0071CE', best: true },
+      { name: 'Kroger', price: 3.99, icon: '●', color: '#CC0000' },
+      { name: 'Safeway', price: 4.49, icon: '◆', color: '#E31837' },
     ],
   },
   {
@@ -16,9 +16,9 @@ const MOCK_ITEMS = [
     sub: '1 gallon',
     emoji: '🥛',
     stores: [
-      { name: 'Walmart', price: 35.90, icon: '✦', color: '#0071CE' },
-      { name: 'Kroger', price: 26.00, icon: '●', color: '#CC0000' },
-      { name: 'Safeway', price: 17.00, icon: '◆', color: '#E31837' },
+      { name: 'Walmart', price: 5.98, icon: '✦', color: '#0071CE' },
+      { name: 'Kroger', price: 5.49, icon: '●', color: '#CC0000', best: true },
+      { name: 'Safeway', price: 6.79, icon: '◆', color: '#E31837' },
     ],
   },
   {
@@ -26,9 +26,9 @@ const MOCK_ITEMS = [
     sub: '3 lbs',
     emoji: '🍎',
     stores: [
-      { name: 'Walmart', price: 38.99, icon: '✦', color: '#0071CE', best: true },
-      { name: 'Kroger', price: 24.00, icon: '●', color: '#CC0000' },
-      { name: 'Safeway', price: 18.00, icon: '◆', color: '#E31837' },
+      { name: 'Walmart', price: 4.97, icon: '✦', color: '#0071CE' },
+      { name: 'Kroger', price: 4.49, icon: '●', color: '#CC0000', best: true },
+      { name: 'Safeway', price: 5.99, icon: '◆', color: '#E31837' },
     ],
   },
 ];
@@ -96,16 +96,16 @@ export default function PriceOptimizationDemo() {
           <p className="text-xs font-bold text-slate-700 uppercase tracking-wide mb-2">Total Savings</p>
           <div className="space-y-1 text-xs">
             <div className="flex justify-between text-slate-500">
-              <span>Current List Cost:</span>
-              <span className="font-semibold text-slate-700">$45.20</span>
+              <span>Safeway (highest):</span>
+              <span className="font-semibold text-slate-700">$17.27</span>
             </div>
             <div className="flex justify-between text-slate-500">
-              <span>THRFT Optimized Cost:</span>
-              <span className="font-bold text-slate-900">$38.99</span>
+              <span>THRFT Optimized:</span>
+              <span className="font-bold text-slate-900">$13.46</span>
             </div>
             <div className="flex justify-between text-slate-500 pt-1 border-t border-slate-200 mt-1">
-              <span>Instant Savings:</span>
-              <span className="font-bold text-emerald-600">$6.21 (15%)</span>
+              <span>You Save:</span>
+              <span className="font-bold text-emerald-600">$3.81 (22%)</span>
             </div>
           </div>
         </div>
