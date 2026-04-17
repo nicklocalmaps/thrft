@@ -4,7 +4,7 @@ import InstructionModal from '@/components/InstructionModal';
 
 const SEARCH_SLIDES = [
   { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c661c9ba7_SearchProducts1.jpg', nextTop: '76%', dismissTop: '86%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/e6195a5bd_SearchProducts2.jpg', nextTop: '3%', dismissTop: '12%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/e6195a5bd_SearchProducts2.jpg', nextTop: '7%', dismissTop: '16%' },
 ];
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
