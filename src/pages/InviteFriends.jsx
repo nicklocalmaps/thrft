@@ -5,7 +5,7 @@ import InstructionModal from '@/components/InstructionModal';
 
 const INVITE_SLIDES = [
   { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/9cfab70f3_InviteFriends1.jpg', nextTop: '76%', dismissTop: '87%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/4ed147b0c_InviteFriends2.jpg', nextTop: '3%', dismissTop: '12%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/4ed147b0c_InviteFriends2.jpg', nextTop: '7%', dismissTop: '16%' },
 ];
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
