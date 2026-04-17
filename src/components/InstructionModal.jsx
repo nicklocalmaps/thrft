@@ -11,7 +11,7 @@ function isActualMobileDevice() {
   const isTabletUA = /ipad/.test(ua) || (/android/.test(ua) && !/mobile/.test(ua));
 
   // Touch check — phones have touch but so do tablets, so combine with screen size
-  const isSmallScreen = smallerDimension < 480;
+  const isSmallScreen = smallerDimension < 600;
 
   return isSmallScreen && !isTabletUA;
 }
