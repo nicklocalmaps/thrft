@@ -98,7 +98,7 @@ export default function Landing() {
             <p className="text-xl text-slate-500 max-w-2xl mx-auto mb-4">
               THRFT compares grocery prices across 50+ stores — in-store, pickup & delivery — so your family always gets the best deal.
             </p>
-            <p className="text-base font-semibold text-blue-600 mb-8">Price Compare · Shared Family Lists</p>
+            <p className="text-base font-semibold text-blue-600 mb-8">Price Compare · Shared Family Lists · Budget Tool · Coupon Scanner · Delivery Finder</p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-4">
               <Button onClick={handleCTA} className="h-14 px-10 text-base font-bold rounded-2xl shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
