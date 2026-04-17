@@ -32,7 +32,7 @@ export default function InstructionModal({ slides, onClose }) {
     top: slide.nextTop ?? '5%',
     height: '10%',
     cursor: 'pointer',
-    backgroundColor: 'rgba(255,0,0,0.3)',
+    backgroundColor: 'transparent',
   };
 
   const dismissZoneStyle = {
@@ -42,7 +42,7 @@ export default function InstructionModal({ slides, onClose }) {
     top: slide.dismissTop ?? '20%',
     height: '10%',
     cursor: 'pointer',
-    backgroundColor: 'rgba(0,0,255,0.3)',
+    backgroundColor: 'transparent',
   };
 
   return (
