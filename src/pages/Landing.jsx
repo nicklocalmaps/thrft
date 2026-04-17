@@ -167,7 +167,7 @@ export default function Landing() {
             {/* Right: demo */}
             <div className="flex-1 w-full max-w-md">
               <PriceOptimizationDemo />
-              <p className="text-xs text-slate-400 text-center mt-3">Live demo · prices updated in real time across 50+ stores</p>
+              <p className="text-2xl font-bold text-slate-700 text-center mt-3">Now Imagine What You'll Save On Your Weekly Shopping List!</p>
             </div>
           </div>
         </div>
