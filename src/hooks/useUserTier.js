@@ -25,7 +25,7 @@ export default function useUserTier() {
   useEffect(() => {
     Promise.all([
       base44.auth.me(),
-      base44.entities.GroceryList.list('-created_date', 100),
+      base44.entities.GroceryList.list('-created_date', 20),
     ]).then(([user, allLists]) => {
       const activeStatuses = ['trialing', 'active'];
       const stripeActive = activeStatuses.includes(user?.subscription_status);

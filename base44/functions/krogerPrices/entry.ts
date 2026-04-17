@@ -49,17 +49,22 @@ async function getPrice(token, locationId, term) {
     'filter.limit': '1',
     'filter.fulfillment': 'ais',
   });
-  const r = await fetch(`${BASE}/products?${q}`, { headers: { Authorization: `Bearer ${token}` } });
-  if (!r.ok) {
-    console.log('Product error for', term, r.status);
+  const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000));
+  try {
+    const r = await Promise.race([
+      fetch(`${BASE}/products?${q}`, { headers: { Authorization: `Bearer ${token}` } }),
+      timeout,
+    ]);
+    if (!r.ok) return { item_name: term, product_name: term, price: null, unit_price: '', in_stock: false };
+    const d = await r.json();
+    const p = d.data?.[0];
+    if (!p) return { item_name: term, product_name: term, price: null, unit_price: '', in_stock: false };
+    const priceInfo = p.items?.[0]?.price;
+    const price = priceInfo?.regular ?? priceInfo?.promo ?? null;
+    return { item_name: term, product_name: p.description || term, price, unit_price: p.items?.[0]?.size || '', in_stock: price != null };
+  } catch {
     return { item_name: term, product_name: term, price: null, unit_price: '', in_stock: false };
   }
-  const d = await r.json();
-  const p = d.data?.[0];
-  if (!p) return { item_name: term, product_name: term, price: null, unit_price: '', in_stock: false };
-  const priceInfo = p.items?.[0]?.price;
-  const price = priceInfo?.regular ?? priceInfo?.promo ?? null;
-  return { item_name: term, product_name: p.description || term, price, unit_price: p.items?.[0]?.size || '', in_stock: price != null };
 }
 
 Deno.serve(async (req) => {
@@ -74,7 +79,10 @@ Deno.serve(async (req) => {
     const targets = store_keys.filter(k => KROGER_FAMILY.includes(k));
     if (!targets.length) return Response.json({ results: {}, reason: 'no kroger stores in list' });
 
-    const token = await getToken();
+    const token = await Promise.race([
+      getToken(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('auth timeout')), 8000)),
+    ]);
 
     const results = {};
     await Promise.all(targets.map(async (key) => {
