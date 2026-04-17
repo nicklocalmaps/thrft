@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import InstructionModal from '@/components/InstructionModal';
+
+const SEARCH_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c661c9ba7_SearchProducts1.jpg', nextTop: '76%', dismissTop: '86%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/e6195a5bd_SearchProducts2.jpg', nextTop: '3%', dismissTop: '12%' },
+];
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, Search, Loader2, Plus, ShoppingCart, LayoutGrid } from 'lucide-react';
@@ -28,6 +34,7 @@ export default function SearchProducts() {
   const [query, setQuery] = useState(initialQuery);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(true);
   const [addedItems, setAddedItems] = useState(new Set());
 
   useEffect(() => {
@@ -86,6 +93,12 @@ export default function SearchProducts() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
+      {showInstructions && (
+        <InstructionModal
+          slides={SEARCH_SLIDES}
+          onClose={() => setShowInstructions(false)}
+        />
+      )}
       {/* Header */}
       <div className="bg-white border-b border-slate-100 px-4 py-3 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto flex items-center gap-3">
