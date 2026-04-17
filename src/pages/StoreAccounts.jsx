@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import InstructionModal from '@/components/InstructionModal';
+
+const STORES_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/4f6af4bc3_Stores1.jpg', nextTop: '5%', dismissTop: '15%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c2c0b6303_Stores2.jpg', nextTop: '76%', dismissTop: '86%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/7df75b810_Stores3.jpg', nextTop: '76%', dismissTop: '86%' },
+];
 
 import { ALL_STORES, COLOR_MAP } from '@/lib/storeConfig';
 import { getStoreLink } from '@/lib/storeLinks';
@@ -22,6 +29,7 @@ export default function StoreAccounts() {
   const [savingZip, setSavingZip] = useState(false);
   const [refreshingStores, setRefreshingStores] = useState(false);
   const [refreshMessage, setRefreshMessage] = useState('');
+  const [showInstructions, setShowInstructions] = useState(true);
 
   useEffect(() => {
     base44.auth.me().then(u => {
@@ -93,6 +101,12 @@ export default function StoreAccounts() {
 
   return (
     <div>
+      {showInstructions && (
+        <InstructionModal
+          slides={STORES_SLIDES}
+          onClose={() => setShowInstructions(false)}
+        />
+      )}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Store Accounts</h1>
         <p className="text-slate-500 mt-1">Save your loyalty card numbers and manage your shopping preferences.</p>
