@@ -1,21 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-/**
- * InstructionModal
- *
- * Each slide can define an explicit tap zone via:
- *   tapTop    — CSS top value for the tap zone (e.g. '75%', '200px')
- *   tapBottom — CSS bottom value for the tap zone (e.g. '18%')
- *
- * If neither is provided, defaults to bottom: '18%'.
- */
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      const width = window.innerWidth;
+      // Also check user agent to catch tablets that report narrow widths
+      const ua = navigator.userAgent.toLowerCase();
+      const isTablet = /ipad|tablet|(android(?!.*mobile))/.test(ua);
+      setIsMobile(width < 768 && !isTablet);
+    };
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  return isMobile;
+}
+
 export default function InstructionModal({ slides, onClose }) {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const isMobile = useIsMobile();
 
-  // Only show on mobile devices (width < 1024px threshold excludes tablets)
-  if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-    return null;
-  }
+  // Only show on mobile phones, not tablets or desktops
+  if (!isMobile) return null;
 
   const handleNext = () => {
     if (currentSlide < slides.length - 1) {
@@ -27,9 +36,6 @@ export default function InstructionModal({ slides, onClose }) {
 
   const slide = slides[currentSlide];
 
-  // Two tap zones per slide:
-  // Zone 1 (Next): top 5–15%
-  // Zone 2 (Don't Show Again): top 20–25%
   const nextZoneStyle = {
     position: 'absolute',
     left: '5%',
@@ -65,18 +71,8 @@ export default function InstructionModal({ slides, onClose }) {
           objectPosition: 'top',
         }}
       />
-      {/* Next button zone (red) */}
-      <div
-        style={nextZoneStyle}
-        onClick={handleNext}
-        aria-label="Next"
-      />
-      {/* Don't Show Again zone (blue) */}
-      <div
-        style={dismissZoneStyle}
-        onClick={() => onClose?.()}
-        aria-label="Don't Show Again"
-      />
+      <div style={nextZoneStyle} onClick={handleNext} aria-label="Next" />
+      <div style={dismissZoneStyle} onClick={() => onClose?.()} aria-label="Don't Show Again" />
     </div>
   );
 }
