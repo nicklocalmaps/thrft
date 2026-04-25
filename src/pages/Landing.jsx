@@ -39,7 +39,7 @@ function handleCTA() {
 const fade = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 
 export default function Landing() {
-  const [userCount, setUserCount] = React.useState(11483);
+  const [userCount, setUserCount] = React.useState(217);
 
   React.useEffect(() => {
     base44.functions.invoke('getUserCount', {}).then(res => {
@@ -80,7 +80,7 @@ export default function Landing() {
                   <div className="w-6 h-6 rounded-full bg-emerald-400 border-2 border-white" />
                   <div className="w-6 h-6 rounded-full bg-amber-400 border-2 border-white" />
                 </div>
-                <span className="text-xs font-semibold text-slate-700">{userCount.toLocaleString()} families saving money</span>
+                <span className="text-xs font-semibold text-slate-700">{userCount.toLocaleString()} users saving money</span>
                 <span className="text-base">🎉</span>
               </div>
             </div>
@@ -251,7 +251,7 @@ export default function Landing() {
       <section className="py-20 px-5 bg-white">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl font-extrabold text-slate-900 mb-3">Families Are Saving Every Week</h2>
-          <p className="text-slate-500 text-lg mb-10">Join {userCount.toLocaleString()}+ smart shoppers already using THRFT.</p>
+          <p className="text-slate-500 text-lg mb-10">Join {userCount.toLocaleString()}+ users already saving with THRFT.</p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {TESTIMONIALS.map((t) => (
               <div key={t.name} className="bg-slate-50 rounded-2xl border border-slate-100 p-6 text-left">
