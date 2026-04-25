@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, CreditCard, CheckCircle2, Clock, XCircle, User, Mail, Edit2, Check, X } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
-import SavingsDashboard from '@/components/dashboard/SavingsDashboard';
 
 const STATUS_CONFIG = {
   trialing: { label: 'Free Trial', color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200', icon: Clock },
@@ -85,13 +84,8 @@ export default function Profile() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Dashboard</h1>
-        <p className="text-slate-500 mt-1">Your savings overview and account settings.</p>
-      </div>
-
-      {/* Savings Dashboard */}
-      <div className="mb-8 max-w-2xl">
-        <SavingsDashboard />
+        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">My Profile</h1>
+        <p className="text-slate-500 mt-1">Manage your account and subscription.</p>
       </div>
 
       <div className="space-y-4 max-w-lg">
