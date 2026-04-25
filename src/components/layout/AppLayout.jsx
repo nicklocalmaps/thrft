@@ -15,7 +15,7 @@ export default function AppLayout() {
     { path: '/Coupons', label: 'Coupons', icon: Ticket },
     { path: '/Stores', label: 'Stores', icon: Store },
     { path: '/Rewards', label: 'Rewards', icon: Gift },
-    { path: '/Profile', label: 'Profile', icon: UserCircle },
+    { path: '/Profile', label: 'Dashboard', icon: UserCircle },
   ];
 
   return (
