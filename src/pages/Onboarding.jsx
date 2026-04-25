@@ -25,7 +25,7 @@ export default function Onboarding() {
 
   const [promoError, setPromoError] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
-  const [userCount, setUserCount] = useState(11483);
+  const [userCount, setUserCount] = useState(217);
   const [showInstructions, setShowInstructions] = useState(true);
   useEffect(() => {
     base44.functions.invoke('getUserCount', {}).then(res => {
