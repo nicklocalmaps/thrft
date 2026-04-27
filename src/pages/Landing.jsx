@@ -105,15 +105,13 @@ export default function Landing() {
               </div>
             </div>
 
-            <p className="text-xl text-slate-500 max-w-2xl mx-auto mb-2">
-              THRFT compares grocery prices across 50+ stores — in-store, pickup & delivery — so your family always gets the best deal.
-            </p>
-            <ul className="text-base text-slate-500 mb-4 space-y-0.5">
-              <li>· In-Store</li>
-              <li>· Curbside Pickup</li>
-              <li>· Delivery</li>
-            </ul>
-            <p className="text-sm font-semibold text-blue-600 mb-8">Price Compare · Shared Family Lists · Budget Tool · Coupon Scanner · Delivery Finder</p>
+            <div className="max-w-2xl mx-auto mb-8">
+              <img
+                src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/2736b1685_image7.jpg"
+                alt="THRFT compares grocery prices across 50+ stores"
+                className="w-full rounded-3xl"
+              />
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-4">
               <Button onClick={handleCTA} className="h-14 px-10 text-base font-bold rounded-2xl shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
