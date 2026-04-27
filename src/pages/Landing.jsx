@@ -143,7 +143,7 @@ export default function Landing() {
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col lg:flex-row items-center gap-12">
             {/* Left: copy */}
-            <div className="flex-1">
+            <div className="flex-1 text-center">
               <p className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: THRFT_BLUE }}>Live Price Optimization Engine</p>
               <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-tight mb-5">
                 See exactly how much<br className="hidden sm:block" /> you'll save on every trip
@@ -151,7 +151,7 @@ export default function Landing() {
               <p className="text-lg text-slate-500 mb-8">
                 THRFT compares 50+ stores in seconds and shows you the cheapest option for your entire list — in-store, pickup, or delivery.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Button onClick={handleCTA} className="h-13 px-8 text-base font-bold rounded-2xl shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
                   Create Your Free Account →
                 </Button>
