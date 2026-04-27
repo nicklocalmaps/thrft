@@ -13,6 +13,7 @@ import {
   ChevronRight,
   Play,
 } from 'lucide-react';
+import PriceOptimizationDemo from '@/components/grocery/PriceOptimizationDemo';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -471,6 +472,45 @@ export default function Landing() {
           </div>
         </div>
       </FadeSection>
+
+      {/* ── SECTION 2b: PRICE OPTIMIZATION ENGINE ───────────────────────────── */}
+      <section className="py-16 px-5 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <FadeSection>
+            <div className="flex flex-col lg:flex-row items-center gap-12">
+              {/* Left: copy */}
+              <div className="flex-1 text-center lg:text-left">
+                <p className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: THRFT_BLUE }}>
+                  Live Price Optimization Engine
+                </p>
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 leading-tight mb-4">
+                  See exactly how much<br className="hidden sm:block" /> you'll save on every trip
+                </h2>
+                <p className="text-lg text-slate-500 mb-8">
+                  THRFT compares 50+ stores in seconds and shows you the cheapest option for your entire list — in-store, pickup, or delivery.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                  <button
+                    onClick={handleCTA}
+                    className="h-12 px-8 rounded-xl text-sm font-bold text-white shadow-md flex items-center justify-center gap-2"
+                    style={{ backgroundColor: THRFT_BLUE }}
+                  >
+                    Create Your Free Account →
+                  </button>
+                </div>
+                <p className="text-xs text-slate-400 mt-3">No Charge For 7 Days. Cancel Anytime.</p>
+              </div>
+              {/* Right: demo */}
+              <div className="flex-1 w-full max-w-md">
+                <PriceOptimizationDemo />
+                <p className="text-xl font-bold text-slate-700 text-center mt-4">
+                  Now Imagine What You'll Save On Your Weekly Shopping List!
+                </p>
+              </div>
+            </div>
+          </FadeSection>
+        </div>
+      </section>
 
       {/* ── SECTION 3: HOW IT WORKS ──────────────────────────────────────────── */}
       <section className="py-16 px-5 bg-white">
