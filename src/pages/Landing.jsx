@@ -111,16 +111,15 @@ export default function Landing() {
             {/* Explainer Video */}
             <div className="mt-10 max-w-2xl mx-auto">
               <div className="rounded-3xl overflow-hidden shadow-2xl shadow-blue-100 border border-slate-100 aspect-video">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  src="https://player.vimeo.com/video/1187056512?badge=0&autopause=0&player_id=0&app_id=58479"
-                  title="How THRFT Works"
-                  frameBorder="0"
-                  allow="autoplay; fullscreen; picture-in-picture"
-                  allowFullScreen
-                  className="w-full h-full"
-                />
+                <video
+                  className="w-full h-full object-cover"
+                  controls
+                  playsInline
+                  preload="metadata"
+                  poster=""
+                >
+                  <source src="https://res.cloudinary.com/dqjd0eg05/video/upload/v1777315911/THRFT.Whiteboard.Explainer.Video.2_k3qxqm.mp4" type="video/mp4" />
+                </video>
               </div>
               <p className="text-sm text-slate-400 mt-3">See how THRFT works in 60 seconds</p>
             </div>
