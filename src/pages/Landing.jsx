@@ -417,9 +417,9 @@ export default function Landing() {
           >
             <button
               onClick={handleCTA}
-              className="w-full h-13 rounded-2xl text-base font-bold text-blue-700 bg-white hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 shadow-lg mb-2.5"
+              className="w-full py-4 rounded-2xl text-base font-bold text-blue-700 bg-white hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 shadow-lg mb-2.5"
             >
-              Create free account
+              Create Free Account
               <ChevronRight className="w-4 h-4" />
             </button>
             <p className="text-center text-xs text-white/50">
