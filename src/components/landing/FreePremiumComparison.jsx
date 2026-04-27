@@ -80,7 +80,7 @@ export default function FreePremiumComparison({ onCTA }) {
         </div>
 
         <p className="text-center text-xs text-slate-400 mt-4">
-          Free plan resets every month. Upgrade anytime. No contracts.
+          Free plan resets every month.<br />Upgrade anytime. No contracts.
         </p>
       </div>
     </section>

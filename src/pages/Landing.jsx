@@ -87,7 +87,7 @@ export default function Landing() {
 
             <div className="flex flex-col items-center mb-4">
               <h1 className="text-5xl sm:text-6xl font-extrabold text-slate-900 leading-tight tracking-tight mb-4">
-                Manage Your Grocery<br className="hidden sm:block" /> Budget Wisely
+                Manage Your Grocery<br /> Budget Wisely
               </h1>
             </div>
 
@@ -119,7 +119,7 @@ export default function Landing() {
               </Button>
 
             </div>
-            <p className="text-xs text-slate-400">Free forever plan available. No credit card required to start.</p>
+            <p className="text-xs text-slate-400">Free forever plan available.<br />No credit card required to start.</p>
 
 
           </motion.div>
@@ -138,7 +138,7 @@ export default function Landing() {
       </section>
 
       {/* 1b. PRICE OPTIMIZATION ENGINE */}
-      <section className="py-20 px-5 bg-white">
+      <section className="pt-8 pb-20 px-5 bg-white">
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col lg:flex-row items-center gap-12">
             {/* Left: copy */}
@@ -155,7 +155,7 @@ export default function Landing() {
                   Create Your Free Account →
                 </Button>
               </div>
-              <p className="text-xs text-slate-400 mt-3">No charge for 7 days. Cancel anytime.</p>
+              <p className="text-xs text-slate-400 mt-3 text-center">No Charge For 7 Days. Cancel Anytime.</p>
             </div>
             {/* Right: demo */}
             <div className="flex-1 w-full max-w-md">
@@ -167,7 +167,7 @@ export default function Landing() {
       </section>
 
       {/* 2. 4 HOOK CARDS */}
-      <section id="features" className="py-20 px-5 bg-white">
+      <section id="features" className="pt-8 pb-20 px-5 bg-white">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-extrabold text-slate-900 mb-3">Everything Your Family Needs to Save More</h2>
