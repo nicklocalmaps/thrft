@@ -355,7 +355,7 @@ export default function Landing() {
             transition={{ duration: 0.5 }}
             className="flex justify-center mb-5"
           >
-            <div className="flex items-center gap-2 bg-white/15 rounded-full px-4 py-2">
+            <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2">
               <div className="flex">
                 {['#a5f3c0', '#fde68a', '#c4b5fd'].map((c, i) => (
                   <div
@@ -365,7 +365,7 @@ export default function Landing() {
                   />
                 ))}
               </div>
-              <span className="text-sm text-white/90 font-medium">
+              <span className="text-sm text-slate-900 font-medium">
                 {userCount.toLocaleString()} Families Saving Money
               </span>
             </div>
