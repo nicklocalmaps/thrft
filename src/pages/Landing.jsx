@@ -90,6 +90,21 @@ export default function Landing() {
                 Manage Your Grocery<br className="hidden sm:block" /> Budget Wisely
               </h1>
             </div>
+
+            {/* Explainer Video */}
+            <div className="mt-2 mb-8 max-w-2xl mx-auto w-full">
+              <div className="rounded-3xl overflow-hidden shadow-2xl shadow-blue-100 border border-slate-100 aspect-video">
+                <video
+                  className="w-full h-full object-cover"
+                  controls
+                  playsInline
+                  preload="metadata"
+                >
+                  <source src="https://res.cloudinary.com/dqjd0eg05/video/upload/v1777315911/THRFT.Whiteboard.Explainer.Video.2_k3qxqm.mp4" type="video/mp4" />
+                </video>
+              </div>
+            </div>
+
             <p className="text-xl text-slate-500 max-w-2xl mx-auto mb-2">
               THRFT compares grocery prices across 50+ stores — in-store, pickup & delivery — so your family always gets the best deal.
             </p>
@@ -108,21 +123,7 @@ export default function Landing() {
             </div>
             <p className="text-xs text-slate-400">Free forever plan available. No credit card required to start.</p>
 
-            {/* Explainer Video */}
-            <div className="mt-10 max-w-2xl mx-auto">
-              <div className="rounded-3xl overflow-hidden shadow-2xl shadow-blue-100 border border-slate-100 aspect-video">
-                <video
-                  className="w-full h-full object-cover"
-                  controls
-                  playsInline
-                  preload="metadata"
-                  poster=""
-                >
-                  <source src="https://res.cloudinary.com/dqjd0eg05/video/upload/v1777315911/THRFT.Whiteboard.Explainer.Video.2_k3qxqm.mp4" type="video/mp4" />
-                </video>
-              </div>
-              <p className="text-sm text-slate-400 mt-3">See how THRFT works in 60 seconds</p>
-            </div>
+
           </motion.div>
 
           {/* Store logos */}
