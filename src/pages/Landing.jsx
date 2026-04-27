@@ -86,7 +86,7 @@ export default function Landing() {
             </div>
 
             <div className="flex flex-col items-center mb-4">
-              <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight mb-4">
+              <h1 className="text-5xl sm:text-6xl font-extrabold text-slate-900 leading-tight tracking-tight mb-4">
                 <span className="block">Manage Your Grocery</span>
                 <span className="block">Budget Wisely</span>
               </h1>
