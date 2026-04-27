@@ -379,9 +379,9 @@ export default function Landing() {
             className="text-center mb-4"
           >
             <h1 className="text-4xl sm:text-5xl font-extrabold text-white leading-tight tracking-tight mb-3">
-              Stop overpaying
+              Stop Overpaying
               <br />
-              for groceries
+              For Groceries
             </h1>
             <p className="text-base sm:text-lg text-white/70 max-w-md mx-auto leading-relaxed">
               Compare 50+ stores in seconds. Know your total before you leave home.
@@ -516,7 +516,7 @@ export default function Landing() {
       <section className="py-16 px-5 bg-white">
         <div className="max-w-3xl mx-auto">
           <FadeSection>
-            <div className="mb-10">
+            <div className="mb-10 text-center">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-2">
                 Simple as 1-2-3
               </h2>
@@ -567,7 +567,7 @@ export default function Landing() {
       <section id="features" className="py-16 px-5 bg-slate-50">
         <div className="max-w-5xl mx-auto">
           <FadeSection>
-            <div className="mb-10">
+            <div className="mb-10 text-center">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-2">
                 Everything you need
               </h2>
@@ -616,7 +616,7 @@ export default function Landing() {
       <section id="pricing" className="py-16 px-5 bg-white">
         <div className="max-w-md mx-auto">
           <FadeSection>
-            <div className="mb-8">
+            <div className="mb-8 text-center">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-2">
                 Simple pricing
               </h2>
