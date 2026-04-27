@@ -89,11 +89,6 @@ export default function Landing() {
               <h1 className="text-5xl sm:text-6xl font-extrabold text-slate-900 leading-tight tracking-tight mb-4">
                 Manage Your Grocery<br className="hidden sm:block" /> Budget Wisely
               </h1>
-              <img
-                src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/a3d564b94_OwlCharacterPointingUp_edited.png"
-                alt="Willie the Savings Owl"
-                className="w-40 sm:w-48 drop-shadow-lg"
-              />
             </div>
             <p className="text-xl text-slate-500 max-w-2xl mx-auto mb-2">
               THRFT compares grocery prices across 50+ stores — in-store, pickup & delivery — so your family always gets the best deal.
@@ -112,23 +107,23 @@ export default function Landing() {
 
             </div>
             <p className="text-xs text-slate-400">Free forever plan available. No credit card required to start.</p>
-          </motion.div>
 
-          {/* Explainer Video */}
-          <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.6 }} className="mt-14 max-w-2xl mx-auto">
-            <div className="rounded-3xl overflow-hidden shadow-2xl shadow-blue-100 border border-slate-100 aspect-video">
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://www.youtube.com/embed/Fx6C0N2r9PI?rel=0&modestbranding=1"
-                title="How THRFT Works"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
-              />
+            {/* Explainer Video */}
+            <div className="mt-10 max-w-2xl mx-auto">
+              <div className="rounded-3xl overflow-hidden shadow-2xl shadow-blue-100 border border-slate-100 aspect-video">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src="https://www.youtube.com/embed/Fx6C0N2r9PI?rel=0&modestbranding=1"
+                  title="How THRFT Works"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full"
+                />
+              </div>
+              <p className="text-sm text-slate-400 mt-3">See how THRFT works in 60 seconds</p>
             </div>
-            <p className="text-sm text-slate-400 mt-3">See how THRFT works in 60 seconds</p>
           </motion.div>
 
           {/* Store logos */}
