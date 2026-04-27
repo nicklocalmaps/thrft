@@ -366,7 +366,7 @@ export default function Landing() {
                 ))}
               </div>
               <span className="text-sm text-white/90 font-medium">
-                {userCount.toLocaleString()} families saving money
+                {userCount.toLocaleString()} Families Saving Money
               </span>
             </div>
           </motion.div>
