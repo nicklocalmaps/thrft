@@ -8,7 +8,7 @@ import {
   ArrowLeft, RefreshCw, Loader2, Store,
   ChevronDown, ChevronUp, CheckSquare,
   TrendingDown, ExternalLink, Check,
-  AlertCircle, Zap, BarChart2, ShoppingBag,
+  AlertCircle, Zap, BarChart2, ShoppingBag, Truck,
 } from 'lucide-react';
 import ThrftCartIcon from '@/components/icons/ThrftCartIcon';
 import AddItemForm from '@/components/grocery/AddItemForm';
@@ -377,7 +377,7 @@ function ThrftDeliveryCard({ delivery, nextCheapestAllIn, onOrder }) {
   );
 }
 
-function HandoffModal({ delivery, nextCheapestAllIn, onConfirm, onClose }) {
+function HandoffModal({ delivery, nextCheapestAllIn, savedAddress, onConfirm, onClose }) {
   const savings = nextCheapestAllIn ? Math.max(0, nextCheapestAllIn - delivery.thrftPrice) : 0;
   const breakdown = [
     { label: 'Your list total', value: `$${delivery.instoreTotal.toFixed(2)}` },
@@ -423,6 +423,39 @@ function HandoffModal({ delivery, nextCheapestAllIn, onConfirm, onClose }) {
               <span className="text-base font-extrabold" style={{ color: THRFT_BLUE }}>${delivery.thrftPrice.toFixed(2)}</span>
             </div>
           </div>
+
+          {/* Delivery address */}
+          {savedAddress ? (
+            <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-4">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-start gap-2.5 flex-1 min-w-0">
+                  <Truck className="w-4 h-4 shrink-0 mt-0.5" style={{ color: THRFT_BLUE }} />
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-slate-700 mb-0.5">Delivering to</p>
+                    <p className="text-sm font-semibold text-slate-900 truncate">
+                      {savedAddress.street}{savedAddress.apt ? `, ${savedAddress.apt}` : ''}
+                    </p>
+                    <p className="text-xs text-slate-500">{savedAddress.city}, {savedAddress.state} {savedAddress.zip}</p>
+                    {savedAddress.instructions && (
+                      <p className="text-xs text-slate-400 mt-1 italic">"{savedAddress.instructions}"</p>
+                    )}
+                  </div>
+                </div>
+                <a href="/Profile" className="text-xs font-semibold shrink-0 hover:underline" style={{ color: THRFT_BLUE }}>Edit</a>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-amber-50 border border-amber-100 rounded-2xl p-3 mb-4 flex items-center gap-2.5">
+              <svg className="w-4 h-4 text-amber-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+              </svg>
+              <p className="text-xs text-amber-700 flex-1">
+                No delivery address saved.{' '}
+                <a href="/Profile" className="font-semibold underline">Add one in Profile</a>
+                {' '}to speed up checkout.
+              </p>
+            </div>
+          )}
 
           {savings > 0.01 && (
             <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 mb-5">
@@ -527,6 +560,7 @@ export default function ListDetail() {
   const [showHandoff, setShowHandoff]         = useState(false);
   const [showConfirmed, setShowConfirmed]     = useState(false);
   const [deliveryOrdered, setDeliveryOrdered] = useState(null);
+  const [savedAddress, setSavedAddress]       = useState(null);
   const [lifetimeSavings, setLifetimeSavings] = useState(0);
   const [ordersThisMonth, setOrdersThisMonth] = useState(0);
 
@@ -698,8 +732,13 @@ export default function ListDetail() {
 
   // ── Delivery handlers ──────────────────────────────────────────────────────
 
-  const handleOrderDelivery = () => {
+  const handleOrderDelivery = async () => {
     setDeliveryOrdered(bestDelivery);
+    try {
+      const user = await base44.auth.me();
+      const addr = user?.delivery_address;
+      setSavedAddress(addr?.street && addr?.city && addr?.state && addr?.zip ? addr : null);
+    } catch { setSavedAddress(null); }
     setShowHandoff(true);
   };
 
@@ -709,7 +748,20 @@ export default function ListDetail() {
     setShowHandoff(false);
 
     try {
-      const user = await base44.auth.me().catch(() => null);
+      await base44.entities.DeliveryOrder.create({
+        list_id:       listId,
+        list_name:     list.name,
+        store_key:     deliveryOrdered.storeKey,
+        store_name:    deliveryOrdered.storeName,
+        service:       deliveryOrdered.service,
+        instore_total: deliveryOrdered.instoreTotal,
+        delivery_fee:  deliveryOrdered.deliveryFee,
+        thrft_price:   deliveryOrdered.thrftPrice,
+        affiliate_url: deliveryOrdered.affiliateUrl,
+        ordered_at:    new Date().toISOString(),
+      }).catch(() => {});
+
+      const user   = await base44.auth.me().catch(() => null);
       const prev   = user?.lifetime_delivery_savings || 0;
       const months = user?.delivery_orders_this_month || 0;
       const saved  = deliveryOrdered.thrftPrice * THRFT_MARKUP / (1 + THRFT_MARKUP);
@@ -732,8 +784,8 @@ export default function ListDetail() {
     const includePickup   = isPremium && (shoppingMethod === 'pickup'   || shoppingMethod === 'all');
     const includeDelivery = isPremium && (shoppingMethod === 'delivery' || shoppingMethod === 'all');
 
-    const existingData    = list?.price_data || {};
-    const itemsChanged    = cStatus === 'changed' || cStatus === 'empty';
+    const existingData  = list?.price_data || {};
+    const itemsChanged  = cStatus === 'changed' || cStatus === 'empty';
 
     const storesToRefresh = forceRefresh || itemsChanged
       ? effectiveStores
@@ -895,6 +947,7 @@ export default function ListDetail() {
           <HandoffModal
             delivery={deliveryOrdered}
             nextCheapestAllIn={nextCheapestDelivery}
+            savedAddress={savedAddress}
             onConfirm={handleConfirmDelivery}
             onClose={() => setShowHandoff(false)}
           />
@@ -932,21 +985,18 @@ export default function ListDetail() {
           className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
             shoppingMode ? 'text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
           }`}
-          style={shoppingMode ? { backgroundColor: THRFT_BLUE } : {}}
-        >
+          style={shoppingMode ? { backgroundColor: THRFT_BLUE } : {}}>
           <CheckSquare className="w-3.5 h-3.5" />
           {shoppingMode ? 'Done' : 'Shop mode'}
         </button>
       </div>
 
-      {/* Coupons */}
       <CouponListMatcher
         coupons={coupons}
         list={{ ...list, items }}
         onItemAdded={() => queryClient.invalidateQueries({ queryKey: ['grocery-list', listId] })}
       />
 
-      {/* Cache banner */}
       {cStatus !== 'empty' && (
         <CacheBanner
           status={cStatus}
@@ -956,12 +1006,10 @@ export default function ListDetail() {
         />
       )}
 
-      {/* Add item */}
       <div className="mb-4">
         <AddItemForm onAdd={addItem} listId={listId} />
       </div>
 
-      {/* Item list */}
       <div className="space-y-2 mb-5">
         {shoppingMode ? (
           <>
@@ -1004,7 +1052,6 @@ export default function ListDetail() {
         )}
       </div>
 
-      {/* Store picker */}
       {items.length > 0 && (
         <div className="mb-5 rounded-2xl border border-slate-100 bg-white overflow-hidden">
           {!isPremium ? (
@@ -1049,7 +1096,6 @@ export default function ListDetail() {
         </div>
       )}
 
-      {/* Budget */}
       {items.length > 0 && (
         <div className="mb-5">
           <ListBudget list={list} priceData={list?.price_data}
@@ -1057,7 +1103,6 @@ export default function ListDetail() {
         </div>
       )}
 
-      {/* Loading progress */}
       <AnimatePresence>
         {comparing && (
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mb-6">
@@ -1097,7 +1142,6 @@ export default function ListDetail() {
         )}
       </AnimatePresence>
 
-      {/* Results */}
       {priceData && !comparing && comparedStoreKeys.length > 0 && (
         <motion.div ref={resultsRef} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
 
