@@ -18,7 +18,6 @@ import Profile    from '@/pages/Profile';
 import Rewards    from '@/pages/Rewards';
 import Coupons    from '@/pages/Coupons';
 import Budget     from '@/pages/Budget';
-import StoreAccounts from '@/pages/StoreAccounts';
 import Stores from '@/pages/Stores';
 import useUserTier   from '@/hooks/useUserTier';
 import { base44 }    from '@/api/base44Client';

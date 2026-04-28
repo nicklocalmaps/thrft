@@ -561,6 +561,14 @@ export default function ListDetail() {
   const [showConfirmed, setShowConfirmed]     = useState(false);
   const [deliveryOrdered, setDeliveryOrdered] = useState(null);
   const [savedAddress, setSavedAddress]       = useState(null);
+
+  // Load saved delivery address on mount
+  useEffect(() => {
+    base44.auth.me().then(u => {
+      const addr = u?.delivery_address;
+      if (addr?.street && addr?.city && addr?.state && addr?.zip) setSavedAddress(addr);
+    }).catch(() => {});
+  }, []);
   const [lifetimeSavings, setLifetimeSavings] = useState(0);
   const [ordersThisMonth, setOrdersThisMonth] = useState(0);
 
@@ -1216,7 +1224,7 @@ export default function ListDetail() {
           </p>
 
           <div className="mb-4">
-            <NearbyStoresMap priceData={list?.price_data} listName={list?.name} />
+            <NearbyStoresMap priceData={list?.price_data} listName={list?.name} savedAddress={savedAddress} />
           </div>
         </motion.div>
       )}
