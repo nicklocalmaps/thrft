@@ -1,5 +1,6 @@
+import ThrftCartIcon from '@/components/icons/ThrftCartIcon';
 import React, { useMemo } from 'react';
-import { TrendingDown, ShoppingCart } from 'lucide-react';
+import { TrendingDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { ALL_STORES, COLOR_MAP } from '@/lib/storeConfig';
 
@@ -10,7 +11,6 @@ function getInstoreTotal(storeData) {
 }
 
 export default function StorePriceDashboard({ lists }) {
-  // Aggregate totals per store across all lists that have price data
   const storeTotals = useMemo(() => {
     const totals = {};
     lists.forEach(list => {
@@ -34,7 +34,7 @@ export default function StorePriceDashboard({ lists }) {
   return (
     <div className="mb-8 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
       <div className="px-5 pt-5 pb-3 border-b border-slate-100 flex items-center gap-2">
-        <ShoppingCart className="w-4 h-4" style={{ color: '#4181ed' }} />
+        <ThrftCartIcon className="w-4 h-4" style={{ color: '#4181ed' }} />
         <h2 className="font-bold text-slate-800 text-sm">Store Price Comparison</h2>
         <span className="ml-auto text-xs text-slate-400">across all lists with price data</span>
       </div>
@@ -75,7 +75,6 @@ export default function StorePriceDashboard({ lists }) {
                 </span>
               </div>
 
-              {/* Progress bar */}
               <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
