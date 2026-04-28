@@ -86,15 +86,15 @@ function ProfileTab() {
 // ─── Save tab content ─────────────────────────────────────────────────────────
 
 function SaveTab() {
-  const [section, setSection] = useState('coupons');
+  const [section, setSection] = useState('budget');
 
   return (
     <div>
       {/* Sub-tabs */}
       <div className="flex gap-1 rounded-2xl p-1 mb-5 bg-slate-100">
         {[
-          { key: 'coupons', label: '🏷️ Coupons' },
           { key: 'budget',  label: '💵 Budget'  },
+          { key: 'coupons', label: '🏷️ Coupons' },
         ].map(tab => (
           <button
             key={tab.key}
@@ -147,16 +147,16 @@ function BottomNav({ activeTab, onTabChange }) {
       action: () => { onTabChange('lists'); navigate('/NewList'); },
     },
     {
-      key:    'save',
-      label:  'Save',
-      icon:   Tag,
-      action: () => onTabChange('save'),
-    },
-    {
       key:    'profile',
       label:  'Profile',
       icon:   UserCircle,
       action: () => onTabChange('profile'),
+    },
+    {
+      key:    'save',
+      label:  'Save',
+      icon:   Tag,
+      action: () => onTabChange('save'),
     },
   ];
 
@@ -181,14 +181,15 @@ function BottomNav({ activeTab, onTabChange }) {
                 <div
                   className="flex items-center justify-center rounded-2xl transition-transform active:scale-95"
                   style={{
-                    width:           44,
-                    height:          44,
-                    backgroundColor: THRFT_BLUE,
-                    marginTop:       -14,
-                    boxShadow:       '0 4px 16px rgba(65,129,237,.45)',
+                    width:     44,
+                    height:    44,
+                    background: '#fff',
+                    border:    `2px solid ${THRFT_BLUE}`,
+                    marginTop: -14,
+                    boxShadow: '0 2px 10px rgba(65,129,237,.2)',
                   }}
                 >
-                  <Plus className="w-5 h-5 text-white" strokeWidth={2.5} />
+                  <Plus className="w-5 h-5" style={{ color: THRFT_BLUE }} strokeWidth={2.5} />
                 </div>
                 <span
                   className="font-medium"
@@ -240,8 +241,8 @@ function DesktopNav({ activeTab, onTabChange, location }) {
   const items = [
     { key: 'lists',   label: 'My Lists', path: '/Home'    },
     { key: 'newlist', label: 'New List', path: '/NewList' },
-    { key: 'save',    label: 'Save',     path: null       },
     { key: 'profile', label: 'Profile',  path: null       },
+    { key: 'save',    label: 'Save',     path: null       },
   ];
 
   return (
