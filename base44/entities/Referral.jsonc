@@ -37,6 +37,11 @@
     "referral_code": {
       "type": "string",
       "description": "Unique referral code used"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optional notes or description for this referral"
     }
   },
   "required": [

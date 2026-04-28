@@ -1,0 +1,41 @@
+{
+  "name": "PriceHistory",
+  "type": "object",
+  "properties": {
+    "list_id": {
+      "type": "string",
+      "description": "Reference to the GroceryList"
+    },
+    "list_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optional description for this price snapshot"
+    },
+    "snapshot_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "store_totals": {
+      "type": "object",
+      "description": "Map of store key to instore total",
+      "additionalProperties": {
+        "type": "number"
+      }
+    },
+    "cheapest_store": {
+      "type": "string"
+    },
+    "cheapest_total": {
+      "type": "number"
+    },
+    "item_count": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "list_id"
+  ]
+}

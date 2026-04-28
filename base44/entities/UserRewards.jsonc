@@ -41,6 +41,11 @@
     "referred_by_code": {
       "type": "string",
       "description": "Referral code used when signing up"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optional notes or description for this rewards record"
     }
   },
   "required": [

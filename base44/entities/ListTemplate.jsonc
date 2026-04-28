@@ -1,0 +1,55 @@
+{
+  "name": "ListTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Template name"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optional description for this template"
+    },
+    "shopping_method": {
+      "type": "string",
+      "enum": [
+        "instore",
+        "pickup",
+        "delivery",
+        "all"
+      ],
+      "default": "all"
+    },
+    "items": {
+      "type": "array",
+      "description": "Items in this template",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number",
+            "default": 1
+          },
+          "unit": {
+            "type": "string",
+            "default": "each"
+          },
+          "search_hint": {
+            "type": "string"
+          },
+          "is_branded": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

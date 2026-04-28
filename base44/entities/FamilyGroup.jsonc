@@ -48,6 +48,11 @@
         "past_due"
       ],
       "default": "active"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optional description for this family group"
     }
   },
   "required": [

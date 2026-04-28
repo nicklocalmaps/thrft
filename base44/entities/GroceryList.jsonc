@@ -6,6 +6,11 @@
       "type": "string",
       "description": "Name of the grocery list"
     },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optional description for this list"
+    },
     "shopping_method": {
       "type": "string",
       "enum": [
