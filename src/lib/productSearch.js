@@ -44,7 +44,7 @@ export function filterByPopularity(products, searchQuery = '') {
   return popular.length > 0 ? popular : products.slice(0, 8);
 }
 
-// Map our category keys to OpenFoodFacts category tags + search terms
+// Map our category keys to THRFT Food Library category tags + search terms
 export const CATEGORY_SEARCH_CONFIG = {
   produce: { offCategory: 'fruits-and-vegetables', searchTerms: ['fresh produce vegetables fruits'] },
   bread: { offCategory: 'breads', searchTerms: ['bread loaf sandwich'] },
@@ -77,7 +77,7 @@ export const CATEGORY_SEARCH_CONFIG = {
   alcohol: { offCategory: 'beers', searchTerms: ['beer wine seltzer'] },
 };
 
-// Fetch products from OpenFoodFacts for a given category
+// Fetch products from THRFT Food Library for a given category
 export async function fetchCategoryProducts(categoryKey, page = 1) {
   const config = CATEGORY_SEARCH_CONFIG[categoryKey];
   if (!config) return [];
@@ -93,7 +93,7 @@ export async function fetchCategoryProducts(categoryKey, page = 1) {
   }
 }
 
-// Search OpenFoodFacts for specific term
+// Search THRFT Food Library for specific term
 export async function searchProducts(query, page = 1) {
   try {
     const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page=${page}&page_size=48&fields=product_name,brands,image_front_small_url,quantity,_id`;
