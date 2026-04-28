@@ -1,3 +1,4 @@
+import ThrftCartIcon from '@/components/icons/ThrftCartIcon';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InstructionModal from '@/components/InstructionModal';
@@ -6,12 +7,12 @@ const SEARCH_SLIDES = [
   { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c661c9ba7_SearchProducts1.jpg', nextTop: '76%', dismissTop: '86%' },
   { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/e6195a5bd_SearchProducts2.jpg', nextTop: '4%', dismissTop: '16%' },
 ];
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, Search, Loader2, Plus, ShoppingCart, LayoutGrid } from 'lucide-react';
+import { ArrowLeft, Search, Loader2, Plus, LayoutGrid } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProductBrowser from '@/components/grocery/ProductBrowser';
-
 
 async function searchTHRFTFoodLibrary(query) {
   const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=20&fields=product_name,brands,image_front_small_url,quantity,categories_tags`;
@@ -76,7 +77,6 @@ export default function SearchProducts() {
     }
   };
 
-  // For browse mode — add item and stay on page (allow multi-add)
   const handleBrowseAdd = (item) => {
     const encoded = encodeURIComponent(JSON.stringify({ ...item, quantity: 1, unit: 'each' }));
     if (listId) {
@@ -96,6 +96,7 @@ export default function SearchProducts() {
           onClose={() => setShowInstructions(false)}
         />
       )}
+
       {/* Header */}
       <div className="bg-white border-b border-slate-100 px-4 py-3 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto flex items-center gap-3">
@@ -106,7 +107,6 @@ export default function SearchProducts() {
             <ArrowLeft className="w-5 h-5" />
           </button>
 
-          {/* Tabs */}
           <div className="flex gap-1 flex-1">
             <button
               onClick={() => setTab('search')}
@@ -127,7 +127,6 @@ export default function SearchProducts() {
           </div>
         </div>
 
-        {/* Search bar (only on search tab) */}
         {tab === 'search' && (
           <div className="max-w-2xl mx-auto mt-3">
             <form onSubmit={handleSearch} className="flex gap-2">
@@ -156,7 +155,6 @@ export default function SearchProducts() {
 
       {/* Content */}
       {tab === 'browse' ? (
-        // Browse mode — inline (not full-screen modal) since we're already on the page
         <div className="flex-1">
           <ProductBrowser
             onAdd={handleBrowseAdd}
@@ -168,7 +166,7 @@ export default function SearchProducts() {
           {!loading && results.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
-                <ShoppingCart className="w-8 h-8 text-blue-400" />
+                <ThrftCartIcon className="w-8 h-8 text-blue-400" />
               </div>
               <p className="text-slate-500 text-sm mb-4">
                 {query.length < 3
