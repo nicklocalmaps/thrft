@@ -19,6 +19,7 @@ import Rewards    from '@/pages/Rewards';
 import Coupons    from '@/pages/Coupons';
 import Budget     from '@/pages/Budget';
 import StoreAccounts from '@/pages/StoreAccounts';
+import Stores from '@/pages/Stores';
 import useUserTier   from '@/hooks/useUserTier';
 import { base44 }    from '@/api/base44Client';
 
@@ -36,7 +37,7 @@ function ProfileTab() {
 
   const sections = [
     { key: 'profile', label: 'Account',   icon: UserCircle, color: '#4181ed', bg: '#eff6ff' },
-    { key: 'stores',  label: 'My Stores', icon: Store,      color: '#16a34a', bg: '#f0fdf4' },
+    { key: 'stores',  label: 'My Stores', icon: Store,      color: '#16a34a', bg: '#f0fdf4', path: '/Stores' },
     { key: 'rewards', label: 'Rewards',   icon: Gift,       color: '#7c3aed', bg: '#faf5ff' },
   ];
 
@@ -75,7 +76,7 @@ function ProfileTab() {
           transition={{ duration: 0.2 }}
         >
           {section === 'profile' && <Profile />}
-          {section === 'stores'  && <StoreAccounts />}
+          {section === 'stores'  && <Stores />}
           {section === 'rewards' && <Rewards />}
         </motion.div>
       </AnimatePresence>
