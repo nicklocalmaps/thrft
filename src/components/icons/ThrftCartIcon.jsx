@@ -13,7 +13,7 @@ export default function ThrftCartIcon({ className = '', style = {}, ...props }) 
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
+      viewBox="0 0 48 48"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
@@ -24,23 +24,15 @@ export default function ThrftCartIcon({ className = '', style = {}, ...props }) 
       aria-hidden="true"
       {...props}
     >
-      {/* Handle — hook at top-left, diagonal sweep down to base */}
-      <path d="M2 3h2l1 2.5" />
-      <path d="M5 5.5 Q6 7 7 10 L10 19" />
+      {/* Handle: curves down from top-left */}
+      <path d="M7 10 C7 10 10 10 11 12 L17 32" strokeWidth="2.2" />
 
-      {/* Basket right wall — rises from base, rounded cap */}
-      <path d="M10 19 Q18 19 19 14 L18 8 Q17.5 5 15.5 5" />
+      {/* Basket body: angled right side, no top bar */}
+      <path d="M17 32 L36 32 L40 18" strokeWidth="2.2" />
 
-      {/* Base shelf — horizontal double line */}
-      <line x1="8"  y1="20" x2="19" y2="20" />
-
-      {/* Left wheel pair */}
-      <circle cx="9"  cy="22.2" r="1" fill="currentColor" stroke="none" />
-      <circle cx="11" cy="22.2" r="1" fill="currentColor" stroke="none" />
-
-      {/* Right wheel pair */}
-      <circle cx="16" cy="22.2" r="1" fill="currentColor" stroke="none" />
-      <circle cx="18" cy="22.2" r="1" fill="currentColor" stroke="none" />
+      {/* Wheels */}
+      <circle cx="20" cy="38" r="3" fill="currentColor" stroke="none" />
+      <circle cx="33" cy="38" r="3" fill="currentColor" stroke="none" />
     </svg>
   );
 }
