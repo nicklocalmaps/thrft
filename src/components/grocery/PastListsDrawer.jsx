@@ -1,7 +1,8 @@
+import ThrftCartIcon from '@/components/icons/ThrftCartIcon';
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { History, ChevronDown, ChevronUp, ShoppingCart, ChevronRight, Check, Plus } from 'lucide-react';
+import { History, ChevronDown, ChevronUp, ChevronRight, Check, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
@@ -99,7 +100,7 @@ export default function PastListsDrawer({ onAddItems }) {
                       onClick={() => setExpandedId(expandedId === list.id ? null : list.id)}
                       className="w-full flex items-center gap-3 px-5 py-3 hover:bg-slate-50 transition-colors text-left"
                     >
-                      <ShoppingCart className="w-4 h-4 text-slate-300 shrink-0" />
+                      <ThrftCartIcon className="w-4 h-4 text-slate-300 shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-slate-800 truncate">{list.name}</p>
                         <p className="text-xs text-slate-400">
