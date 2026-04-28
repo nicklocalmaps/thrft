@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Plus, Loader2, Search } from 'lucide-react';
 import { filterByPopularity } from '@/lib/productSearch';
 
-async function searchOpenFoodFacts(query) {
+async function searchTHRFTFoodLibrary(query) {
   const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=24&fields=product_name,brands,image_front_small_url,quantity`;
   const res = await fetch(url);
   const data = await res.json();
@@ -30,7 +30,7 @@ export default function AddItemForm({ onAdd }) {
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(async () => {
       setLoading(true);
-      const results = await searchOpenFoodFacts(name);
+      const results = await searchTHRFTFoodLibrary(name);
       setSuggestions(results);
       setShowDropdown(results.length > 0);
       setLoading(false);
