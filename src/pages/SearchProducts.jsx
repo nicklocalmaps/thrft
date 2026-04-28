@@ -13,10 +13,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ProductBrowser from '@/components/grocery/ProductBrowser';
 
 
-
-
-
-async function searchOpenFoodFacts(query) {
+async function searchTHRFTFoodLibrary(query) {
   const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=20&fields=product_name,brands,image_front_small_url,quantity,categories_tags`;
   const res = await fetch(url);
   const data = await res.json();
@@ -46,7 +43,7 @@ export default function SearchProducts() {
   const runSearch = async (q) => {
     if (q.length < 3) return;
     setLoading(true);
-    const data = await searchOpenFoodFacts(q);
+    const data = await searchTHRFTFoodLibrary(q);
     setResults(data);
     setLoading(false);
   };
