@@ -711,7 +711,7 @@ export default function Landing() {
               </button>
               <button
                 onClick={handleCTA}
-                className="w-full h-12 rounded-2xl text-sm font-bold text-blue-800 bg-white hover:bg-blue-50 transition-colors flex items-center justify-center"
+                className="w-full h-14 rounded-2xl text-base font-bold text-blue-800 bg-white hover:bg-blue-50 transition-colors flex items-center justify-center"
               >
                 Start 7-Day Free Trial
               </button>
