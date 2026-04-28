@@ -6,9 +6,9 @@ import { filterByPopularity } from '@/lib/productSearch';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const THRFT_BLUE   = '#4181ed';
-const MAX_BRANDS   = 4;
-const MAX_PRODUCTS = 4;
+const THRFT_BLUE    = '#4181ed';
+const MAX_BRANDS    = 4;
+const MAX_PRODUCTS  = 4;
 
 // ─── THRFT Food Library helpers ───────────────────────────────────────────────
 
@@ -55,8 +55,8 @@ function mapLibraryProduct(p, fallbackEmoji = '🛒') {
 function ProductDetail({ item, onAdd, onClose, added }) {
   const [qty, setQty]         = useState(1);
   const [selSize, setSelSize] = useState(item.size || null);
-  const sizes   = item.sizes || (item.size ? [item.size] : []);
-  const key     = item.search_hint || item.name;
+  const sizes = item.sizes || (item.size ? [item.size] : []);
+  const key   = item.search_hint || item.name;
   const isAdded = added.has(key);
 
   const doAdd = () => {
@@ -97,7 +97,6 @@ function ProductDetail({ item, onAdd, onClose, added }) {
         </div>
 
         <div className="p-5">
-          {/* Image */}
           <div className="w-full rounded-2xl flex items-center justify-center mb-4 border border-slate-100 overflow-hidden" style={{ height: 160, background: '#f8fafc' }}>
             {item.image ? (
               <img src={item.image} alt={item.name} className="h-full object-contain" onError={e => { e.target.style.display = 'none'; }} />
@@ -110,7 +109,6 @@ function ProductDetail({ item, onAdd, onClose, added }) {
             <p className="text-sm text-slate-400 mb-4">{[item.brand, item.category].filter(Boolean).join(' · ')}</p>
           )}
 
-          {/* Sizes */}
           {sizes.length > 1 && (
             <div className="mb-4">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Pick a size</p>
@@ -133,7 +131,6 @@ function ProductDetail({ item, onAdd, onClose, added }) {
             </div>
           )}
 
-          {/* Qty + Add */}
           <div className="flex gap-3">
             <div className="flex items-center rounded-xl border border-slate-200 overflow-hidden shrink-0 bg-slate-50">
               <button onClick={() => setQty(q => Math.max(1, q - 1))} className="w-10 h-11 flex items-center justify-center text-slate-500 text-lg hover:text-slate-800">−</button>
@@ -335,7 +332,7 @@ function CategoryBrandsPanel({ category, onSelectBrand, searchQuery, onAdd, adde
   }, [localItems]);
 
   const q = searchQuery.trim().toLowerCase();
-  const filteredBrands   = q ? localBrands.filter(b => b.label.toLowerCase().includes(q))   : localBrands;
+  const filteredBrands   = q ? localBrands.filter(b => b.label.toLowerCase().includes(q)) : localBrands;
   const filteredProducts = q ? localItems.filter(i => `${i.name} ${i.search_hint || ''}`.toLowerCase().includes(q)) : localItems;
 
   const visibleBrands   = showAllBrands   ? filteredBrands   : filteredBrands.slice(0, MAX_BRANDS);
@@ -359,7 +356,6 @@ function CategoryBrandsPanel({ category, onSelectBrand, searchQuery, onAdd, adde
         )}
       </AnimatePresence>
 
-      {/* Brands section */}
       {filteredBrands.length > 0 && (
         <div className="mb-5">
           <div className="flex items-center justify-between mb-2">
@@ -383,7 +379,6 @@ function CategoryBrandsPanel({ category, onSelectBrand, searchQuery, onAdd, adde
         </div>
       )}
 
-      {/* Products section */}
       <div>
         <div className="flex items-center justify-between mb-2">
           <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">
@@ -576,7 +571,6 @@ export default function ProductBrowser({
             {subtitle && <p className="text-xs font-semibold truncate text-emerald-600">{subtitle}</p>}
           </div>
 
-          {/* Home: tab switcher */}
           {current.level === 'home' && !inline && (
             <div className="flex gap-1 bg-slate-100 rounded-xl p-1 shrink-0">
               {['categories', 'brands'].map(tab => (
@@ -585,8 +579,8 @@ export default function ProductBrowser({
                   onClick={() => setNav([{ level: 'home', tab }])}
                   className="px-3 py-1 rounded-lg text-xs font-semibold transition-all capitalize"
                   style={{
-                    background: current.tab === tab ? '#fff'      : 'transparent',
-                    color:      current.tab === tab ? '#0f172a'   : '#94a3b8',
+                    background: current.tab === tab ? '#fff' : 'transparent',
+                    color:      current.tab === tab ? '#0f172a' : '#94a3b8',
                     boxShadow:  current.tab === tab ? '0 1px 3px rgba(0,0,0,.08)' : 'none',
                   }}
                 >
