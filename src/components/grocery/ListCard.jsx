@@ -1,6 +1,7 @@
+import ThrftCartIcon from '@/components/icons/ThrftCartIcon';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChevronRight, Clock, ShoppingCart, Trash2 } from 'lucide-react';
+import { ChevronRight, Clock, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { getStoreByKey } from '@/lib/storeConfig';
@@ -25,7 +26,7 @@ export default function ListCard({ list, index, onDelete }) {
               </h3>
               <div className="flex items-center gap-3 mt-2 text-sm text-slate-500">
                 <span className="flex items-center gap-1">
-                  <ShoppingCart className="w-3.5 h-3.5" />
+                  <ThrftCartIcon className="w-3.5 h-3.5" />
                   {itemCount} item{itemCount !== 1 ? 's' : ''}
                 </span>
                 {list.last_compared && (
