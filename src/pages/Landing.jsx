@@ -551,13 +551,13 @@ export default function Landing() {
             ))}
           </motion.div>
 
-          <FadeSection className="mt-8">
+          <FadeSection className="mt-8 flex justify-center">
             <Button
               onClick={handleCTA}
               className="h-12 px-8 rounded-xl font-bold shadow-md shadow-blue-100"
               style={{ backgroundColor: THRFT_BLUE }}
             >
-              Get started free →
+              Get Started Free →
             </Button>
           </FadeSection>
         </div>
@@ -661,14 +661,14 @@ export default function Landing() {
                   className="w-full h-12 rounded-xl text-sm font-bold shadow-md shadow-blue-100"
                   style={{ backgroundColor: THRFT_BLUE }}
                 >
-                  Start 7-day free trial
+                  Start 7-Day Free Trial
                 </Button>
                 <Button
                   onClick={handleCTA}
                   variant="outline"
                   className="w-full h-11 rounded-xl text-sm font-medium border-slate-200 text-slate-600"
                 >
-                  Create free account instead
+                  Create Free Account Instead
                 </Button>
                 <p className="text-center text-xs text-slate-400">
                   No charge for 7 days · Cancel anytime
@@ -707,13 +707,13 @@ export default function Landing() {
                 onClick={handleCTA}
                 className="w-full h-14 rounded-2xl text-base font-bold text-blue-800 bg-white hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
               >
-                Create free account →
+                Create Free Account →
               </button>
               <button
                 onClick={handleCTA}
                 className="w-full h-12 rounded-2xl text-sm font-medium text-white border border-white/25 bg-white/10 hover:bg-white/15 transition-colors"
               >
-                Start 7-day free trial
+                Start 7-Day Free Trial
               </button>
             </div>
           </div>
