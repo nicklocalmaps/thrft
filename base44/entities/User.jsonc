@@ -10,73 +10,29 @@
       ],
       "default": "user"
     },
-    "account_type": {
-      "type": "string",
-      "enum": [
-        "free",
-        "premium",
-        "family"
-      ],
-      "default": "free",
-      "description": "User's account tier"
-    },
-    "has_lifetime_access": {
-      "type": "boolean",
-      "default": false,
-      "description": "Granted lifetime premium via promo code"
-    },
-    "trial_start_date": {
-      "type": "string",
-      "format": "date-time",
-      "description": "When the user's trial started"
-    },
-    "family_group_id": {
-      "type": "string",
-      "description": "ID of the family group this user belongs to"
-    },
-    "owl_hints_dismissed": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "default": [],
-      "description": "Keys of Willie Owl hints the user has dismissed forever"
-    },
-    "zip_code": {
-      "type": "string"
-    },
-    "favorite_stores": {
-      "type": "array",
-      "items": {
-        "type": "string"
+    "delivery_address": {
+      "type": "object",
+      "description": "User's saved delivery address",
+      "properties": {
+        "street": {
+          "type": "string"
+        },
+        "apt": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "zip": {
+          "type": "string"
+        },
+        "instructions": {
+          "type": "string"
+        }
       }
-    },
-    "onboarding_complete": {
-      "type": "boolean",
-      "default": false
-    },
-    "tour_completed": {
-      "type": "boolean",
-      "default": false
-    },
-    "default_shopping_method": {
-      "type": "string",
-      "enum": [
-        "instore",
-        "pickup",
-        "delivery",
-        "all"
-      ],
-      "default": "all"
-    },
-    "loyalty_cards": {
-      "type": "object"
-    },
-    "subscription_status": {
-      "type": "string"
-    },
-    "stripe_customer_id": {
-      "type": "string"
     }
   }
 }
