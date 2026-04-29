@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Loader2, Check, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
+import InstructionModal from '@/components/InstructionModal';
 import { ALL_STORES } from '@/lib/storeConfig';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -12,6 +13,10 @@ const THRFT_LOGO = 'https://media.base44.com/images/public/69b782bc4deba77b6b05b
 const VALID_PROMO_CODES = ['EBT2026', 'AIRDROP2026'];
 
 const STEPS = ['welcome', 'stores', 'ready'];
+
+const ONBOARDING_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/e304df701_Budget1.jpg', nextTop: '5%', dismissTop: '17%' },
+];
 
 // ─── Step indicator ───────────────────────────────────────────────────────────
 
@@ -449,6 +454,11 @@ export default function Onboarding() {
       style={{ background: 'linear-gradient(160deg, #eff6ff 0%, white 60%)' }}
     >
       <div className="w-full max-w-sm">
+        <InstructionModal
+          instructionKey="onboarding"
+          slides={ONBOARDING_SLIDES}
+          onClose={() => {}}
+        />
         <AnimatePresence mode="wait">
           {step === 'welcome' && (
             <WelcomeStep

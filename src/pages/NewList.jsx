@@ -13,10 +13,17 @@ import FreePlanLimitModal from '@/components/subscription/FreePlanLimitModal';
 import PremiumTrialPrompt from '@/components/subscription/PremiumTrialPrompt';
 import useUserTier, { FREE_TIER_LIST_LIMIT } from '@/hooks/useUserTier';
 import AddItemForm from '@/components/grocery/AddItemForm';
+import InstructionModal from '@/components/InstructionModal';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const THRFT_BLUE = '#4181ed';
+
+const NEWLIST_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/3f9b2db30_NewList1.jpg', nextTop: '5%',  dismissTop: '20%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/a2a628e97_NewList2.jpg', nextTop: '76%', dismissTop: '85%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/ee504c4f0_NewList3.jpg', nextTop: '76%', dismissTop: '85%' },
+];
 
 const METHODS = [
   { key: 'instore',  label: 'In-store',  icon: '🏪' },
@@ -190,6 +197,11 @@ export default function NewList() {
 
   return (
     <div className="pb-36">
+      <InstructionModal
+        instructionKey="newlist"
+        slides={NEWLIST_SLIDES}
+        onClose={() => {}}
+      />
       {showLimitModal && <FreePlanLimitModal onClose={() => setShowLimitModal(false)} />}
       {showTrialPrompt && <PremiumTrialPrompt onClose={handleTrialPromptClose} />}
 

@@ -1,3 +1,4 @@
+import InstructionModal from '@/components/InstructionModal';
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
@@ -12,6 +13,10 @@ import useUserTier from '@/hooks/useUserTier';
 
 const THRFT_BLUE = '#4181ed';
 const THRFT_LOGO = 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg';
+
+const HOME_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/e304df701_Budget1.jpg', nextTop: '5%', dismissTop: '17%' },
+];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -140,7 +145,10 @@ function ListCard({ list, index, onDelete }) {
                   </p>
                 </div>
               ) : (
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full border bg-amber-50 text-amber-700 border-amber-200">
+                <span
+                  className="text-xs font-semibold px-2.5 py-1 rounded-full border"
+                  style={{ background: '#fffbeb', color: '#b45309', borderColor: '#fde68a' }}
+                >
                   Compare →
                 </span>
               )}
@@ -212,7 +220,10 @@ function EmptyState() {
           { emoji: '🔍', label: 'Compare stores' },
           { emoji: '💰', label: 'Save money'     },
         ].map(step => (
-          <div key={step.label} className="bg-white rounded-xl border border-slate-100 py-4 text-center">
+          <div
+            key={step.label}
+            className="bg-white rounded-xl border border-slate-100 py-4 text-center"
+          >
             <p className="text-2xl mb-2">{step.emoji}</p>
             <p className="text-xs font-semibold text-slate-700">{step.label}</p>
           </div>
@@ -263,6 +274,11 @@ export default function Home() {
 
   return (
     <div className="pb-24">
+      <InstructionModal
+        instructionKey="home"
+        slides={HOME_SLIDES}
+        onClose={() => {}}
+      />
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <div className="flex items-center gap-3 mb-5">
@@ -299,8 +315,12 @@ export default function Home() {
           <SavingsStrip lists={thisMonthLists} />
 
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Recent lists</p>
-            <p className="text-xs text-slate-400">{lists.length} list{lists.length !== 1 ? 's' : ''}</p>
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+              Recent lists
+            </p>
+            <p className="text-xs text-slate-400">
+              {lists.length} list{lists.length !== 1 ? 's' : ''}
+            </p>
           </div>
 
           <div className="space-y-3">
@@ -337,7 +357,10 @@ export default function Home() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="fixed bottom-20 right-4 z-40 w-14 h-14 rounded-2xl flex items-center justify-center"
-          style={{ backgroundColor: THRFT_BLUE, boxShadow: '0 4px 20px rgba(65,129,237,.45)' }}
+          style={{
+            backgroundColor: THRFT_BLUE,
+            boxShadow: '0 4px 20px rgba(65,129,237,.45)',
+          }}
           aria-label="New list"
         >
           <Plus className="w-6 h-6 text-white" strokeWidth={2.5} />
