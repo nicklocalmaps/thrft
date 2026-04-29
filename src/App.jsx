@@ -11,6 +11,7 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import AppLayout from '@/components/layout/AppLayout';
 import Home from '@/pages/Home';
 import NewList from '@/pages/NewList';
+import Shop from '@/pages/Shop';
 import ListDetail from '@/pages/ListDetail';
 import Onboarding from '@/pages/Onboarding';
 import StoreAccounts from '@/pages/StoreAccounts';
@@ -95,7 +96,7 @@ const AuthenticatedApp = () => {
       <Route element={<AppLayout />}>
         <Route path="/app" element={<OnboardingGate />} />
         <Route path="/Home" element={<SubscriptionGate><Home /></SubscriptionGate>} />
-        <Route path="/NewList" element={<SubscriptionGate><NewList /></SubscriptionGate>} />
+        <Route path="/NewList" element={<SubscriptionGate><Shop /></SubscriptionGate>} />
         <Route path="/ListDetail" element={<SubscriptionGate><ListDetail /></SubscriptionGate>} />
         <Route path="/Stores" element={<SubscriptionGate><Stores /></SubscriptionGate>} />
         <Route path="/StoreAccounts" element={<SubscriptionGate><StoreAccounts /></SubscriptionGate>} />
