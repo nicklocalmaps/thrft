@@ -97,6 +97,7 @@ const AuthenticatedApp = () => {
         <Route path="/app" element={<OnboardingGate />} />
         <Route path="/Home" element={<SubscriptionGate><Home /></SubscriptionGate>} />
         <Route path="/NewList" element={<SubscriptionGate><Shop /></SubscriptionGate>} />
+        <Route path="/Shop" element={<SubscriptionGate><Shop /></SubscriptionGate>} />
         <Route path="/ListDetail" element={<SubscriptionGate><ListDetail /></SubscriptionGate>} />
         <Route path="/Stores" element={<SubscriptionGate><Stores /></SubscriptionGate>} />
         <Route path="/StoreAccounts" element={<SubscriptionGate><StoreAccounts /></SubscriptionGate>} />
