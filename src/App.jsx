@@ -9,6 +9,10 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
 import AppLayout from '@/components/layout/AppLayout';
+import Aisle from '@/pages/Aisle';
+import Product from '@/pages/Product';
+import Cart from '@/pages/Cart';
+import { CartProvider } from '@/lib/cartContext.jsx';
 import Home from '@/pages/Home';
 import NewList from '@/pages/NewList';
 import Shop from '@/pages/Shop';
@@ -98,6 +102,9 @@ const AuthenticatedApp = () => {
         <Route path="/Home" element={<SubscriptionGate><Home /></SubscriptionGate>} />
         <Route path="/NewList" element={<SubscriptionGate><Shop /></SubscriptionGate>} />
         <Route path="/Shop" element={<SubscriptionGate><Shop /></SubscriptionGate>} />
+        <Route path="/Aisle" element={<SubscriptionGate><Aisle /></SubscriptionGate>} />
+        <Route path="/Product" element={<SubscriptionGate><Product /></SubscriptionGate>} />
+        <Route path="/Cart" element={<SubscriptionGate><Cart /></SubscriptionGate>} />
         <Route path="/ListDetail" element={<SubscriptionGate><ListDetail /></SubscriptionGate>} />
         <Route path="/Stores" element={<SubscriptionGate><Stores /></SubscriptionGate>} />
         <Route path="/StoreAccounts" element={<SubscriptionGate><StoreAccounts /></SubscriptionGate>} />
@@ -119,10 +126,12 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
-        <Router>
-          <AuthenticatedApp />
-        </Router>
-        <Toaster />
+        <CartProvider>
+          <Router>
+            <AuthenticatedApp />
+          </Router>
+          <Toaster />
+        </CartProvider>
       </QueryClientProvider>
     </AuthProvider>
   )
