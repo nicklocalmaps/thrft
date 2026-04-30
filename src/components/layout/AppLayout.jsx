@@ -1,6 +1,6 @@
 import ThrftListIcon from '@/components/icons/ThrftListIcon';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { Plus, Store, UserCircle, Gift, DollarSign, Ticket } from 'lucide-react';
+import { Plus, Store, UserCircle } from 'lucide-react';
 import ReferralBanner from '@/components/rewards/ReferralBanner';
 
 const THRFT_BLUE = '#4181ed';
@@ -12,10 +12,7 @@ export default function AppLayout() {
   const navItems = [
     { path: '/Home', label: 'My Lists', icon: ThrftListIcon },
     { path: '/NewList', label: 'New List', icon: Plus },
-    { path: '/Budget', label: 'Budget', icon: DollarSign },
-    { path: '/Coupons', label: 'Coupons', icon: Ticket },
     { path: '/Stores', label: 'Stores', icon: Store },
-    { path: '/Rewards', label: 'Rewards', icon: Gift },
     { path: '/Profile', label: 'Profile', icon: UserCircle },
   ];
 
@@ -79,7 +76,7 @@ export default function AppLayout() {
         className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 z-50"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
-        <div className="grid grid-cols-7">
+        <div className="grid grid-cols-4">
           {navItems.map(({ path, label, icon: Icon }) => {
             const isActive = location.pathname === path;
             return (
