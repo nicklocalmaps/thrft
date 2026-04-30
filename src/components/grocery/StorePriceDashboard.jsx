@@ -1,4 +1,4 @@
-import ThrftCartIcon from '@/components/icons/ThrftCartIcon';
+import ThrftListIcon from '@/components/icons/ThrftListIcon';
 import React, { useMemo } from 'react';
 import { TrendingDown } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -34,7 +34,7 @@ export default function StorePriceDashboard({ lists }) {
   return (
     <div className="mb-8 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
       <div className="px-5 pt-5 pb-3 border-b border-slate-100 flex items-center gap-2">
-        <ThrftCartIcon className="w-4 h-4" style={{ color: '#4181ed' }} />
+        <ThrftListIcon className="w-4 h-4" style={{ color: '#4181ed' }} />
         <h2 className="font-bold text-slate-800 text-sm">Store Price Comparison</h2>
         <span className="ml-auto text-xs text-slate-400">across all lists with price data</span>
       </div>
@@ -53,16 +53,12 @@ export default function StorePriceDashboard({ lists }) {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.05 }}
               className={`rounded-xl p-3 border transition-all ${
-                isCheapest
-                  ? `${colors.border} ${colors.light}`
-                  : 'border-slate-100 bg-slate-50/50'
+                isCheapest ? `${colors.border} ${colors.light}` : 'border-slate-100 bg-slate-50/50'
               }`}
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-slate-800">
-                    {store?.name || key}
-                  </span>
+                  <span className="text-sm font-semibold text-slate-800">{store?.name || key}</span>
                   {isCheapest && (
                     <span className={`flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${colors.badge}`}>
                       <TrendingDown className="w-3 h-3" />
@@ -74,7 +70,6 @@ export default function StorePriceDashboard({ lists }) {
                   ${total.toFixed(2)}
                 </span>
               </div>
-
               <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}

@@ -1,8 +1,7 @@
-import ThrftCartIcon from '@/components/icons/ThrftCartIcon';
+import ThrftListIcon from '@/components/icons/ThrftListIcon';
 import React from 'react';
-import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Tag, Calendar, Store, CheckCircle2, Trash2 } from 'lucide-react';
+import { Tag, Calendar, Store, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { format, isPast, parseISO } from 'date-fns';
 
