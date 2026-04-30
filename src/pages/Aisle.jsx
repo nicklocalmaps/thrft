@@ -19,13 +19,14 @@ function ProductImg({ imageUrl, emoji, size = 48, className = '' }) {
   return <span style={{ fontSize: size * 0.6 }}>{emoji || '🛒'}</span>;
 }
 
-function VariantRow({ variant, onAdd, inCart }) {
+function VariantRow({ variant, onAdd, onView, inCart }) {
   const [err, setErr] = useState(false);
   return (
-    <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 transition-colors">
+    <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => onView?.(variant)}>
       <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center shrink-0 overflow-hidden border border-slate-100">
         {variant.imageUrl && !err ? (
-          <img src={variant.imageUrl} alt="" className="w-full h-full object-contain p-0.5" onError={() => setErr(true)} />
+          <img src={variant.imageUrl} alt="" className="w-full h-full object-contain p-0.5"
+            onError={() => setErr(true)} />
         ) : (
           <span style={{ fontSize: 18 }}>🛒</span>
         )}
@@ -38,7 +39,7 @@ function VariantRow({ variant, onAdd, inCart }) {
         </div>
       </div>
       <button
-        onClick={() => onAdd(variant)}
+        onClick={e => { e.stopPropagation(); onAdd(variant); }}
         className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors"
         style={{ backgroundColor: inCart ? '#16a34a' : THRFT_BLUE }}
       >
@@ -48,16 +49,20 @@ function VariantRow({ variant, onAdd, inCart }) {
   );
 }
 
-function ProductFamily({ family, emoji, onAdd, cartNames }) {
-  const [expanded, setExpanded] = useState(false);
+const MAX_VARIANTS_SHOWN = 2;
+
+function ProductFamily({ family, emoji, onAdd, cartNames, onViewProduct }) {
+  const [showAll, setShowAll] = useState(false);
   const hasVariants = family.variants.length > 1;
   const firstVariant = family.variants[0];
   const inCart = cartNames.has(family.name) || family.variants.some(v => cartNames.has(v.name));
+  const visibleVariants = showAll ? family.variants : family.variants.slice(0, MAX_VARIANTS_SHOWN);
+  const hiddenCount = family.variants.length - MAX_VARIANTS_SHOWN;
 
   return (
     <div className="border-b border-slate-50 last:border-0">
       <button
-        onClick={() => hasVariants ? setExpanded(e => !e) : onAdd(firstVariant)}
+        onClick={() => onViewProduct(firstVariant, family)}
         className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors text-left"
       >
         <div className="w-14 h-14 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 overflow-hidden border border-slate-100">
@@ -67,42 +72,49 @@ function ProductFamily({ family, emoji, onAdd, cartNames }) {
           <p className="text-sm font-bold text-slate-900 truncate">{family.name}</p>
           {family.price !== null && (
             <p className="text-xs text-slate-500 mt-0.5">
-              From ${family.price.toFixed(2)}{hasVariants && ` · ${family.variants.length} options`}
+              From ${family.price.toFixed(2)}
+              {hasVariants && ` · ${family.variants.length} size${family.variants.length !== 1 ? 's' : ''}`}
             </p>
           )}
         </div>
-        {hasVariants ? (
-          <div className="flex items-center gap-1.5 shrink-0">
-            {inCart && (
-              <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
-                <Check className="w-3 h-3 text-white" strokeWidth={3} />
-              </div>
-            )}
-            {expanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+        {inCart && (
+          <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
+            <Check className="w-3 h-3 text-white" strokeWidth={3} />
           </div>
-        ) : (
-          <button
-            onClick={e => { e.stopPropagation(); onAdd(firstVariant); }}
-            className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors"
-            style={{ backgroundColor: inCart ? '#16a34a' : THRFT_BLUE }}
-          >
-            {inCart ? <Check className="w-3.5 h-3.5 text-white" strokeWidth={2.5} /> : <Plus className="w-3.5 h-3.5 text-white" />}
-          </button>
         )}
+        <ChevronDown className="w-4 h-4 text-slate-300 shrink-0 -rotate-90" />
       </button>
-      {expanded && hasVariants && (
+
+      {hasVariants && (
         <div className="bg-slate-50 border-t border-slate-100">
-          {family.variants.map((variant, i) => (
-            <VariantRow key={i} variant={variant} onAdd={onAdd} inCart={cartNames.has(variant.name)} />
+          {visibleVariants.map((variant, i) => (
+            <VariantRow
+              key={i}
+              variant={variant}
+              onAdd={onAdd}
+              onView={() => onViewProduct(variant, family)}
+              inCart={cartNames.has(variant.name)}
+            />
           ))}
+          {!showAll && hiddenCount > 0 && (
+            <button
+              onClick={() => setShowAll(true)}
+              className="w-full flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold border-t border-slate-200 hover:bg-blue-50 transition-colors"
+              style={{ color: THRFT_BLUE }}
+            >
+              <ChevronDown className="w-3.5 h-3.5" />
+              See {hiddenCount} more size{hiddenCount !== 1 ? 's' : ''}
+            </button>
+          )}
         </div>
       )}
     </div>
   );
 }
 
-function BrandSection({ brandData, emoji, onAdd, cartNames }) {
-  const [expanded, setExpanded] = useState(true);
+function BrandSection({ brandData, emoji, onAdd, cartNames, onViewProduct, defaultExpanded = false }) {
+  const [expanded, setExpanded] = useState(defaultExpanded);
+
   return (
     <div className="mb-3">
       <button
@@ -118,10 +130,11 @@ function BrandSection({ brandData, emoji, onAdd, cartNames }) {
         </div>
         {expanded ? <ChevronUp className="w-4 h-4 text-slate-500 shrink-0" /> : <ChevronDown className="w-4 h-4 text-slate-500 shrink-0" />}
       </button>
+
       {expanded && (
         <div className="bg-white border border-slate-100 border-t-0 rounded-b-2xl overflow-hidden">
           {brandData.products.map((family, i) => (
-            <ProductFamily key={i} family={family} emoji={emoji} onAdd={onAdd} cartNames={cartNames} />
+            <ProductFamily key={i} family={family} emoji={emoji} onAdd={onAdd} cartNames={cartNames} onViewProduct={onViewProduct} />
           ))}
         </div>
       )}
@@ -155,6 +168,17 @@ export default function Aisle() {
 
   const cartNames = new Set(cartItems.map(i => i.name));
 
+  const handleViewProduct = (variant, family) => {
+    const productData = {
+      ...variant,
+      displayName: family?.name || variant.name,
+      allVariants: family?.variants || [variant],
+      imageUrl:    family?.imageUrl || variant.imageUrl,
+    };
+    sessionStorage.setItem('thrft_selected_product', JSON.stringify(productData));
+    navigate('/Product');
+  };
+
   const handleAdd = item => {
     addToCart({ name: item.name, brand: item.brand || '', size: item.size || '', imageUrl: item.imageUrl, price: item.price, quantity: 1 });
   };
@@ -171,8 +195,6 @@ export default function Aisle() {
 
   return (
     <div className="min-h-screen" style={{ background: '#f8fafc', paddingBottom: 80 }}>
-
-      {/* Header */}
       <header className="sticky top-0 z-40 bg-white border-b border-slate-100">
         <div className="px-4 py-3 flex items-center gap-3">
           <button onClick={() => navigate('/NewList')}
@@ -195,7 +217,6 @@ export default function Aisle() {
             )}
           </button>
         </div>
-
         <div className="px-4 pb-3">
           <div className="flex items-center gap-2 bg-slate-100 rounded-xl px-3 py-2">
             <svg className="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -210,7 +231,6 @@ export default function Aisle() {
         </div>
       </header>
 
-      {/* Content */}
       <div className="p-3">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-24">
@@ -224,13 +244,12 @@ export default function Aisle() {
             {search && <button onClick={() => setSearch('')} className="text-blue-500 text-sm mt-2 underline">Clear search</button>}
           </div>
         ) : (
-          filtered.map(brandData => (
-            <BrandSection key={brandData.brand} brandData={brandData} emoji={emoji} onAdd={handleAdd} cartNames={cartNames} />
+          filtered.map((brandData, i) => (
+            <BrandSection key={brandData.brand} brandData={brandData} emoji={emoji} onAdd={handleAdd} cartNames={cartNames} onViewProduct={handleViewProduct} defaultExpanded={i === 0} />
           ))
         )}
       </div>
 
-      {/* Cart bar */}
       {cartCount > 0 && (
         <div className="fixed bottom-16 left-0 right-0 z-30 px-4">
           <button onClick={() => navigate('/Cart')}

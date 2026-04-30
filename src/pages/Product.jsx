@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { ChevronLeft, Plus, Minus, Check, Loader2, ChevronDown } from 'lucide-react';
-import ThrftCartIcon from '@/components/icons/ThrftCartIcon';
+import ThrftListIcon from '@/components/icons/ThrftListIcon';
 import { useCart } from '@/lib/cartContext.jsx';
 
 const THRFT_BLUE = '#4181ed';
@@ -14,8 +14,7 @@ function SimilarCard({ p, onClick }) {
       className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-3 text-left hover:bg-blue-50 transition-colors border border-slate-100">
       <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shrink-0 overflow-hidden border border-slate-100">
         {p.imageUrl && !err ? (
-          <img src={p.imageUrl} alt={p.name} className="w-full h-full object-contain p-1"
-            onError={() => setErr(true)} />
+          <img src={p.imageUrl} alt={p.name} className="w-full h-full object-contain p-1" onError={() => setErr(true)} />
         ) : (
           <span style={{ fontSize: 20 }}>🛒</span>
         )}
@@ -32,21 +31,28 @@ export default function Product() {
   const navigate = useNavigate();
   const { cartCount, addToCart, cartItems } = useCart();
 
-  const [product, setProduct]     = useState(null);
-  const [similar, setSimilar]     = useState([]);
+  const [product, setProduct]           = useState(null);
+  const [similar, setSimilar]           = useState([]);
   const [loadingSimilar, setLoadingSimilar] = useState(false);
-  const [qty, setQty]             = useState(1);
-  const [variant, setVariant]     = useState('');
-  const [variants, setVariants]   = useState([]);
-  const [imgError, setImgError]   = useState(false);
-  const [added, setAdded]         = useState(false);
+  const [qty, setQty]                   = useState(1);
+  const [variant, setVariant]           = useState('');
+  const [variants, setVariants]         = useState([]);
+  const [imgError, setImgError]         = useState(false);
+  const [added, setAdded]               = useState(false);
 
   useEffect(() => {
     const stored = sessionStorage.getItem('thrft_selected_product');
     if (!stored) { navigate('/NewList'); return; }
     const p = JSON.parse(stored);
     setProduct(p);
-    if (p.size) setVariants([p.size]);
+
+    if (p.allVariants && p.allVariants.length > 0) {
+      setVariants(p.allVariants);
+      setVariant(p.allVariants[0]);
+    } else if (p.size) {
+      setVariants([p.size]);
+      setVariant(p.size);
+    }
 
     if (p.brand) {
       setLoadingSimilar(true);
@@ -57,17 +63,8 @@ export default function Product() {
         });
       }).then(res => {
         const results = res.data?.products || [];
-        const current = JSON.parse(sessionStorage.getItem('thrft_selected_product') || '{}');
-
-        const sizeSet = new Set();
-        results.forEach(r => { if (r.size) sizeSet.add(r.size); });
-        const variantList = [...sizeSet].slice(0, 8);
-        if (variantList.length > 0) {
-          setVariants(variantList);
-          setVariant(current.size || variantList[0]);
-        }
-
-        const sim = results.filter(r => r.imageUrl && r.name !== current.name).slice(0, 4);
+        const currentName = JSON.parse(sessionStorage.getItem('thrft_selected_product') || '{}').name;
+        const sim = results.filter(r => r.imageUrl && r.name !== currentName).slice(0, 4);
         setSimilar(sim);
         setLoadingSimilar(false);
       }).catch(() => setLoadingSimilar(false));
@@ -78,12 +75,17 @@ export default function Product() {
 
   const handleAddToCart = () => {
     if (!product) return;
+    const isObj  = typeof variant === 'object' && variant !== null;
+    const vName  = isObj ? variant.name  : null;
+    const vSize  = isObj ? variant.size  : (variant || product.size);
+    const vPrice = isObj ? variant.price : product.price;
+    const vImage = isObj ? variant.imageUrl : product.imageUrl;
     addToCart({
-      name:     variant ? `${product.name} (${variant})` : product.name,
+      name:     vName || (vSize ? `${product.displayName || product.name} (${vSize})` : (product.displayName || product.name)),
       brand:    product.brand,
-      size:     variant || product.size,
-      imageUrl: product.imageUrl,
-      price:    product.price,
+      size:     vSize,
+      imageUrl: vImage || product.imageUrl,
+      price:    vPrice || product.price,
       quantity: qty,
     });
     setAdded(true);
@@ -107,7 +109,6 @@ export default function Product() {
 
   return (
     <div className="min-h-screen bg-white" style={{ paddingBottom: 80 }}>
-
       <header className="sticky top-0 z-40 bg-white border-b border-slate-100">
         <div className="px-4 py-3 flex items-center gap-3">
           <button onClick={() => navigate(-1)}
@@ -118,7 +119,7 @@ export default function Product() {
             <p className="text-xs text-slate-400 truncate">{product.brand || 'Product'}</p>
           </div>
           <button onClick={() => navigate('/Cart')} className="relative shrink-0">
-            <ThrftCartIcon className="w-6 h-6 text-slate-600" />
+            <ThrftListIcon className="w-6 h-6 text-slate-600" />
             {cartCount > 0 && (
               <div className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-red-500 flex items-center justify-center">
                 <span className="text-white font-bold" style={{ fontSize: 9 }}>{cartCount}</span>
@@ -139,11 +140,9 @@ export default function Product() {
 
       <div className="px-4 py-5">
         {product.brand && <p className="text-sm text-slate-400 mb-1">{product.brand}</p>}
-        <h1 className="text-xl font-bold text-slate-900 mb-1">{product.name}</h1>
+        <h1 className="text-xl font-bold text-slate-900 mb-1">{product.displayName || product.name}</h1>
         {product.size && <p className="text-sm text-slate-400 mb-3">{product.size}</p>}
-        {product.price && (
-          <p className="text-2xl font-extrabold text-slate-900 mb-1">${product.price.toFixed(2)}</p>
-        )}
+        {product.price && <p className="text-2xl font-extrabold text-slate-900 mb-1">${product.price.toFixed(2)}</p>}
 
         <div className="border-t border-slate-100 my-4" />
 
@@ -151,9 +150,19 @@ export default function Product() {
           <div className="mb-5">
             <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Size / variant</p>
             <div className="relative">
-              <select value={variant} onChange={e => setVariant(e.target.value)}
-                className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-300 appearance-none">
-                {variants.map(v => <option key={v} value={v}>{v}</option>)}
+              <select
+                value={typeof variant === 'object' ? JSON.stringify(variant) : variant}
+                onChange={e => {
+                  try { setVariant(JSON.parse(e.target.value)); } catch { setVariant(e.target.value); }
+                }}
+                className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-300 appearance-none"
+              >
+                {variants.map((v, i) => {
+                  const isObj = typeof v === 'object' && v !== null;
+                  const label = isObj ? `${v.name}${v.size ? ` — ${v.size}` : ''}${v.price ? ` ($${v.price.toFixed(2)})` : ''}` : v;
+                  const val   = isObj ? JSON.stringify(v) : v;
+                  return <option key={i} value={val}>{label}</option>;
+                })}
               </select>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             </div>
@@ -175,10 +184,7 @@ export default function Product() {
           <button onClick={handleAddToCart}
             className="flex-1 h-12 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 transition-all"
             style={{ backgroundColor: added ? '#16a34a' : THRFT_BLUE, boxShadow: added ? 'none' : '0 4px 14px rgba(65,129,237,.3)' }}>
-            {added
-              ? <><Check className="w-4 h-4" strokeWidth={2.5} /> Added to cart!</>
-              : <><Plus className="w-4 h-4" /> Add to cart</>
-            }
+            {added ? <><Check className="w-4 h-4" strokeWidth={2.5} /> Added!</> : <><Plus className="w-4 h-4" /> Add to cart</>}
           </button>
         </div>
 

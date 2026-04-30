@@ -118,7 +118,40 @@ async function browseAisle(token, locationId, categoryKey, limit = 50) {
   return all.slice(0, limit);
 }
 
-function buildBrandHierarchy(products) {
+const BRAND_POPULARITY = {
+  beverages: ['Coca-Cola','Pepsi','Diet Coke','Sprite','Mountain Dew','Dr Pepper',
+    'Gatorade','Powerade','Dasani','Aquafina','Lipton','Snapple','Red Bull',
+    'Monster','Celsius','Tropicana','Minute Maid','Simply','Ocean Spray','Capri Sun'],
+  snacks: ['Lays','Doritos','Cheetos','Pringles','Ritz','Oreo','Chips Ahoy',
+    'Nabisco','Frito-Lay','Planters','Goldfish','Triscuit','Wheat Thins','SkinnyPop'],
+  breakfast: ['Kelloggs','General Mills','Quaker','Post','Cheerios','Frosted Flakes',
+    'Special K','Nature Valley','Eggo','Jimmy Dean','Bob Evans','Pillsbury'],
+  meat: ['Tyson','Perdue','Smithfield','Oscar Mayer','Hillshire Farm','Jennie-O',
+    'Ball Park','Hebrew National','Nathans','Johnsonville'],
+  frozen: ['Stouffers','Marie Callenders','Lean Cuisine','Healthy Choice',
+    'DiGiorno','Red Baron','Amys','Birds Eye','Green Giant','Ore-Ida'],
+  bread: ['Wonder','Natures Own','Daves Killer Bread','Sara Lee','Pepperidge Farm',
+    'Arnold','Thomas','Oroweat','Brownberry'],
+  eggs_dairy: ['Kroger','Land O Lakes','Horizon','Organic Valley','Fairlife',
+    'Silk','Oatly','Almond Breeze','Lactaid'],
+  cheese: ['Kraft','Sargento','Tillamook','Cabot','Boars Head','Philadelphia',
+    'Velveeta','Babybel','Cracker Barrel'],
+  yogurt: ['Chobani','Fage','Oikos','Siggis','Stonyfield','Yoplait','Dannon'],
+  canned: ['Campbells','Progresso','Del Monte','Hunts','Bushs','Goya',
+    'Libbys','Green Giant','Dole'],
+  candy: ['Hersheys','Mars','Reeses','Snickers','MMs','Skittles',
+    'Starburst','Haribo','Sour Patch','Kit Kat'],
+  cookies: ['Oreo','Chips Ahoy','Pepperidge Farm','Nabisco','Keebler',
+    'Famous Amos','Nutter Butter'],
+};
+
+function getBrandPriority(brand, categoryKey) {
+  const list = BRAND_POPULARITY[categoryKey] || [];
+  const idx  = list.findIndex(b => brand.toLowerCase().includes(b.toLowerCase()) || b.toLowerCase().includes(brand.toLowerCase()));
+  return idx >= 0 ? idx : 999;
+}
+
+function buildBrandHierarchy(products, categoryKey = '') {
   const brandMap = {};
   for (const p of products) {
     const brand = p.brand || 'Other';
@@ -154,8 +187,9 @@ function buildBrandHierarchy(products) {
   });
 
   brands.sort((a, b) => {
-    if (a.productCount > 2 && b.productCount <= 2) return -1;
-    if (b.productCount > 2 && a.productCount <= 2) return 1;
+    const pa = getBrandPriority(a.brand, categoryKey);
+    const pb = getBrandPriority(b.brand, categoryKey);
+    if (pa !== pb) return pa - pb;
     return a.brand.localeCompare(b.brand);
   });
 
@@ -195,7 +229,7 @@ Deno.serve(async (req) => {
       products = await browseAisle(token, locationId, category, limit || 50);
     }
 
-    const brands = mode === 'browse' ? buildBrandHierarchy(products) : [];
+    const brands = mode === 'browse' ? buildBrandHierarchy(products, category || '') : [];
 
     return Response.json({ products, brands, locationId, zip_code, count: products.length, brandCount: brands.length });
 
