@@ -1,4 +1,4 @@
-import ThrftCartIcon from '@/components/icons/ThrftCartIcon';
+import ThrftListIcon from '@/components/icons/ThrftListIcon';
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
@@ -59,15 +59,53 @@ function PastListItems({ list, onAddItems }) {
   );
 }
 
-export default function PastListsDrawer({ onAddItems }) {
+export default function PastListsDrawer({ onAddItems, inline }) {
   const [open, setOpen] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
 
   const { data: lists = [] } = useQuery({
     queryKey: ['grocery-lists-history'],
     queryFn: () => base44.entities.GroceryList.list('-created_date'),
-    enabled: open,
+    enabled: open || inline,
   });
+
+  if (inline) {
+    return (
+      <div>
+        {lists.length === 0 ? (
+          <p className="text-sm text-slate-400 text-center py-4">No past lists yet.</p>
+        ) : (
+          <div className="divide-y divide-slate-50">
+            {lists.map(list => (
+              <div key={list.id}>
+                <button
+                  onClick={() => setExpandedId(expandedId === list.id ? null : list.id)}
+                  className="w-full flex items-center gap-3 py-3 hover:bg-slate-50 transition-colors text-left"
+                >
+                  <ThrftListIcon className="w-4 h-4 text-slate-300 shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-slate-800 truncate">{list.name}</p>
+                    <p className="text-xs text-slate-400">
+                      {list.items?.length || 0} items
+                      {list.created_date && <span> · {format(new Date(list.created_date), 'MMM d, yyyy')}</span>}
+                    </p>
+                  </div>
+                  <ChevronRight className={`w-4 h-4 text-slate-300 transition-transform ${expandedId === list.id ? 'rotate-90' : ''}`} />
+                </button>
+                <AnimatePresence>
+                  {expandedId === list.id && (
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="bg-slate-50/50">
+                      <PastListItems list={list} onAddItems={(items) => { onAddItems(items); setExpandedId(null); }} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-2xl border border-slate-100 bg-white overflow-hidden">
@@ -84,12 +122,7 @@ export default function PastListsDrawer({ onAddItems }) {
 
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="border-t border-slate-100"
-          >
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="border-t border-slate-100">
             {lists.length === 0 ? (
               <p className="text-sm text-slate-400 text-center py-6">No past lists yet.</p>
             ) : (
@@ -100,7 +133,7 @@ export default function PastListsDrawer({ onAddItems }) {
                       onClick={() => setExpandedId(expandedId === list.id ? null : list.id)}
                       className="w-full flex items-center gap-3 px-5 py-3 hover:bg-slate-50 transition-colors text-left"
                     >
-                      <ThrftCartIcon className="w-4 h-4 text-slate-300 shrink-0" />
+                      <ThrftListIcon className="w-4 h-4 text-slate-300 shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-slate-800 truncate">{list.name}</p>
                         <p className="text-xs text-slate-400">
@@ -110,19 +143,10 @@ export default function PastListsDrawer({ onAddItems }) {
                       </div>
                       <ChevronRight className={`w-4 h-4 text-slate-300 transition-transform ${expandedId === list.id ? 'rotate-90' : ''}`} />
                     </button>
-
                     <AnimatePresence>
                       {expandedId === list.id && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="bg-slate-50/50"
-                        >
-                          <PastListItems
-                            list={list}
-                            onAddItems={(items) => { onAddItems(items); setExpandedId(null); }}
-                          />
+                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="bg-slate-50/50">
+                          <PastListItems list={list} onAddItems={(items) => { onAddItems(items); setExpandedId(null); }} />
                         </motion.div>
                       )}
                     </AnimatePresence>

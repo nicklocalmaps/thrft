@@ -1,4 +1,4 @@
-import ThrftCartIcon from '@/components/icons/ThrftCartIcon';
+import ThrftListIcon from '@/components/icons/ThrftListIcon';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InstructionModal from '@/components/InstructionModal';
@@ -33,7 +33,6 @@ export default function SearchProducts() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showInstructions, setShowInstructions] = useState(true);
-  const [addedItems, setAddedItems] = useState(new Set());
 
   useEffect(() => {
     if (initialQuery.length >= 3) {
@@ -58,17 +57,8 @@ export default function SearchProducts() {
     const productName = product.brands
       ? `${product.product_name} (${product.brands})`
       : product.product_name;
-    const searchHint = [product.product_name, product.brands, product.quantity]
-      .filter(Boolean).join(' ');
-
-    const item = {
-      name: productName,
-      quantity: 1,
-      unit: 'each',
-      search_hint: searchHint,
-      is_branded: true,
-    };
-
+    const searchHint = [product.product_name, product.brands, product.quantity].filter(Boolean).join(' ');
+    const item = { name: productName, quantity: 1, unit: 'each', search_hint: searchHint, is_branded: true };
     const encoded = encodeURIComponent(JSON.stringify(item));
     if (listId) {
       navigate(`/ListDetail?id=${listId}&addItem=${encoded}`);
@@ -91,10 +81,7 @@ export default function SearchProducts() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {showInstructions && (
-        <InstructionModal
-          slides={SEARCH_SLIDES}
-          onClose={() => setShowInstructions(false)}
-        />
+        <InstructionModal slides={SEARCH_SLIDES} onClose={() => setShowInstructions(false)} />
       )}
 
       {/* Header */}
@@ -106,39 +93,31 @@ export default function SearchProducts() {
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-
           <div className="flex gap-1 flex-1">
             <button
               onClick={() => setTab('search')}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-semibold transition-all ${
-                tab === 'search' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-semibold transition-all ${tab === 'search' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
             >
               <Search className="w-3.5 h-3.5" /> Search
             </button>
             <button
               onClick={() => setTab('browse')}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-semibold transition-all ${
-                tab === 'browse' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-semibold transition-all ${tab === 'browse' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
             >
               <LayoutGrid className="w-3.5 h-3.5" /> Browse
             </button>
           </div>
         </div>
-
         {tab === 'search' && (
           <div className="max-w-2xl mx-auto mt-3">
             <form onSubmit={handleSearch} className="flex gap-2">
-              <div className="relative flex-1">
-                <Input
-                  autoFocus
-                  placeholder="Search products by name or brand..."
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  className="h-10 rounded-xl border-slate-200 bg-slate-50 pl-4 pr-4 text-sm focus-visible:ring-blue-400"
-                />
-              </div>
+              <Input
+                autoFocus
+                placeholder="Search products by name or brand..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="h-10 rounded-xl border-slate-200 bg-slate-50 pl-4 pr-4 text-sm focus-visible:ring-blue-400 flex-1"
+              />
               <Button
                 type="submit"
                 disabled={query.length < 3 || loading}
@@ -156,38 +135,30 @@ export default function SearchProducts() {
       {/* Content */}
       {tab === 'browse' ? (
         <div className="flex-1">
-          <ProductBrowser
-            onAdd={handleBrowseAdd}
-            onClose={() => navigate(backUrl)}
-          />
+          <ProductBrowser onAdd={handleBrowseAdd} onClose={() => navigate(backUrl)} />
         </div>
       ) : (
         <div className="max-w-2xl mx-auto w-full px-4 py-6">
           {!loading && results.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
-                <ThrftCartIcon className="w-8 h-8 text-blue-400" />
+                <ThrftListIcon className="w-8 h-8 text-blue-400" />
               </div>
               <p className="text-slate-500 text-sm mb-4">
                 {query.length < 3
                   ? 'Type at least 3 characters to search, or use Browse to explore by category.'
                   : 'No products found. Try a different search term.'}
               </p>
-              <button
-                onClick={() => setTab('browse')}
-                className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:underline"
-              >
+              <button onClick={() => setTab('browse')} className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:underline">
                 <LayoutGrid className="w-4 h-4" /> Browse by category or brand →
               </button>
             </div>
           )}
-
           {loading && (
             <div className="flex justify-center py-20">
               <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
             </div>
           )}
-
           {!loading && results.length > 0 && (
             <>
               <p className="text-xs text-slate-400 mb-4">{results.length} products found for "{query}"</p>
@@ -203,33 +174,18 @@ export default function SearchProducts() {
                     >
                       <div className="w-14 h-14 rounded-xl bg-slate-100 overflow-hidden shrink-0 flex items-center justify-center">
                         {product.image_front_small_url ? (
-                          <img
-                            src={product.image_front_small_url}
-                            alt={product.product_name}
-                            className="w-full h-full object-cover"
-                            onError={(e) => { e.target.style.display = 'none'; }}
-                          />
+                          <img src={product.image_front_small_url} alt={product.product_name} className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
                         ) : (
                           <span className="text-2xl">🛒</span>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold text-slate-900 text-sm truncate">{product.product_name}</p>
-                        {product.brands && (
-                          <p className="text-xs text-slate-500 truncate">{product.brands}</p>
-                        )}
-                        {product.quantity && (
-                          <p className="text-xs text-slate-400 mt-0.5">{product.quantity}</p>
-                        )}
+                        {product.brands && <p className="text-xs text-slate-500 truncate">{product.brands}</p>}
+                        {product.quantity && <p className="text-xs text-slate-400 mt-0.5">{product.quantity}</p>}
                       </div>
-                      <Button
-                        size="sm"
-                        onClick={() => handleAddItem(product)}
-                        className="h-9 px-3 rounded-xl gap-1.5 text-xs shrink-0"
-                        style={{ backgroundColor: '#4181ed' }}
-                      >
-                        <Plus className="w-3.5 h-3.5" />
-                        Add
+                      <Button size="sm" onClick={() => handleAddItem(product)} className="h-9 px-3 rounded-xl gap-1.5 text-xs shrink-0" style={{ backgroundColor: '#4181ed' }}>
+                        <Plus className="w-3.5 h-3.5" /> Add
                       </Button>
                     </motion.div>
                   ))}

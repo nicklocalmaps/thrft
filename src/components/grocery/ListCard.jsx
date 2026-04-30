@@ -1,4 +1,4 @@
-import ThrftCartIcon from '@/components/icons/ThrftCartIcon';
+import ThrftListIcon from '@/components/icons/ThrftListIcon';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ChevronRight, Clock, Trash2 } from 'lucide-react';
@@ -26,7 +26,7 @@ export default function ListCard({ list, index, onDelete }) {
               </h3>
               <div className="flex items-center gap-3 mt-2 text-sm text-slate-500">
                 <span className="flex items-center gap-1">
-                  <ThrftCartIcon className="w-3.5 h-3.5" />
+                  <ThrftListIcon className="w-3.5 h-3.5" />
                   {itemCount} item{itemCount !== 1 ? 's' : ''}
                 </span>
                 {list.last_compared && (
@@ -63,11 +63,7 @@ export default function ListCard({ list, index, onDelete }) {
                 variant="ghost"
                 size="icon"
                 className="w-8 h-8 text-slate-300 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  onDelete(list.id);
-                }}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(list.id); }}
               >
                 <Trash2 className="w-4 h-4" />
               </Button>
