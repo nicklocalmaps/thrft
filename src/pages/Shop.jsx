@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Search, Loader2, X } from 'lucide-react';
 import ThrftListIcon from '@/components/icons/ThrftListIcon';
-import { useCart } from '@/lib/cartContext.jsx';
+import { useCart } from '@/lib/cartContext';
 
 const THRFT_BLUE = '#4181ed';
 
 const AISLES = [
+  { key: 'beverages',     label: 'Beverages',    emoji: '🥤' },
   { key: 'produce',       label: 'Produce',      emoji: '🥦' },
   { key: 'meat',          label: 'Meat',         emoji: '🥩' },
   { key: 'seafood',       label: 'Seafood',      emoji: '🦐' },
@@ -15,7 +16,6 @@ const AISLES = [
   { key: 'cheese',        label: 'Cheese',       emoji: '🧀' },
   { key: 'frozen',        label: 'Frozen',       emoji: '🧊' },
   { key: 'bread',         label: 'Bakery',       emoji: '🍞' },
-  { key: 'beverages',     label: 'Beverages',    emoji: '🥤' },
   { key: 'snacks',        label: 'Snacks',       emoji: '🍿' },
   { key: 'breakfast',     label: 'Breakfast',    emoji: '🍳' },
   { key: 'cereal',        label: 'Cereal',       emoji: '🥣' },
@@ -35,8 +35,10 @@ const AISLES = [
 function ProductCard({ product, onClick }) {
   const [imgError, setImgError] = useState(false);
   return (
-    <button onClick={() => onClick(product)}
-      className="bg-white border border-slate-100 rounded-2xl overflow-hidden text-left hover:border-blue-200 hover:shadow-md transition-all w-full">
+    <button
+      onClick={() => onClick(product)}
+      className="bg-white border border-slate-100 rounded-2xl overflow-hidden text-left hover:border-blue-200 hover:shadow-md transition-all w-full"
+    >
       <div className="w-full bg-slate-50 flex items-center justify-center" style={{ height: 110 }}>
         {product.imageUrl && !imgError ? (
           <img src={product.imageUrl} alt={product.name} className="object-contain"
@@ -57,15 +59,21 @@ function ProductCard({ product, onClick }) {
   );
 }
 
+// ─── Search result row ────────────────────────────────────────────────────────
+
 function SearchRow({ product, onClick }) {
   const [imgError, setImgError] = useState(false);
   return (
-    <button onClick={() => onClick(product)}
-      className="w-full flex items-center gap-3 px-4 py-3 border-b border-slate-50 hover:bg-blue-50 transition-colors text-left">
+    <button
+      onClick={() => onClick(product)}
+      className="w-full flex items-center gap-3 px-4 py-3 border-b border-slate-50 hover:bg-blue-50 transition-colors text-left"
+    >
       <div className="w-14 h-14 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 overflow-hidden border border-slate-100">
         {product.imageUrl && !imgError ? (
           <img src={product.imageUrl} alt={product.name} className="w-full h-full object-contain p-1" onError={() => setImgError(true)} />
-        ) : <span style={{ fontSize: 26 }}>🛒</span>}
+        ) : (
+          <span style={{ fontSize: 26 }}>🛒</span>
+        )}
       </div>
       <div className="flex-1 min-w-0">
         {product.brand && <p className="text-xs text-slate-400 truncate">{product.brand}</p>}
@@ -82,14 +90,19 @@ function SearchRow({ product, onClick }) {
   );
 }
 
+// ─── Aisle sidebar ────────────────────────────────────────────────────────────
+
 const MAX_VISIBLE_AISLES = 8;
 
 function AisleSidebar({ aisles, onSelect }) {
   const [showAll, setShowAll] = useState(false);
   const visible = showAll ? aisles : aisles.slice(0, MAX_VISIBLE_AISLES);
+
   return (
-    <div className="fixed right-0 top-16 z-30 flex flex-col bg-white border-l border-slate-100 shadow-lg"
-      style={{ width: 72, maxHeight: 'calc(100vh - 130px)', overflowY: 'auto', scrollbarWidth: 'none' }}>
+    <div
+      className="fixed right-0 top-16 z-30 flex flex-col bg-white border-l border-slate-100 shadow-lg"
+      style={{ width: 72, maxHeight: 'calc(100vh - 130px)', overflowY: 'auto', scrollbarWidth: 'none' }}
+    >
       {visible.map(aisle => (
         <button key={aisle.key} onClick={() => onSelect(aisle)}
           className="flex flex-col items-center justify-center gap-1 py-3 px-1 border-b border-slate-50 hover:bg-blue-50 transition-colors">
@@ -124,9 +137,9 @@ export default function Shop() {
   const navigate  = useNavigate();
   const { cartCount, userZip } = useCart();
 
-  const [query, setQuery]               = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [searching, setSearching]       = useState(false);
+  const [query, setQuery]                       = useState('');
+  const [searchResults, setSearchResults]       = useState([]);
+  const [searching, setSearching]               = useState(false);
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loadingFeatured, setLoadingFeatured]   = useState(true);
   const debounceRef = useRef(null);
@@ -145,6 +158,7 @@ export default function Shop() {
   useEffect(() => {
     const q = query.trim();
     if (q.length < 2) { setSearchResults([]); return; }
+
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(async () => {
       setSearching(true);
@@ -156,6 +170,7 @@ export default function Shop() {
       } catch { setSearchResults([]); }
       setSearching(false);
     }, 400);
+
     return () => clearTimeout(debounceRef.current);
   }, [query, userZip]);
 
@@ -168,6 +183,7 @@ export default function Shop() {
 
   return (
     <div className="min-h-screen" style={{ background: '#f8fafc', paddingBottom: 80, paddingRight: 76 }}>
+
       <header className="sticky top-0 z-40" style={{ backgroundColor: THRFT_BLUE }}>
         <div className="px-4 py-3 flex items-center gap-3">
           <div className="flex flex-col shrink-0">
@@ -175,12 +191,19 @@ export default function Shop() {
             <span className="text-sm font-bold text-white leading-tight">{userZip || 'your area'}</span>
           </div>
           <div className="flex-1 flex items-center gap-2 bg-white rounded-xl px-3 py-2">
-            {searching ? <Loader2 className="w-3.5 h-3.5 text-blue-400 animate-spin shrink-0" /> : <Search className="w-3.5 h-3.5 text-slate-400 shrink-0" />}
+            {searching
+              ? <Loader2 className="w-3.5 h-3.5 text-blue-400 animate-spin shrink-0" />
+              : <Search className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            }
             <input ref={inputRef} type="text" placeholder="Search products..." value={query}
               onChange={e => setQuery(e.target.value)}
               className="flex-1 text-sm text-slate-900 placeholder:text-slate-400 bg-transparent focus:outline-none"
               autoComplete="off" spellCheck={false} />
-            {query && <button onClick={() => { setQuery(''); setSearchResults([]); }}><X className="w-3.5 h-3.5 text-slate-400" /></button>}
+            {query && (
+              <button onClick={() => { setQuery(''); setSearchResults([]); }}>
+                <X className="w-3.5 h-3.5 text-slate-400" />
+              </button>
+            )}
           </div>
           <button onClick={() => navigate('/Cart')} className="relative shrink-0">
             <ThrftListIcon className="w-7 h-7 text-white" />
@@ -198,7 +221,9 @@ export default function Shop() {
           <p className="text-xs text-slate-400 px-4 py-2.5 border-b border-slate-100">
             {searching ? 'Searching Kroger...' : `${searchResults.length} results for "${query}"`}
           </p>
-          {searchResults.map((product, i) => <SearchRow key={i} product={product} onClick={goToProduct} />)}
+          {searchResults.map((product, i) => (
+            <SearchRow key={i} product={product} onClick={goToProduct} />
+          ))}
           {!searching && searchResults.length === 0 && (
             <div className="text-center py-16">
               <p className="text-slate-500 text-sm">No results for "{query}"</p>
@@ -209,6 +234,7 @@ export default function Shop() {
       ) : (
         <div>
           <AisleSidebar aisles={AISLES} onSelect={aisle => navigate(`/Aisle?key=${aisle.key}&label=${encodeURIComponent(aisle.label)}&emoji=${aisle.emoji}`)} />
+
           <div className="px-4 pt-5 pb-4">
             <h2 className="text-base font-bold text-slate-900 mb-3">Start your grocery list</h2>
             <div className="flex gap-1 bg-slate-100 rounded-xl p-1 mb-4">
@@ -220,13 +246,18 @@ export default function Shop() {
               ))}
             </div>
             {loadingFeatured ? (
-              <div className="flex items-center justify-center py-10"><Loader2 className="w-6 h-6 text-blue-400 animate-spin" /></div>
+              <div className="flex items-center justify-center py-10">
+                <Loader2 className="w-6 h-6 text-blue-400 animate-spin" />
+              </div>
             ) : (
               <div className="grid grid-cols-2 gap-3">
-                {featuredProducts.map((product, i) => <ProductCard key={i} product={product} onClick={goToProduct} />)}
+                {featuredProducts.map((product, i) => (
+                  <ProductCard key={i} product={product} onClick={goToProduct} />
+                ))}
               </div>
             )}
           </div>
+
           <div className="px-4 pb-6">
             <h2 className="text-base font-bold text-slate-900 mb-3">Browse by aisle</h2>
             <div className="grid grid-cols-2 gap-2">
