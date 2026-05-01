@@ -25,11 +25,8 @@ function VariantRow({ variant, onAdd, onView, inCart }) {
     <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => onView?.(variant)}>
       <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center shrink-0 overflow-hidden border border-slate-100">
         {variant.imageUrl && !err ? (
-          <img src={variant.imageUrl} alt="" className="w-full h-full object-contain p-0.5"
-            onError={() => setErr(true)} />
-        ) : (
-          <span style={{ fontSize: 18 }}>🛒</span>
-        )}
+          <img src={variant.imageUrl} alt="" className="w-full h-full object-contain p-0.5" onError={() => setErr(true)} />
+        ) : <span style={{ fontSize: 18 }}>🛒</span>}
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-slate-900 truncate">{variant.name}</p>
@@ -53,18 +50,16 @@ const MAX_VARIANTS_SHOWN = 2;
 
 function ProductFamily({ family, emoji, onAdd, cartNames, onViewProduct }) {
   const [showAll, setShowAll] = useState(false);
-  const hasVariants = family.variants.length > 1;
+  const hasVariants  = family.variants.length > 1;
   const firstVariant = family.variants[0];
-  const inCart = cartNames.has(family.name) || family.variants.some(v => cartNames.has(v.name));
+  const inCart       = cartNames.has(family.name) || family.variants.some(v => cartNames.has(v.name));
   const visibleVariants = showAll ? family.variants : family.variants.slice(0, MAX_VARIANTS_SHOWN);
-  const hiddenCount = family.variants.length - MAX_VARIANTS_SHOWN;
+  const hiddenCount  = family.variants.length - MAX_VARIANTS_SHOWN;
 
   return (
     <div className="border-b border-slate-50 last:border-0">
-      <button
-        onClick={() => onViewProduct(firstVariant, family)}
-        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors text-left"
-      >
+      <button onClick={() => onViewProduct(firstVariant, family)}
+        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors text-left">
         <div className="w-14 h-14 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 overflow-hidden border border-slate-100">
           <ProductImg imageUrl={family.imageUrl} emoji={emoji} size={52} />
         </div>
@@ -88,20 +83,13 @@ function ProductFamily({ family, emoji, onAdd, cartNames, onViewProduct }) {
       {hasVariants && (
         <div className="bg-slate-50 border-t border-slate-100">
           {visibleVariants.map((variant, i) => (
-            <VariantRow
-              key={i}
-              variant={variant}
-              onAdd={onAdd}
-              onView={() => onViewProduct(variant, family)}
-              inCart={cartNames.has(variant.name)}
-            />
+            <VariantRow key={i} variant={variant} onAdd={onAdd}
+              onView={() => onViewProduct(variant, family)} inCart={cartNames.has(variant.name)} />
           ))}
           {!showAll && hiddenCount > 0 && (
-            <button
-              onClick={() => setShowAll(true)}
+            <button onClick={() => setShowAll(true)}
               className="w-full flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold border-t border-slate-200 hover:bg-blue-50 transition-colors"
-              style={{ color: THRFT_BLUE }}
-            >
+              style={{ color: THRFT_BLUE }}>
               <ChevronDown className="w-3.5 h-3.5" />
               See {hiddenCount} more size{hiddenCount !== 1 ? 's' : ''}
             </button>
@@ -117,10 +105,8 @@ function BrandSection({ brandData, emoji, onAdd, cartNames, onViewProduct, defau
 
   return (
     <div className="mb-3">
-      <button
-        onClick={() => setExpanded(e => !e)}
-        className="w-full flex items-center gap-3 px-4 py-3 bg-slate-100 text-left hover:bg-slate-200 transition-colors"
-      >
+      <button onClick={() => setExpanded(e => !e)}
+        className="w-full flex items-center gap-3 px-4 py-3 bg-slate-100 text-left hover:bg-slate-200 transition-colors">
         <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shrink-0 overflow-hidden border border-slate-200">
           <ProductImg imageUrl={brandData.imageUrl} emoji={emoji} size={36} />
         </div>
@@ -134,7 +120,8 @@ function BrandSection({ brandData, emoji, onAdd, cartNames, onViewProduct, defau
       {expanded && (
         <div className="bg-white border border-slate-100 border-t-0 rounded-b-2xl overflow-hidden">
           {brandData.products.map((family, i) => (
-            <ProductFamily key={i} family={family} emoji={emoji} onAdd={onAdd} cartNames={cartNames} onViewProduct={onViewProduct} />
+            <ProductFamily key={i} family={family} emoji={emoji} onAdd={onAdd}
+              cartNames={cartNames} onViewProduct={onViewProduct} />
           ))}
         </div>
       )}
@@ -220,7 +207,8 @@ export default function Aisle() {
         <div className="px-4 pb-3">
           <div className="flex items-center gap-2 bg-slate-100 rounded-xl px-3 py-2">
             <svg className="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" placeholder={`Search ${label}…`} value={search} onChange={e => setSearch(e.target.value)}
+            <input type="text" placeholder={`Search ${label}…`} value={search}
+              onChange={e => setSearch(e.target.value)}
               className="flex-1 text-sm bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none" />
             {search && (
               <button onClick={() => setSearch('')} className="text-slate-400">
@@ -245,7 +233,9 @@ export default function Aisle() {
           </div>
         ) : (
           filtered.map((brandData, i) => (
-            <BrandSection key={brandData.brand} brandData={brandData} emoji={emoji} onAdd={handleAdd} cartNames={cartNames} onViewProduct={handleViewProduct} defaultExpanded={i === 0} />
+            <BrandSection key={brandData.brand} brandData={brandData} emoji={emoji}
+              onAdd={handleAdd} cartNames={cartNames} onViewProduct={handleViewProduct}
+              defaultExpanded={i === 0} />
           ))
         )}
       </div>

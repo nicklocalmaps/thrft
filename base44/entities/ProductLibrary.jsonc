@@ -1,0 +1,59 @@
+{
+  "name": "ProductLibrary",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Product name"
+    },
+    "brand": {
+      "type": "string",
+      "description": "Brand name"
+    },
+    "aisle_key": {
+      "type": "string",
+      "description": "Aisle category key (e.g. beverages, meat)"
+    },
+    "size": {
+      "type": "string",
+      "description": "Product size/weight"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Product image URL"
+    },
+    "price": {
+      "type": "number",
+      "description": "Last known price"
+    },
+    "kroger_id": {
+      "type": "string",
+      "description": "Kroger product ID"
+    },
+    "upc": {
+      "type": "string",
+      "description": "UPC barcode"
+    },
+    "added_by": {
+      "type": "string",
+      "enum": [
+        "user",
+        "system"
+      ],
+      "default": "system"
+    },
+    "times_added": {
+      "type": "number",
+      "default": 0,
+      "description": "How many times users have added this to a list"
+    },
+    "created_at": {
+      "type": "string",
+      "description": "ISO timestamp of creation"
+    }
+  },
+  "required": [
+    "name",
+    "aisle_key"
+  ]
+}
