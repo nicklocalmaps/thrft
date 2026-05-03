@@ -1,3 +1,4 @@
+import PermissionsPrompt from '@/components/PermissionsPrompt';
 import ThrftListIcon from '@/components/icons/ThrftListIcon';
 import InstructionModal from '@/components/InstructionModal';
 import React, { useState, useMemo } from 'react';
@@ -5,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Clock, Trash2, ChevronRight } from 'lucide-react';
+import { Plus, Clock, Trash2, ChevronRight, TrendingDown } from 'lucide-react';
 import { format, isThisMonth } from 'date-fns';
 import { getStoreByKey, ALL_STORES } from '@/lib/storeConfig';
 import useUserTier from '@/hooks/useUserTier';
@@ -13,9 +14,7 @@ import useUserTier from '@/hooks/useUserTier';
 const THRFT_BLUE = '#4181ed';
 const THRFT_LOGO = 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg';
 
-const HOME_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/e304df701_Budget1.jpg', nextTop: '5%', dismissTop: '17%' },
-];
+const HOME_SLIDES = [];
 
 function getInstoreTotal(storeData) {
   if (!storeData) return null;
@@ -43,18 +42,21 @@ function SavingsStrip({ lists }) {
     let totalSaved = 0;
     let listsCompared = 0;
     const storeWins = {};
+
     for (const list of lists) {
       if (!list.price_data || Object.keys(list.price_data).length === 0) continue;
       listsCompared++;
       const cheapest = getCheapestStore(list.price_data);
-      const max = getMaxTotal(list.price_data);
+      const max      = getMaxTotal(list.price_data);
       if (cheapest) {
         totalSaved += max - cheapest.total;
         storeWins[cheapest.key] = (storeWins[cheapest.key] || 0) + 1;
       }
     }
+
     const bestStoreKey = Object.entries(storeWins).sort((a, b) => b[1] - a[1])[0]?.[0];
-    const bestStore = bestStoreKey ? (getStoreByKey(bestStoreKey)?.name || bestStoreKey) : null;
+    const bestStore    = bestStoreKey ? (getStoreByKey(bestStoreKey)?.name || bestStoreKey) : null;
+
     return { totalSaved, listsCompared, bestStore };
   }, [lists]);
 
@@ -64,11 +66,17 @@ function SavingsStrip({ lists }) {
     <div className="grid grid-cols-3 gap-3 mb-5">
       {[
         { value: `$${Math.round(stats.totalSaved)}`, label: 'saved this month' },
-        { value: stats.listsCompared, label: `list${stats.listsCompared !== 1 ? 's' : ''} compared` },
-        { value: stats.bestStore || '—', label: 'best store' },
+        { value: stats.listsCompared,                label: `list${stats.listsCompared !== 1 ? 's' : ''} compared` },
+        { value: stats.bestStore || '—',             label: 'best store' },
       ].map(stat => (
-        <div key={stat.label} className="text-center rounded-xl py-3 px-2 bg-slate-50">
-          <p className="font-bold leading-tight mb-0.5 truncate text-slate-900" style={{ fontSize: stat.value?.length > 5 ? 13 : 18 }}>
+        <div
+          key={stat.label}
+          className="text-center rounded-xl py-3 px-2 bg-slate-50"
+        >
+          <p
+            className="font-bold leading-tight mb-0.5 truncate text-slate-900"
+            style={{ fontSize: stat.value?.length > 5 ? 13 : 18 }}
+          >
             {stat.value}
           </p>
           <p className="text-xs text-slate-400">{stat.label}</p>
@@ -79,11 +87,11 @@ function SavingsStrip({ lists }) {
 }
 
 function ListCard({ list, index, onDelete }) {
-  const itemCount = list.items?.length || 0;
-  const priceData = list.price_data;
-  const hasCompared = priceData && Object.keys(priceData).length > 0;
-  const cheapest = hasCompared ? getCheapestStore(priceData) : null;
-  const cheapestMeta = cheapest ? getStoreByKey(cheapest.key) : null;
+  const itemCount    = list.items?.length || 0;
+  const priceData    = list.price_data;
+  const hasCompared  = priceData && Object.keys(priceData).length > 0;
+  const cheapest     = hasCompared ? getCheapestStore(priceData) : null;
+  const cheapestMeta = cheapest    ? getStoreByKey(cheapest.key) : null;
 
   const storeResults = hasCompared
     ? Object.entries(priceData)
@@ -119,14 +127,20 @@ function ListCard({ list, index, onDelete }) {
                 )}
               </div>
             </div>
+
             <div className="flex items-center gap-2 shrink-0">
               {cheapest ? (
                 <div className="text-right">
                   <p className="text-base font-bold text-emerald-600">${cheapest.total.toFixed(2)}</p>
-                  <p className="text-xs text-emerald-500 truncate max-w-[80px]">{cheapestMeta?.name || cheapest.key}</p>
+                  <p className="text-xs text-emerald-500 truncate max-w-[80px]">
+                    {cheapestMeta?.name || cheapest.key}
+                  </p>
                 </div>
               ) : (
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full border" style={{ background: '#fffbeb', color: '#b45309', borderColor: '#fde68a' }}>
+                <span
+                  className="text-xs font-semibold px-2.5 py-1 rounded-full border"
+                  style={{ background: '#fffbeb', color: '#b45309', borderColor: '#fde68a' }}
+                >
                   Compare →
                 </span>
               )}
@@ -140,19 +154,28 @@ function ListCard({ list, index, onDelete }) {
               <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-blue-400 transition-colors" />
             </div>
           </div>
+
           {storeResults.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
               {storeResults.slice(0, 4).map((s, i) => {
                 const meta = getStoreByKey(s.key);
                 return (
-                  <span key={s.key} className="text-xs font-medium px-2 py-0.5 rounded-full"
-                    style={{ background: i === 0 ? '#eff6ff' : '#f8fafc', color: i === 0 ? '#1d4ed8' : '#94a3b8' }}>
+                  <span
+                    key={s.key}
+                    className="text-xs font-medium px-2 py-0.5 rounded-full"
+                    style={{
+                      background: i === 0 ? '#eff6ff' : '#f8fafc',
+                      color:      i === 0 ? '#1d4ed8' : '#94a3b8',
+                    }}
+                  >
                     {meta?.name || s.key}: ${s.total.toFixed(2)}
                   </span>
                 );
               })}
               {storeResults.length > 4 && (
-                <span className="text-xs text-slate-400 px-2 py-0.5">+{storeResults.length - 4} more</span>
+                <span className="text-xs text-slate-400 px-2 py-0.5">
+                  +{storeResults.length - 4} more
+                </span>
               )}
             </div>
           )}
@@ -165,24 +188,35 @@ function ListCard({ list, index, onDelete }) {
 function EmptyState() {
   return (
     <div>
-      <div className="rounded-2xl p-5 mb-5" style={{ background: `linear-gradient(135deg, ${THRFT_BLUE}, #3672d4)` }}>
+      <div
+        className="rounded-2xl p-5 mb-5"
+        style={{ background: `linear-gradient(135deg, ${THRFT_BLUE}, #3672d4)` }}
+      >
         <p className="text-base font-bold text-white mb-1">Welcome to THRFT 👋</p>
-        <p className="text-xs text-white/70 leading-relaxed mb-4">Create your first list and start saving money on groceries today.</p>
+        <p className="text-xs text-white/70 leading-relaxed mb-4">
+          Create your first list and start saving money on groceries today.
+        </p>
         <Link to="/NewList">
           <button className="bg-white text-blue-700 text-sm font-semibold px-4 py-2 rounded-xl hover:bg-blue-50 transition-colors">
             Create my first list →
           </button>
         </Link>
       </div>
+
       <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">How it works</p>
       <div className="grid grid-cols-3 gap-3 mb-6">
-        {[{ emoji: '📝', label: 'Add items' }, { emoji: '🔍', label: 'Compare stores' }, { emoji: '💰', label: 'Save money' }].map(step => (
+        {[
+          { emoji: '📝', label: 'Add items'      },
+          { emoji: '🔍', label: 'Compare stores' },
+          { emoji: '💰', label: 'Save money'     },
+        ].map(step => (
           <div key={step.label} className="bg-white rounded-xl border border-slate-100 py-4 text-center">
             <p className="text-2xl mb-2">{step.emoji}</p>
             <p className="text-xs font-semibold text-slate-700">{step.label}</p>
           </div>
         ))}
       </div>
+
       <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">My lists</p>
       <div className="rounded-2xl border-2 border-dashed border-slate-200 py-10 text-center">
         <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center mx-auto mb-3">
@@ -196,18 +230,21 @@ function EmptyState() {
 }
 
 export default function Home() {
+  const [showPermissions, setShowPermissions] = React.useState(() => {
+    return !localStorage.getItem('thrft_permissions_asked');
+  });
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  const navigate    = useNavigate();
   const { isPremium, isFree } = useUserTier();
 
   const { data: lists = [], isLoading } = useQuery({
     queryKey: ['grocery-lists'],
-    queryFn: () => base44.entities.GroceryList.list('-created_date'),
+    queryFn:  () => base44.entities.GroceryList.list('-created_date'),
   });
 
   const deleteMutation = useMutation({
     mutationFn: id => base44.entities.GroceryList.delete(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['grocery-lists'] }),
+    onSuccess:  () => queryClient.invalidateQueries({ queryKey: ['grocery-lists'] }),
   });
 
   const thisMonthLists = useMemo(
@@ -225,8 +262,11 @@ export default function Home() {
 
   return (
     <div className="pb-24">
-      <InstructionModal instructionKey="home" slides={HOME_SLIDES} onClose={() => {}} />
+      {showPermissions && (
+        <PermissionsPrompt onComplete={() => setShowPermissions(false)} />
+      )}
 
+      {/* Header */}
       <div className="flex items-center gap-3 mb-5">
         <div className="w-8 h-8 rounded-xl overflow-hidden shrink-0">
           <img src={THRFT_LOGO} alt="THRFT" className="w-full h-full object-cover" />
@@ -235,36 +275,49 @@ export default function Home() {
           {lists.length === 0 ? 'THRFT' : 'My lists'}
         </h1>
         {isFree && lists.length > 0 && (
-          <Link to="/Subscribe" className="text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors"
-            style={{ color: THRFT_BLUE, borderColor: '#bfdbfe', background: '#eff6ff' }}>
+          <Link
+            to="/Subscribe"
+            className="text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors"
+            style={{ color: THRFT_BLUE, borderColor: '#bfdbfe', background: '#eff6ff' }}
+          >
             Upgrade
           </Link>
         )}
         <Link to="/Profile">
           <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition-colors">
             <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
-              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
             </svg>
           </div>
         </Link>
       </div>
 
+      {/* Content */}
       {lists.length === 0 ? (
         <EmptyState />
       ) : (
         <>
           <SavingsStrip lists={thisMonthLists} />
+
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Recent lists</p>
             <p className="text-xs text-slate-400">{lists.length} list{lists.length !== 1 ? 's' : ''}</p>
           </div>
+
           <div className="space-y-3">
             <AnimatePresence>
               {lists.map((list, i) => (
-                <ListCard key={list.id} list={list} index={i} onDelete={id => deleteMutation.mutate(id)} />
+                <ListCard
+                  key={list.id}
+                  list={list}
+                  index={i}
+                  onDelete={id => deleteMutation.mutate(id)}
+                />
               ))}
             </AnimatePresence>
           </div>
+
           {isPremium && (
             <Link to="/Rewards">
               <div className="mt-5 flex items-center gap-3 px-4 py-3 bg-purple-50 border border-purple-100 rounded-2xl hover:shadow-sm transition-all">
@@ -280,12 +333,16 @@ export default function Home() {
         </>
       )}
 
+      {/* FAB */}
       <Link to="/NewList">
         <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="fixed bottom-20 right-4 z-40 w-14 h-14 rounded-2xl flex items-center justify-center"
-          style={{ backgroundColor: THRFT_BLUE, boxShadow: '0 4px 20px rgba(65,129,237,.45)' }}
+          style={{
+            backgroundColor: THRFT_BLUE,
+            boxShadow: '0 4px 20px rgba(65,129,237,.45)',
+          }}
           aria-label="New list"
         >
           <Plus className="w-6 h-6 text-white" strokeWidth={2.5} />
