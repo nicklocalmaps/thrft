@@ -29,8 +29,8 @@ const WILLIE_IMAGES = {
 };
 
 const ROBOT_IMAGES = {
-  robot:     'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/af3825e2a_image8.jpg',
-  robot_bag: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/7fe6fecc0_image7.jpg',
+  robot:     'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/247e0a85d_image8.jpg',
+  robot_bag: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/247e0a85d_image8.jpg',
 };
 
 const ALL_IMAGES = { ...WILLIE_IMAGES, ...ROBOT_IMAGES };
