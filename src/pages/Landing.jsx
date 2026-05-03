@@ -63,7 +63,7 @@ export default function Landing() {
             <a href="#features" className="text-sm text-slate-500 hover:text-slate-800 transition-colors hidden sm:block">Features</a>
             <a href="#pricing" className="text-sm text-slate-500 hover:text-slate-800 transition-colors hidden sm:block">Pricing</a>
             <Button onClick={handleCTA} className="h-10 rounded-xl px-6 text-sm font-semibold whitespace-nowrap" style={{ backgroundColor: THRFT_BLUE }}>
-              Free Sign Up
+              Get Started Free
             </Button>
           </div>
         </div>
@@ -107,11 +107,11 @@ export default function Landing() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-4">
-              <Button onClick={handleCTA} className="h-14 px-10 text-base font-bold rounded-2xl shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
-                Get started free — no card needed →
+              <Button onClick={handleCTA} className="h-12 px-8 rounded-xl text-sm font-bold shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
+                Get Started Free
               </Button>
             </div>
-            <p className="text-xs text-slate-400">Takes 60 seconds · Free forever plan included</p>
+            <p className="text-xs text-slate-400">Get Started Free · No Credit Card Needed</p>
           </motion.div>
 
           {/* Store logos */}
@@ -144,8 +144,8 @@ export default function Landing() {
             ))}
           </div>
           <div className="mt-10">
-            <Button onClick={handleCTA} className="h-12 px-8 rounded-xl font-bold shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
-              Get Started Free →
+            <Button onClick={handleCTA} className="h-12 px-8 rounded-xl text-sm font-bold shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
+              Get Started Free
             </Button>
           </div>
         </div>
@@ -246,7 +246,7 @@ export default function Landing() {
                 </li>
               ))}
             </ul>
-            <Button onClick={handleCTA} className="w-full h-13 rounded-xl text-base font-bold shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
+            <Button onClick={handleCTA} className="w-full h-12 rounded-xl text-sm font-bold shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
               Start 7-Day Premium Free Trial →
             </Button>
             <p className="text-xs text-slate-400 mt-3">No charge today · Cancel in one tap · No questions asked</p>
@@ -260,10 +260,10 @@ export default function Landing() {
           <h2 className="text-5xl font-extrabold mb-4">Stop Guessing. Start Saving.</h2>
           <p className="text-blue-200 text-xl mb-10">Your family's grocery budget — finally under control.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button onClick={handleCTA} className="h-14 px-10 text-base font-bold rounded-2xl bg-white text-blue-700 hover:bg-blue-50 transition-all">
+            <Button onClick={handleCTA} className="h-12 px-8 rounded-xl text-sm font-bold bg-white text-blue-700 hover:bg-blue-50 transition-all">
               Get Started Free
             </Button>
-            <Button onClick={handleCTA} className="h-14 px-10 text-base font-bold rounded-2xl bg-white/10 border-2 border-white/40 text-white hover:bg-white/20 transition-all">
+            <Button onClick={handleCTA} className="h-12 px-8 rounded-xl text-sm font-bold bg-white/10 border-2 border-white/40 text-white hover:bg-white/20 transition-all">
               Start 7-Day Premium Free Trial →
             </Button>
           </div>
