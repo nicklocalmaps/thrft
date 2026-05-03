@@ -154,8 +154,8 @@ export default function Shop() {
     debounceRef.current = setTimeout(async () => {
       setSearching(true);
       try {
-        const res = await base44.functions.invoke('krogerProducts', {
-          mode: 'search', term: q, zip_code: userZip || '10001', limit: 20,
+        const res = await base44.functions.invoke('thrftFoodLibrary', {
+          mode: 'search', term: q, zip_code: userZip || '10001',
         });
         setSearchResults(res.data?.products || []);
       } catch { setSearchResults([]); }
@@ -222,7 +222,7 @@ export default function Shop() {
       {isSearching ? (
         <div className="bg-white">
           <p className="text-xs text-slate-400 px-4 py-2.5 border-b border-slate-100">
-            {searching ? 'Searching Kroger...' : `${searchResults.length} results for "${query}"`}
+            {searching ? 'Searching…' : `${searchResults.length} results for "${query}"`}
           </p>
           {searchResults.map((product, i) => (
             <SearchRow key={i} product={product} onClick={goToProduct} />

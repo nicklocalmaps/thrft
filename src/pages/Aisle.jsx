@@ -84,7 +84,9 @@ function ProductRow({ product, onAdd, onView, inCart }) {
     >
       <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shrink-0 overflow-hidden border border-slate-100">
         {product.imageUrl && !err ? (
-          <img src={product.imageUrl} alt="" className="w-full h-full object-contain p-1" onError={() => setErr(true)} />
+          <img src={product.imageUrl} alt=""
+            className="w-full h-full object-contain p-1"
+            onError={() => setErr(true)} />
         ) : <span style={{ fontSize: 20 }}>🛒</span>}
       </div>
       <div className="flex-1 min-w-0">
@@ -189,14 +191,14 @@ export default function Aisle() {
   const navigate = useNavigate();
   const { cartCount, addToCart, cartItems, userZip } = useCart();
 
-  const params = new URLSearchParams(window.location.search);
-  const key    = params.get('key')   || 'beverages';
-  const label  = decodeURIComponent(params.get('label') || 'Aisle');
-  const emoji  = params.get('emoji') || '🛒';
+  const params  = new URLSearchParams(window.location.search);
+  const key     = params.get('key')   || 'beverages';
+  const label   = decodeURIComponent(params.get('label') || 'Aisle');
+  const emoji   = params.get('emoji') || '🛒';
 
-  const [brands, setBrands]           = useState([]);
-  const [loading, setLoading]         = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [brands, setBrands]             = useState([]);
+  const [loading, setLoading]           = useState(true);
+  const [searchQuery, setSearchQuery]   = useState('');
   const [activeSubcat, setActiveSubcat] = useState('all');
 
   const subcats = SUBCATEGORIES[key] || [];
@@ -208,8 +210,8 @@ export default function Aisle() {
     setSearchQuery('');
     setActiveSubcat(subcats.length > 0 ? subcats[0].key : 'all');
 
-    base44.functions.invoke('krogerProducts', {
-      mode: 'browse', category: key, zip_code: zip, limit: 50,
+    base44.functions.invoke('thrftFoodLibrary', {
+      mode: 'browse', aisle_key: key, zip_code: zip,
     }).then(res => {
       setBrands(res.data?.brands || []);
       setLoading(false);
@@ -219,10 +221,14 @@ export default function Aisle() {
   const cartNames = new Set(cartItems.map(i => i.name));
 
   const handleAdd = item => {
-    addToCart({ name: item.name, brand: item.brand || '', size: item.size || '', imageUrl: item.imageUrl, price: item.price, quantity: 1 });
-    base44.functions.invoke('populateProductLibrary', {
+    addToCart({ name: item.name, brand: item.brand || '', size: item.size || '', imageUrl: item.imageUrl || item.image_url, price: item.price_kroger || item.price_walmart || item.price, quantity: 1 });
+    base44.functions.invoke('thrftFoodLibrary', {
       mode: 'save_product',
-      product: { name: item.name, brand: item.brand || '', aisle_key: key, size: item.size || '', image_url: item.imageUrl || '', price: item.price || null },
+      product: { name: item.name, brand: item.brand || '', aisle_key: key, size: item.size || '', image_url: item.imageUrl || item.image_url || '', price: item.price_kroger || item.price_walmart || item.price || null },
+    }).catch(() => {});
+    base44.functions.invoke('thrftFoodLibrary', {
+      mode: 'log_behavior', action: 'add',
+      log_data: { aisle_key: key, brand: item.brand || '', product_name: item.name },
     }).catch(() => {});
   };
 
@@ -243,14 +249,18 @@ export default function Aisle() {
     let result = brands;
 
     if (activeSubcat !== 'all' && subcats.length > 0) {
-      const sub = subcats.find(s => s.key === activeSubcat);
-      if (sub) {
-        result = brands.filter(b => {
-          const brandText   = b.brand.toLowerCase();
-          const productText = (b.products || []).map(p => p.name).join(' ').toLowerCase();
-          return sub.keywords.some(k => brandText.includes(k) || productText.includes(k));
+      result = brands.map(b => {
+        const matchingProducts = (b.products || []).filter(family => {
+          const variantMatch = (family.variants || []).some(v => v.subcategoryKey === activeSubcat);
+          const sub = subcats.find(s => s.key === activeSubcat);
+          const nameMatch = sub?.keywords?.some(k =>
+            family.name.toLowerCase().includes(k) ||
+            b.brand.toLowerCase().includes(k)
+          );
+          return variantMatch || nameMatch;
         });
-      }
+        return { ...b, products: matchingProducts, productCount: matchingProducts.length };
+      }).filter(b => b.productCount > 0);
     }
 
     if (searchQuery.trim()) {
@@ -274,6 +284,7 @@ export default function Aisle() {
   return (
     <div className="min-h-screen" style={{ background: '#f8fafc', paddingBottom: 100 }}>
 
+      {/* Header */}
       <header className="sticky top-0 z-40 bg-white border-b border-slate-100">
         <div className="px-4 py-3 flex items-center gap-3">
           <button onClick={() => navigate('/NewList')}
@@ -336,6 +347,7 @@ export default function Aisle() {
         )}
       </header>
 
+      {/* Content */}
       <div className="p-3">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-24">
@@ -363,6 +375,7 @@ export default function Aisle() {
         )}
       </div>
 
+      {/* Sticky cart bar */}
       {cartCount > 0 && (
         <div className="fixed bottom-16 left-0 right-0 z-30 px-4">
           <button
