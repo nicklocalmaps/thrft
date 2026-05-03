@@ -17,13 +17,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 const STORAGE_PREFIX = 'thrft_slideshow_dismissed_';
 
 const WILLIE_IMAGES = {
-  pointing_up:    'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/aa6e53bb5_OwlCharacterPointingUp_edited1.png',
-  pointing_right: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/78b941fdc_THRFTowlcharacterpointing_edited.png',
-  waving:         'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/46254b732_THRFTOwlCharacterWavingUp_edited.png',
-  thumbs:         'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/40b265baa_THRFTowlcharacterthumbs_edited.png',
-  both_arms:      'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c1600f160_THRFTowlcharacterbotharms_edited.png',
-  reading:        'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/2580041af_Screenshot232_edited.jpg',
-  main:           'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/b79e5e786_THRFTowlmain_edited.png',
+  pointing_down:  'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/1112f5f36_image1_edited.png',
+  pointing_up:    'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/48a1b8e55_OwlCharacterPointingUp_edited1.png',
+  pointing_left:  'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/3315afd48_OwlCharacterPointingUp_edited.png',
+  both_arms:      'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/d3f9fbead_THRFTowlcharacterbotharms_edited.png',
+  pointing_right: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/64cf1c020_THRFTowlcharacterpointing_edited.png',
+  thumbs:         'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/46ef34dc0_THRFTowlcharacterthumbs_edited.png',
+  waving:         'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/5f17ab451_THRFTOwlCharacterWavingUp_edited.png',
+  main:           'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/192bc5a90_THRFTowlmain_edited.png',
+  reading:        'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/192bc5a90_THRFTowlmain_edited.png',
 };
 
 const ROBOT_IMAGES = {
