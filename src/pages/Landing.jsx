@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Check, Star, Gift, Users, Scan, TrendingDown, Truck, Brain } from 'lucide-react';
+import { Check, Star, Users, Scan, TrendingDown, Truck, Brain } from 'lucide-react';
 import { motion } from 'framer-motion';
 import FreePremiumComparison from '@/components/landing/FreePremiumComparison';
 import HookCards from '@/components/landing/HookCards';
@@ -81,47 +81,18 @@ export default function Landing() {
             </div>
 
             <div className="flex flex-col items-center mb-4">
-              <h1 className="text-5xl sm:text-6xl font-extrabold text-slate-900 leading-tight tracking-tight mb-4">
-                <span className="block">Your grocery list,</span>
-                <span className="block">done in 15 minutes.</span>
+              <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight mb-4">
+                Your grocery list, done in 15 minutes.
               </h1>
               <p className="text-lg sm:text-xl text-slate-600 max-w-xl mx-auto leading-relaxed mb-4">
                 THRFT handles the 80% you buy every week — automatically finding the lowest price across 50+ stores before you leave home.
               </p>
-              <div className="bg-white border border-slate-200 rounded-2xl px-6 py-4 mb-2 text-left inline-block shadow-sm">
-                <p className="text-sm font-bold text-slate-700 mb-3">Always get the lowest price for all 3 ways to shop:</p>
-                <ul className="space-y-2">
-                  <li className="flex items-center gap-2.5 text-sm text-slate-600">
-                    <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-                      <span className="text-xs">🏪</span>
-                    </div>
-                    <span><strong>In-Store</strong> — know the cheapest store before you leave home</span>
-                  </li>
-                  <li className="flex items-center gap-2.5 text-sm text-slate-600">
-                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
-                      <span className="text-xs">🚗</span>
-                    </div>
-                    <span><strong>Curbside Pick-Up</strong> — skip the store, keep the savings</span>
-                  </li>
-                  <li className="flex items-center gap-2.5 text-sm text-slate-600">
-                    <div className="w-5 h-5 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
-                      <span className="text-xs">📦</span>
-                    </div>
-                    <span><strong>Delivery</strong> — compare delivery prices across every store</span>
-                  </li>
-                </ul>
-              </div>
             </div>
 
             {/* Explainer Video */}
             <div className="mt-2 mb-8 max-w-2xl mx-auto w-full">
               <div className="rounded-3xl overflow-hidden shadow-2xl shadow-blue-100 border border-slate-100 aspect-video">
-                <video
-                  className="w-full h-full object-cover"
-                  controls
-                  playsInline
-                  preload="metadata"
-                >
+                <video className="w-full h-full object-cover" controls playsInline preload="metadata">
                   <source src="https://res.cloudinary.com/dqjd0eg05/video/upload/v1777315911/THRFT.Whiteboard.Explainer.Video.2_k3qxqm.mp4" type="video/mp4" />
                 </video>
               </div>
@@ -141,7 +112,6 @@ export default function Landing() {
               </Button>
             </div>
             <p className="text-xs text-slate-400">Takes 60 seconds · Free forever plan included</p>
-
           </motion.div>
 
           {/* Store logos */}
@@ -157,45 +127,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 1b. PRICE OPTIMIZATION ENGINE */}
-      <section className="pt-8 pb-20 px-5 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
-            <div className="flex-1 text-center">
-              <p className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: THRFT_BLUE }}>Live Price Optimization Engine</p>
-              <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-tight mb-5">
-                See exactly how much<br className="hidden sm:block" /> you'll save on every trip
-              </h2>
-              <p className="text-lg text-slate-500 mb-8">
-                THRFT compares 50+ stores in seconds and shows you the cheapest option for your entire list — in-store, pickup, or delivery.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Button onClick={handleCTA} className="h-13 px-8 text-base font-bold rounded-2xl shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
-                  Get started free — no card needed →
-                </Button>
-              </div>
-              <p className="text-xs text-slate-400 mt-3 text-center">No Charge For 7 Days. Cancel Anytime.</p>
-            </div>
-            <div className="flex-1 w-full max-w-md">
-              <PriceOptimizationDemo />
-              <p className="text-2xl font-bold text-slate-700 text-center mt-3">Now Imagine What You'll Save On Your Weekly Shopping List!</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. 4 HOOK CARDS */}
-      <section id="features" className="pt-8 pb-20 px-5 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-extrabold text-slate-900 mb-3">Everything Your Family Needs to Save More</h2>
-            <p className="text-slate-500 text-lg">Four powerful tools. One simple app.</p>
-          </div>
-          <HookCards onCTA={handleCTA} />
-        </div>
-      </section>
-
-      {/* 3. HOW IT WORKS */}
+      {/* HOW IT WORKS */}
       <section className="py-20 px-5 bg-slate-50">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-extrabold text-slate-900 mb-3">Simple as 1-2-3</h2>
@@ -219,46 +151,45 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 4. DELIVERY APPS */}
-      <DeliveryAppsSection onCTA={handleCTA} />
-
-      {/* 5. FREE VS PREMIUM */}
-      <FreePremiumComparison onCTA={handleCTA} />
-
-      {/* 6. SAVINGS EXAMPLE */}
-      <section className="py-20 px-5 bg-emerald-50">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl font-extrabold text-slate-900 mb-3">Real Savings on Every Trip</h2>
-          <p className="text-slate-500 text-lg mb-10">One trip can cover your entire subscription cost.</p>
-          <div className="bg-white rounded-3xl border border-slate-100 shadow-lg p-8 max-w-sm mx-auto text-left">
-            <p className="text-sm text-slate-400 font-medium uppercase tracking-wide mb-4">Example Weekly Cart</p>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center py-2 border-b border-slate-100">
-                <span className="text-slate-600">Whole Foods</span>
-                <span className="font-semibold text-slate-700 line-through">$63.40</span>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-slate-100">
-                <span className="text-slate-600">Kroger</span>
-                <span className="font-semibold text-slate-700 line-through">$54.20</span>
-              </div>
-              <div className="flex justify-between items-center py-2 bg-blue-50 px-3 rounded-xl">
-                <div className="flex items-center gap-2">
-                  <span className="text-slate-800 font-bold">Walmart</span>
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: THRFT_BLUE }}>Best Price</span>
-                </div>
-                <span className="font-extrabold text-blue-600 text-lg">$48.90</span>
-              </div>
-            </div>
-            <div className="mt-4 pt-4 border-t border-slate-100 flex justify-between">
-              <span className="text-emerald-600 font-bold">Your savings</span>
-              <span className="text-emerald-600 font-extrabold text-xl">$14.50</span>
-            </div>
+      {/* HOOK CARDS */}
+      <section id="features" className="pt-8 pb-20 px-5 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-extrabold text-slate-900 mb-3">Everything Your Family Needs to Save More</h2>
+            <p className="text-slate-500 text-lg">Four powerful tools. One simple app.</p>
           </div>
-          <p className="text-emerald-600 font-bold text-lg mt-6">Save $20–$100+ per month. That's groceries, not a subscription. 💚</p>
+          <HookCards onCTA={handleCTA} />
         </div>
       </section>
 
-      {/* 7. SOCIAL PROOF */}
+      {/* PRICE OPTIMIZATION ENGINE */}
+      <section className="pt-8 pb-20 px-5 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            <div className="flex-1 text-center">
+              <p className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: THRFT_BLUE }}>Live Price Optimization Engine</p>
+              <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-tight mb-5">
+                See exactly how much<br className="hidden sm:block" /> you'll save on every trip
+              </h2>
+              <p className="text-lg text-slate-500 mb-8">
+                THRFT compares 50+ stores in seconds and shows you the cheapest option for your entire list — in-store, pickup, or delivery.
+              </p>
+            </div>
+            <div className="flex-1 w-full max-w-md">
+              <PriceOptimizationDemo />
+              <p className="text-2xl font-bold text-slate-700 text-center mt-3">Now Imagine What You'll Save On Your Weekly Shopping List!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* DELIVERY APPS */}
+      <DeliveryAppsSection onCTA={handleCTA} />
+
+      {/* FREE VS PREMIUM */}
+      <FreePremiumComparison onCTA={handleCTA} />
+
+      {/* SOCIAL PROOF */}
       <section className="py-20 px-5 bg-white">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl font-extrabold text-slate-900 mb-3">Families Are Saving Every Week</h2>
@@ -276,26 +207,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 8. REFERRAL */}
-      <section className="py-20 px-5 bg-gradient-to-br from-purple-50 to-blue-50">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="w-14 h-14 rounded-2xl bg-purple-100 flex items-center justify-center mx-auto mb-5">
-            <Gift className="w-7 h-7 text-purple-600" />
-          </div>
-          <h2 className="text-4xl font-extrabold text-slate-900 mb-3">Share THRFT, Earn Free Groceries</h2>
-          <p className="text-slate-500 text-lg mb-8">Invite friends and earn free months, grocery coupons, and bonus rewards.</p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
-            <div className="flex items-center gap-2 bg-white rounded-2xl border border-purple-100 px-5 py-3 text-sm font-medium text-slate-700">🎁 Free months of THRFT</div>
-            <div className="flex items-center gap-2 bg-white rounded-2xl border border-purple-100 px-5 py-3 text-sm font-medium text-slate-700">🏷️ Grocery coupons</div>
-            <div className="flex items-center gap-2 bg-white rounded-2xl border border-purple-100 px-5 py-3 text-sm font-medium text-slate-700">⭐ Bonus rewards</div>
-          </div>
-          <Button onClick={handleCTA} className="h-12 px-8 rounded-xl font-bold text-white" style={{ backgroundColor: '#7c3aed' }}>
-            Start Earning Rewards
-          </Button>
-        </div>
-      </section>
-
-      {/* 9. PRICING */}
+      {/* PRICING */}
       <section id="pricing" className="py-20 px-5 bg-white">
         <div className="max-w-md mx-auto text-center">
           <h2 className="text-4xl font-extrabold text-slate-900 mb-3">Simple, Affordable Pricing</h2>
@@ -311,7 +223,7 @@ export default function Landing() {
               Walmart, Kroger, Amazon Fresh + 50 more stores · up to 5 lists/month · no card, no catch
             </p>
             <Button onClick={handleCTA} className="w-full h-12 rounded-xl text-sm font-bold" style={{ backgroundColor: '#16a34a' }}>
-              Get started free →
+              Get Started Free
             </Button>
           </div>
 
@@ -335,24 +247,24 @@ export default function Landing() {
               ))}
             </ul>
             <Button onClick={handleCTA} className="w-full h-13 rounded-xl text-base font-bold shadow-lg shadow-blue-200" style={{ backgroundColor: THRFT_BLUE }}>
-              Try premium free for 7 days →
+              Start 7-Day Premium Free Trial →
             </Button>
             <p className="text-xs text-slate-400 mt-3">No charge today · Cancel in one tap · No questions asked</p>
           </div>
         </div>
       </section>
 
-      {/* 10. FINAL CTA */}
+      {/* FINAL CTA */}
       <section className="py-24 px-5 bg-gradient-to-br from-blue-600 to-blue-800 text-white text-center">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-5xl font-extrabold mb-4">Stop Guessing. Start Saving.</h2>
           <p className="text-blue-200 text-xl mb-10">Your family's grocery budget — finally under control.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button onClick={handleCTA} className="h-14 px-10 text-base font-bold rounded-2xl bg-white text-blue-700 hover:bg-blue-50 transition-all">
-              Create Free Account →
+              Get Started Free
             </Button>
             <Button onClick={handleCTA} className="h-14 px-10 text-base font-bold rounded-2xl bg-white/10 border-2 border-white/40 text-white hover:bg-white/20 transition-all">
-              Start 7-Day Free Trial
+              Start 7-Day Premium Free Trial →
             </Button>
           </div>
         </div>
