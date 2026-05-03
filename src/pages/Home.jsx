@@ -9,14 +9,10 @@ import ListCard from '@/components/grocery/ListCard';
 import FeatureTour from '@/components/onboarding/FeatureTour';
 import StorePriceDashboard from '@/components/grocery/StorePriceDashboard';
 import ReferralBanner from '@/components/rewards/ReferralBanner';
-import InstructionModal from '@/components/InstructionModal';
+import WillieSlideshow from '@/components/WillieSlideshow';
+import { HOME_SLIDES } from '@/lib/slideData';
 
 const THRFT_LOGO = 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg';
-
-const HOME_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/e782a8866_Home1.jpg', nextTop: '76%', dismissTop: '88%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/466760f21_Home2.jpg', nextTop: '3%', dismissTop: '14%' },
-];
 
 export default function Home() {
   const queryClient = useQueryClient();
@@ -58,7 +54,7 @@ export default function Home() {
     <div>
       {showTour && <FeatureTour onComplete={handleTourComplete} />}
       {showInstructions && (
-        <InstructionModal
+        <WillieSlideshow
           instructionKey="home"
           slides={HOME_SLIDES}
           onClose={() => setShowInstructions(false)}

@@ -1,4 +1,5 @@
-import InstructionModal from '@/components/InstructionModal';
+import WillieSlideshow from '@/components/WillieSlideshow';
+import { COUPONS_SLIDES } from '@/lib/slideData';
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useUserTier from '@/hooks/useUserTier';
@@ -10,10 +11,7 @@ import { Button } from '@/components/ui/button';
 import CouponScanner from '@/components/coupons/CouponScanner';
 import CouponCard from '@/components/coupons/CouponCard';
 
-const COUPONS_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/e304df701_Budget1.jpg', nextTop: '5%', dismissTop: '17%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/6557429b2_Budget2.jpg', nextTop: '76%', dismissTop: '85%' },
-];
+
 
 export default function Coupons() {
   const { isPremium } = useUserTier();
@@ -67,7 +65,7 @@ export default function Coupons() {
   return (
     <div className="max-w-2xl mx-auto">
       {showInstructions && (
-        <InstructionModal
+        <WillieSlideshow
           instructionKey="coupons"
           slides={COUPONS_SLIDES}
           onClose={() => setShowInstructions(false)}

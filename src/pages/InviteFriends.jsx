@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import InstructionModal from '@/components/InstructionModal';
+import WillieSlideshow from '@/components/WillieSlideshow';
+import { INVITEFRIENDS_SLIDES } from '@/lib/slideData';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, Copy, Check, Mail, MessageSquare, Share2, Loader2, Users, Star } from 'lucide-react';
@@ -79,9 +80,9 @@ export default function InviteFriends() {
   return (
     <div className="max-w-lg mx-auto">
       {showInstructions && (
-        <InstructionModal
+        <WillieSlideshow
           instructionKey="invitefriends"
-          slides={INVITE_SLIDES}
+          slides={INVITEFRIENDS_SLIDES}
           onClose={() => setShowInstructions(false)}
         />
       )}

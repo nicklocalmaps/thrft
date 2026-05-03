@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import InstructionModal from '@/components/InstructionModal';
+import WillieSlideshow from '@/components/WillieSlideshow';
+import { STORES_SLIDES } from '@/lib/slideData';
 import { ALL_STORES, COLOR_MAP } from '@/lib/storeConfig';
 import { getStoreLink } from '@/lib/storeLinks';
 import { Button } from '@/components/ui/button';
@@ -9,11 +10,7 @@ import { ExternalLink, Smartphone, Check, CreditCard, Edit2, X, MapPin, RefreshC
 import { motion } from 'framer-motion';
 import ShoppingMethodPicker from '@/components/grocery/ShoppingMethodPicker';
 
-const STORES_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/4f6af4bc3_Stores1.jpg', nextTop: '5%', dismissTop: '15%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c2c0b6303_Stores2.jpg', nextTop: '76%', dismissTop: '86%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/7df75b810_Stores3.jpg', nextTop: '76%', dismissTop: '86%' },
-];
+
 
 export default function StoreAccounts() {
   const [user, setUser] = useState(null);
@@ -96,7 +93,7 @@ export default function StoreAccounts() {
   return (
     <div>
       {showInstructions && (
-        <InstructionModal
+        <WillieSlideshow
           instructionKey="stores"
           slides={STORES_SLIDES}
           onClose={() => setShowInstructions(false)}

@@ -13,15 +13,12 @@ import TemplatesDrawer from '@/components/grocery/TemplatesDrawer';
 import PastListsDrawer from '@/components/grocery/PastListsDrawer';
 import InlineBrowseProducts from '@/components/grocery/InlineBrowseProducts';
 import useUserTier, { FREE_TIER_LIST_LIMIT } from '@/hooks/useUserTier';
-import InstructionModal from '@/components/InstructionModal';
+import WillieSlideshow from '@/components/WillieSlideshow';
+import { NEWLIST_SLIDES } from '@/lib/slideData';
 import FreePlanLimitModal from '@/components/subscription/FreePlanLimitModal';
 import PremiumTrialPrompt from '@/components/subscription/PremiumTrialPrompt';
 
-const NEWLIST_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/3f9b2db30_NewList1.jpg', nextTop: '5%', dismissTop: '20%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/a2a628e97_NewList2.jpg', nextTop: '76%', dismissTop: '85%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/ee504c4f0_NewList3.jpg', nextTop: '76%', dismissTop: '85%' },
-];
+
 
 export default function NewList() {
   const navigate = useNavigate();
@@ -97,7 +94,7 @@ export default function NewList() {
       {showLimitModal && <FreePlanLimitModal onClose={() => setShowLimitModal(false)} />}
       {showTrialPrompt && <PremiumTrialPrompt onClose={handleTrialPromptClose} />}
       {showInstructions && (
-        <InstructionModal
+        <WillieSlideshow
           instructionKey="newlist"
           slides={NEWLIST_SLIDES}
           onClose={() => setShowInstructions(false)}

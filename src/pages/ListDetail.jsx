@@ -1,4 +1,5 @@
-import InstructionModal from '@/components/InstructionModal';
+import WillieSlideshow from '@/components/WillieSlideshow';
+import { LISTDETAIL_SLIDES } from '@/lib/slideData';
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
@@ -25,10 +26,7 @@ const METHOD_LABELS = {
   all: '📦 All Methods',
 };
 
-const LISTDETAIL_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/4f6af4bc3_Stores1.jpg', nextTop: '5%', dismissTop: '15%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c2c0b6303_Stores2.jpg', nextTop: '76%', dismissTop: '86%' },
-];
+
 
 export default function ListDetail() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -335,7 +333,7 @@ Store pricing tendencies:
     <div>
       {showTrialModal && <FreeTrialModal onClose={() => { setShowTrialModal(false); clearTimeout(trialTimerRef.current); }} />}
       {showInstructions && (
-        <InstructionModal
+        <WillieSlideshow
           instructionKey="listdetail"
           slides={LISTDETAIL_SLIDES}
           onClose={() => setShowInstructions(false)}

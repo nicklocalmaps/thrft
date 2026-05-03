@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import InstructionModal from '@/components/InstructionModal';
+import WillieSlideshow from '@/components/WillieSlideshow';
+import { SEARCHPRODUCTS_SLIDES } from '@/lib/slideData';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, Search, Loader2, Plus, ShoppingCart, LayoutGrid } from 'lucide-react';
@@ -68,9 +69,9 @@ export default function SearchProducts() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {showInstructions && (
-        <InstructionModal
+        <WillieSlideshow
           instructionKey="searchproducts"
-          slides={SEARCH_SLIDES}
+          slides={SEARCHPRODUCTS_SLIDES}
           onClose={() => setShowInstructions(false)}
         />
       )}

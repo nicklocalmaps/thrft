@@ -1,4 +1,5 @@
-import InstructionModal from '@/components/InstructionModal';
+import WillieSlideshow from '@/components/WillieSlideshow';
+import { SHOP_SLIDES } from '@/lib/slideData';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
@@ -7,10 +8,6 @@ import ThrftListIcon from '@/components/icons/ThrftListIcon';
 import { useCart } from '@/lib/cartContext';
 
 const THRFT_BLUE = '#4181ed';
-const SHOP_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/3f9b2db30_NewList1.jpg', nextTop: '5%', dismissTop: '20%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/a2a628e97_NewList2.jpg', nextTop: '76%', dismissTop: '85%' },
-];
 
 const AISLES = [
   { key: 'beverages',     label: 'Beverages',    emoji: '🥤' },
@@ -177,7 +174,7 @@ export default function Shop() {
   return (
     <div className="min-h-screen" style={{ background: '#f8fafc', paddingBottom: 80, paddingRight: 76 }}>
       {showInstructions && (
-        <InstructionModal
+        <WillieSlideshow
           instructionKey="shop"
           slides={SHOP_SLIDES}
           onClose={() => setShowInstructions(false)}

@@ -3,20 +3,16 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import useUserTier from '@/hooks/useUserTier';
 import UpgradePrompt from '@/components/subscription/UpgradePrompt';
-import InstructionModal from '@/components/InstructionModal';
-import { Input } from '@/components/ui/input';
+import WillieSlideshow from '@/components/WillieSlideshow';
+import { BUDGET_SLIDES } from '@/lib/slideData';
 import { Loader2, DollarSign, Target, Users, TrendingDown, Lightbulb, AlertTriangle, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { format, startOfMonth, endOfMonth, isWithinInterval, parseISO } from 'date-fns';
+import { Input } from '@/components/ui/input';
 
 const THRFT_BLUE = '#4181ed';
 const AVG_SPEND_PER_PERSON = 300;
-
-const BUDGET_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/e304df701_Budget1.jpg', nextTop: '5%', dismissTop: '17%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/6557429b2_Budget2.jpg', nextTop: '76%', dismissTop: '85%' },
-];
 
 export default function Budget() {
   const { isPremium, loading: tierLoading } = useUserTier();
@@ -150,7 +146,7 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
   return (
     <div className="max-w-2xl mx-auto">
       {showInstructions && (
-        <InstructionModal
+        <WillieSlideshow
           instructionKey="budget"
           slides={BUDGET_SLIDES}
           onClose={() => setShowInstructions(false)}
