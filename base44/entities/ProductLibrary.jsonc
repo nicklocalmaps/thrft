@@ -16,7 +16,21 @@
     },
     "category_key": {
       "type": "string",
-      "description": "Sub-category key within the aisle"
+      "description": "Primary sub-category key within the aisle"
+    },
+    "also_in_categories": {
+      "type": "array",
+      "description": "Product's secondary subcategories within the same aisle",
+      "items": {
+        "type": "string"
+      }
+    },
+    "also_in_aisles": {
+      "type": "array",
+      "description": "Cross-aisle placement \u2014 other aisles this product should surface in",
+      "items": {
+        "type": "string"
+      }
     },
     "size": {
       "type": "string",

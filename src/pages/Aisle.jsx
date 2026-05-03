@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { ChevronLeft, ChevronDown, ChevronUp, Loader2, Plus, Check, X } from 'lucide-react';
@@ -84,9 +84,7 @@ function ProductRow({ product, onAdd, onView, inCart }) {
     >
       <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shrink-0 overflow-hidden border border-slate-100">
         {product.imageUrl && !err ? (
-          <img src={product.imageUrl} alt=""
-            className="w-full h-full object-contain p-1"
-            onError={() => setErr(true)} />
+          <img src={product.imageUrl} alt="" className="w-full h-full object-contain p-1" onError={() => setErr(true)} />
         ) : <span style={{ fontSize: 20 }}>🛒</span>}
       </div>
       <div className="flex-1 min-w-0">
@@ -165,7 +163,11 @@ function BrandCard({ brandData, emoji, onAdd, cartNames, onViewProduct }) {
               key={i}
               product={product}
               onAdd={onAdd}
-              onView={() => onViewProduct(product, { name: product.familyName, imageUrl: product.familyImage || product.imageUrl, variants: allProducts.filter(p => p.familyName === product.familyName) })}
+              onView={() => onViewProduct(product, {
+                name: product.familyName,
+                imageUrl: product.familyImage || product.imageUrl,
+                variants: allProducts.filter(p => p.familyName === product.familyName),
+              })}
               inCart={cartNames.has(product.name)}
             />
           ))}
@@ -191,23 +193,53 @@ export default function Aisle() {
   const navigate = useNavigate();
   const { cartCount, addToCart, cartItems, userZip } = useCart();
 
-  const params  = new URLSearchParams(window.location.search);
-  const key     = params.get('key')   || 'beverages';
-  const label   = decodeURIComponent(params.get('label') || 'Aisle');
-  const emoji   = params.get('emoji') || '🛒';
+  const params = new URLSearchParams(window.location.search);
+  const key    = params.get('key')   || 'beverages';
+  const label  = decodeURIComponent(params.get('label') || 'Aisle');
+  const emoji  = params.get('emoji') || '🛒';
 
   const [brands, setBrands]             = useState([]);
   const [loading, setLoading]           = useState(true);
   const [searchQuery, setSearchQuery]   = useState('');
+  const [searchResults, setSearchResults] = useState(null);
   const [activeSubcat, setActiveSubcat] = useState('all');
+  const searchDebounce                  = useRef(null);
 
   const subcats = SUBCATEGORIES[key] || [];
+
+  // Global search — searches entire library
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    if (searchDebounce.current) clearTimeout(searchDebounce.current);
+    if (!query.trim()) { setSearchResults(null); return; }
+    searchDebounce.current = setTimeout(async () => {
+      setSearchResults([]);
+      try {
+        const res = await base44.functions.invoke('thrftFoodLibrary', {
+          mode: 'search', term: query, zip_code: userZip || '10001', aisle_key: key,
+        });
+        const products = res.data?.products || [];
+        const brandMap = {};
+        for (const p of products) {
+          const brand = p.brand || 'Store Brand';
+          if (!brandMap[brand]) brandMap[brand] = [];
+          brandMap[brand].push({ ...p, imageUrl: p.imageUrl || p.image_url, price: p.price_kroger || p.price_walmart || p.price });
+        }
+        const grouped = Object.entries(brandMap).map(([brand, prods]) => ({
+          brand, imageUrl: prods[0]?.imageUrl || null, productCount: prods.length,
+          products: [{ name: brand, brand, imageUrl: prods[0]?.imageUrl, price: prods[0]?.price, variants: prods }],
+        }));
+        setSearchResults(grouped);
+      } catch { setSearchResults(null); }
+    }, 400);
+  };
 
   useEffect(() => {
     const zip = userZip || '10001';
     setLoading(true);
     setBrands([]);
     setSearchQuery('');
+    setSearchResults(null);
     setActiveSubcat(subcats.length > 0 ? subcats[0].key : 'all');
 
     base44.functions.invoke('thrftFoodLibrary', {
@@ -245,13 +277,21 @@ export default function Aisle() {
     navigate('/Product');
   };
 
+  // When searching, show global search results; otherwise filter browsed brands
+  const displayBrands = searchQuery.trim() && searchResults !== null
+    ? searchResults
+    : null;
+
   const filteredBrands = useMemo(() => {
     let result = brands;
 
+    // Layer 1: multi-subcategory filter — a product can appear in multiple tabs
     if (activeSubcat !== 'all' && subcats.length > 0) {
       result = brands.map(b => {
         const matchingProducts = (b.products || []).filter(family => {
-          const variantMatch = (family.variants || []).some(v => v.subcategoryKey === activeSubcat);
+          const variantMatch = (family.variants || []).some(v =>
+            (v.subcategoryKeys || []).includes(activeSubcat)
+          );
           const sub = subcats.find(s => s.key === activeSubcat);
           const nameMatch = sub?.keywords?.some(k =>
             family.name.toLowerCase().includes(k) ||
@@ -263,23 +303,11 @@ export default function Aisle() {
       }).filter(b => b.productCount > 0);
     }
 
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      result = result.map(b => ({
-        ...b,
-        products: (b.products || []).filter(p =>
-          p.name.toLowerCase().includes(q) || b.brand.toLowerCase().includes(q)
-        ),
-        productCount: (b.products || []).filter(p =>
-          p.name.toLowerCase().includes(q) || b.brand.toLowerCase().includes(q)
-        ).length,
-      })).filter(b => b.productCount > 0 || b.brand.toLowerCase().includes(q));
-    }
-
     return result;
-  }, [brands, activeSubcat, searchQuery, subcats]);
+  }, [brands, activeSubcat, subcats]);
 
   const totalProducts = brands.reduce((s, b) => s + b.productCount, 0);
+  const shownBrands = displayBrands ?? filteredBrands;
 
   return (
     <div className="min-h-screen" style={{ background: '#f8fafc', paddingBottom: 100 }}>
@@ -316,22 +344,24 @@ export default function Aisle() {
               type="text"
               placeholder={`Search in ${label}…`}
               value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
+              onChange={e => handleSearch(e.target.value)}
               className="flex-1 text-sm bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none"
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery('')}><X className="w-3.5 h-3.5 text-slate-400" /></button>
+              <button onClick={() => { setSearchQuery(''); setSearchResults(null); }}>
+                <X className="w-3.5 h-3.5 text-slate-400" />
+              </button>
             )}
           </div>
         </div>
 
         {/* Subcategory tabs */}
-        {subcats.length > 0 && (
+        {subcats.length > 0 && !searchQuery && (
           <div className="flex gap-2 overflow-x-auto px-4 pb-3" style={{ scrollbarWidth: 'none' }}>
             {subcats.map(sub => (
               <button
                 key={sub.key}
-                onClick={() => { setActiveSubcat(sub.key); setSearchQuery(''); }}
+                onClick={() => setActiveSubcat(sub.key)}
                 className="flex items-center gap-1.5 shrink-0 px-3 py-2 rounded-full text-xs font-semibold transition-all border"
                 style={{
                   background:  activeSubcat === sub.key ? THRFT_BLUE : '#fff',
@@ -354,15 +384,15 @@ export default function Aisle() {
             <Loader2 className="w-8 h-8 text-blue-400 animate-spin mb-3" />
             <p className="text-sm text-slate-500">Loading {label}…</p>
           </div>
-        ) : filteredBrands.length === 0 ? (
+        ) : shownBrands.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-slate-500 text-sm">No products found</p>
             {searchQuery && (
-              <button onClick={() => setSearchQuery('')} className="text-blue-500 text-sm mt-2 underline">Clear search</button>
+              <button onClick={() => { setSearchQuery(''); setSearchResults(null); }} className="text-blue-500 text-sm mt-2 underline">Clear search</button>
             )}
           </div>
         ) : (
-          filteredBrands.map(brandData => (
+          shownBrands.map(brandData => (
             <BrandCard
               key={brandData.brand}
               brandData={brandData}
