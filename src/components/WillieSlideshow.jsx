@@ -1,37 +1,152 @@
+/**
+ * WillieSlideshow
+ *
+ * Replaces InstructionModal entirely.
+ * - Real visible Next and Don't Show Again buttons
+ * - Blue highlight ring points to the relevant UI element
+ * - Willie (warm pages) or Robot (technical pages) character
+ * - Character position adapts: bottom (pointing up) or middle (pointing down)
+ * - localStorage "Don't Show Again" per instructionKey
+ * - Slide dot progress indicator
+ * - Fully responsive — no hardcoded tap zones
+ */
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronRight } from 'lucide-react';
 
-const STORAGE_PREFIX = 'thrft_instructions_dismissed_';
+const STORAGE_PREFIX = 'thrft_slideshow_dismissed_';
 
-// Willie the Owl character images
-export const WILLIE_IMAGES = {
-  willie_pointing_down:  'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/47044ac08_image1_edited.png',
-  willie_pointing_up:    'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/aa6e53bb5_OwlCharacterPointingUp_edited1.png',
-  willie_pointing_left:  'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/2b4570c24_OwlCharacterPointingUp_edited.png',
-  willie_both_arms:      'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c1600f160_THRFTowlcharacterbotharms_edited.png',
-  willie_pointing_right: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/78b941fdc_THRFTowlcharacterpointing_edited.png',
-  willie_thumbs:         'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/40b265baa_THRFTowlcharacterthumbs_edited.png',
-  willie_waving:         'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/46254b732_THRFTOwlCharacterWavingUp_edited.png',
-  willie_main:           'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/b79e5e786_THRFTowlmain_edited.png',
-  willie_reading:        'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/2580041af_Screenshot232_edited.jpg',
-  thrft_robot:           'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/af3825e2a_image8.jpg',
-  thrft_robot_bag:       'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/7fe6fecc0_image7.jpg',
+const WILLIE_IMAGES = {
+  pointing_up:    'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/aa6e53bb5_OwlCharacterPointingUp_edited1.png',
+  pointing_right: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/78b941fdc_THRFTowlcharacterpointing_edited.png',
+  waving:         'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/46254b732_THRFTOwlCharacterWavingUp_edited.png',
+  thumbs:         'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/40b265baa_THRFTowlcharacterthumbs_edited.png',
+  both_arms:      'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c1600f160_THRFTowlcharacterbotharms_edited.png',
+  reading:        'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/2580041af_Screenshot232_edited.jpg',
+  main:           'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/b79e5e786_THRFTowlmain_edited.png',
 };
 
-/**
- * WillieSlideshow — replaces InstructionModal
- *
- * Each slide:
- * {
- *   willie: keyof WILLIE_IMAGES,        // which character pose
- *   title: string,
- *   body: string,
- *   williePosition?: 'left' | 'right',  // default 'right'
- *   accent?: string,                    // tailwind bg class, default 'bg-blue-500'
- * }
- */
-export default function WillieSlideshow({ slides, instructionKey, onClose }) {
+const ROBOT_IMAGES = {
+  robot:     'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/af3825e2a_image8.jpg',
+  robot_bag: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/7fe6fecc0_image7.jpg',
+};
+
+const ALL_IMAGES = { ...WILLIE_IMAGES, ...ROBOT_IMAGES };
+
+function Arrow({ direction }) {
+  if (direction === 'none' || !direction) return null;
+  const isUp = direction === 'up';
+  return (
+    <svg width="24" height="40" viewBox="0 0 24 40" style={{ display: 'block' }}>
+      <defs>
+        <marker id="ah" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+          <polygon
+            points={isUp ? '0,10 5,0 10,10' : '0,0 5,10 10,0'}
+            fill="#4181ed"
+          />
+        </marker>
+      </defs>
+      <line
+        x1="12" y1={isUp ? 36 : 4}
+        x2="12" y2={isUp ? 8 : 32}
+        stroke="#4181ed"
+        strokeWidth="2.5"
+        markerEnd="url(#ah)"
+      />
+    </svg>
+  );
+}
+
+function HighlightRing({ top, height = '52px' }) {
+  if (!top) return null;
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top,
+        left: 12,
+        right: 12,
+        height,
+        borderRadius: 12,
+        border: '2.5px solid #4181ed',
+        background: 'rgba(65,129,237,0.1)',
+        boxShadow: '0 0 0 4px rgba(65,129,237,0.15)',
+        zIndex: 11,
+        pointerEvents: 'none',
+      }}
+    />
+  );
+}
+
+function CharacterCard({ slide, onNext, onDismiss, isLast }) {
+  const imgSrc = ALL_IMAGES[slide.pose] || WILLIE_IMAGES.main;
+  const name = slide.character === 'robot'
+    ? 'THRFT Robot'
+    : 'Willie the Wise Savings Owl';
+
+  const isBottom = slide.characterPosition !== 'center';
+  const arrowDir = slide.arrowDirection || 'none';
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: 10,
+        right: 10,
+        bottom: isBottom ? 80 : undefined,
+        top: !isBottom ? '50%' : undefined,
+        transform: !isBottom ? 'translateY(-50%)' : undefined,
+        zIndex: 20,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 8,
+      }}
+    >
+      {arrowDir === 'up' && (
+        <div style={{ alignSelf: 'center' }}>
+          <Arrow direction="up" />
+        </div>
+      )}
+
+      <div
+        style={{
+          background: '#fff',
+          borderRadius: 20,
+          padding: '14px 14px 14px 12px',
+          display: 'flex',
+          gap: 12,
+          alignItems: 'flex-start',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.22)',
+          width: '100%',
+        }}
+      >
+        <img
+          src={imgSrc}
+          alt={name}
+          style={{ width: 76, height: 76, objectFit: 'contain', flexShrink: 0 }}
+          onError={e => { e.target.style.opacity = '0.3'; }}
+        />
+        <div style={{ flex: 1 }}>
+          <p style={{ fontSize: 10, fontWeight: 500, color: '#4181ed', marginBottom: 4 }}>
+            {name}
+          </p>
+          <p style={{ fontSize: 13, color: '#0f172a', lineHeight: 1.55 }}>
+            {slide.message}
+          </p>
+        </div>
+      </div>
+
+      {arrowDir === 'down' && (
+        <div style={{ alignSelf: 'center' }}>
+          <Arrow direction="down" />
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function WillieSlideshow({ slides = [], instructionKey, onClose }) {
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState(0);
 
@@ -41,110 +156,132 @@ export default function WillieSlideshow({ slides, instructionKey, onClose }) {
     if (!dismissed) setVisible(true);
   }, [instructionKey]);
 
-  const handleDismiss = () => {
-    if (instructionKey) localStorage.setItem(`${STORAGE_PREFIX}${instructionKey}`, 'true');
+  const dismiss = () => {
+    if (instructionKey) {
+      localStorage.setItem(`${STORAGE_PREFIX}${instructionKey}`, 'true');
+    }
     setVisible(false);
     onClose?.();
   };
 
-  const handleNext = () => {
+  const next = () => {
     if (current < slides.length - 1) {
       setCurrent(c => c + 1);
     } else {
-      handleDismiss();
+      dismiss();
     }
   };
 
-  if (!visible || !slides?.length) return null;
+  if (!visible || !slides.length) return null;
 
   const slide = slides[current];
-  const willieImg = WILLIE_IMAGES[slide.willie] || WILLIE_IMAGES.willie_main;
-  const isLeft = slide.williePosition === 'left';
   const isLast = current === slides.length - 1;
 
   return (
-    <div
-      className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center"
-      style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(3px)' }}
-      onClick={handleDismiss}
-    >
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={current}
-          initial={{ opacity: 0, y: 40, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -20, scale: 0.96 }}
-          transition={{ type: 'spring', damping: 26, stiffness: 300 }}
-          onClick={e => e.stopPropagation()}
-          className="relative w-full max-w-sm mx-4 mb-6 sm:mb-0 bg-white rounded-3xl overflow-visible shadow-2xl"
-        >
-          {/* Close button */}
-          <button
-            onClick={handleDismiss}
-            className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors"
-          >
-            <X className="w-4 h-4 text-slate-500" />
-          </button>
+    <AnimatePresence>
+      <motion.div
+        key="slideshow-overlay"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          background: 'rgba(0,0,0,0.6)',
+        }}
+      >
+        <HighlightRing top={slide.highlightTop} height={slide.highlightHeight} />
 
-          {/* Colored top bar */}
-          <div className={`h-2 w-full rounded-t-3xl ${slide.accent || 'bg-blue-500'}`} />
-
-          {/* Willie character — floats above the card */}
-          <div
-            className={`absolute -top-24 ${isLeft ? 'left-4' : 'right-4'} w-32 h-32 pointer-events-none`}
-            style={{ zIndex: 10 }}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25 }}
+            style={{ position: 'absolute', inset: 0 }}
           >
-            <img
-              src={willieImg}
-              alt="Willie"
-              className="w-full h-full object-contain drop-shadow-xl"
-              style={{ filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.18))' }}
+            <CharacterCard
+              slide={slide}
+              onNext={next}
+              onDismiss={dismiss}
+              isLast={isLast}
             />
-          </div>
+          </motion.div>
+        </AnimatePresence>
 
-          {/* Content */}
-          <div className={`px-6 pt-6 pb-5 ${isLeft ? 'pl-36' : 'pr-36'} min-h-[140px] flex flex-col justify-center`}>
-            <p className="text-xs font-bold uppercase tracking-widest text-blue-500 mb-1">
-              Tip {current + 1} of {slides.length}
-            </p>
-            <h2 className="text-lg font-extrabold text-slate-900 leading-tight mb-2">
-              {slide.title}
-            </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              {slide.body}
-            </p>
+        {slides.length > 1 && (
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 128,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              gap: 6,
+              zIndex: 21,
+            }}
+          >
+            {slides.map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  width: i === current ? 18 : 7,
+                  height: 7,
+                  borderRadius: 4,
+                  background: i === current ? '#fff' : 'rgba(255,255,255,0.4)',
+                  transition: 'all 0.25s',
+                }}
+              />
+            ))}
           </div>
+        )}
 
-          {/* Progress dots + button */}
-          <div className="px-6 pb-6 flex items-center justify-between gap-4">
-            <div className="flex gap-1.5">
-              {slides.map((_, i) => (
-                <div
-                  key={i}
-                  className={`rounded-full transition-all ${i === current ? 'w-4 h-2 bg-blue-500' : 'w-2 h-2 bg-slate-200'}`}
-                />
-              ))}
-            </div>
-            <button
-              onClick={handleNext}
-              className={`flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all active:scale-95 ${slide.accent || 'bg-blue-500'} hover:opacity-90`}
-            >
-              {isLast ? 'Got it!' : 'Next'}
-              {!isLast && <ChevronRight className="w-4 h-4" />}
-            </button>
-          </div>
-
-          {/* Skip link */}
-          {!isLast && (
-            <button
-              onClick={handleDismiss}
-              className="w-full text-center text-xs text-slate-400 hover:text-slate-600 pb-4 transition-colors"
-            >
-              Skip tutorial
-            </button>
-          )}
-        </motion.div>
-      </AnimatePresence>
-    </div>
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 24,
+            left: 12,
+            right: 12,
+            display: 'flex',
+            gap: 10,
+            zIndex: 22,
+          }}
+        >
+          <button
+            onClick={next}
+            style={{
+              flex: 1,
+              background: '#4181ed',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 14,
+              padding: '13px 0',
+              fontSize: 14,
+              fontWeight: 500,
+              cursor: 'pointer',
+            }}
+          >
+            {isLast ? "Let's go!" : 'Next ›'}
+          </button>
+          <button
+            onClick={dismiss}
+            style={{
+              flex: 1,
+              background: 'rgba(255,255,255,0.15)',
+              color: '#fff',
+              border: '1px solid rgba(255,255,255,0.35)',
+              borderRadius: 14,
+              padding: '13px 0',
+              fontSize: 13,
+              cursor: 'pointer',
+            }}
+          >
+            Don't show again
+          </button>
+        </div>
+      </motion.div>
+    </AnimatePresence>
   );
 }

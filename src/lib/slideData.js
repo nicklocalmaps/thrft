@@ -1,196 +1,286 @@
-/**
- * slideData.js — WillieSlideshow slide definitions for every page.
- *
- * Each slide shape:
- * {
- *   willie: string,             // key from WILLIE_IMAGES in WillieSlideshow.jsx
- *   title: string,
- *   body: string,
- *   williePosition?: 'left' | 'right',   // default 'right'
- *   accent?: string,                      // tailwind bg class e.g. 'bg-emerald-500'
- * }
- */
-
-export const HOME_SLIDES = [
-  {
-    willie: 'willie_waving',
-    title: 'Welcome to THRFT!',
-    body: 'Your grocery lists live here. Tap "New List" to start comparing prices across 50+ stores.',
-    williePosition: 'right',
-    accent: 'bg-blue-500',
-  },
-  {
-    willie: 'willie_pointing_right',
-    title: 'See Your Savings',
-    body: 'After comparing prices, the dashboard shows you exactly how much you saved vs. the priciest store.',
-    williePosition: 'left',
-    accent: 'bg-emerald-500',
-  },
-];
-
-export const NEWLIST_SLIDES = [
-  {
-    willie: 'willie_pointing_up',
-    title: 'Name Your List',
-    body: 'Give it a name like "Weekly Groceries" or "BBQ Party", then add items below.',
-    williePosition: 'right',
-    accent: 'bg-blue-500',
-  },
-  {
-    willie: 'willie_reading',
-    title: 'Be Specific!',
-    body: 'The more specific you are — "Minute Maid OJ 52oz" vs just "orange juice" — the more accurate the prices.',
-    williePosition: 'left',
-    accent: 'bg-amber-500',
-  },
-  {
-    willie: 'willie_thumbs',
-    title: 'Compare & Save',
-    body: 'Hit "Save & Compare Prices" and THRFT will search every store for the best deal on your entire list.',
-    williePosition: 'right',
-    accent: 'bg-emerald-500',
-  },
-];
-
-export const LISTDETAIL_SLIDES = [
-  {
-    willie: 'willie_pointing_right',
-    title: 'Your List is Ready!',
-    body: 'Add items, pick your stores, then tap "Compare Prices" to find the cheapest place to shop.',
-    williePosition: 'left',
-    accent: 'bg-blue-500',
-  },
-  {
-    willie: 'willie_thumbs',
-    title: 'Shop Mode',
-    body: 'Heading to the store? Tap "Shop Mode" to check off items as you grab them from the shelves.',
-    williePosition: 'right',
-    accent: 'bg-emerald-500',
-  },
-];
-
-export const SHOP_SLIDES = [
-  {
-    willie: 'willie_pointing_up',
-    title: 'Browse the Store',
-    body: 'Search for products or tap any aisle on the right to browse by category — just like a real store!',
-    williePosition: 'right',
-    accent: 'bg-blue-500',
-  },
-  {
-    willie: 'willie_both_arms',
-    title: 'Add to Your Cart',
-    body: 'Tap any product to add it to your cart, then compare prices across all stores when you\'re done.',
-    williePosition: 'left',
-    accent: 'bg-emerald-500',
-  },
-];
-
-export const BUDGET_SLIDES = [
-  {
-    willie: 'willie_reading',
-    title: 'Set Your Budget',
-    body: 'Enter a monthly grocery budget and a per-trip target. THRFT will track your spending automatically.',
-    williePosition: 'right',
-    accent: 'bg-blue-500',
-  },
-  {
-    willie: 'willie_thumbs',
-    title: 'AI Smart Tips',
-    body: 'Tap "Get My Tips" for personalized savings advice based on your real shopping history.',
-    williePosition: 'left',
-    accent: 'bg-amber-500',
-  },
-];
-
-export const COUPONS_SLIDES = [
-  {
-    willie: 'willie_pointing_up',
-    title: 'Scan Paper Coupons',
-    body: 'Photograph any paper coupon and AI will read the details — discount, expiry, and product name.',
-    williePosition: 'right',
-    accent: 'bg-blue-500',
-  },
-  {
-    willie: 'willie_pointing_right',
-    title: 'Add to Your List',
-    body: 'Tap "Add to List" on any coupon to automatically add the matching product to your grocery list.',
-    williePosition: 'left',
-    accent: 'bg-emerald-500',
-  },
-];
+// ─── ONBOARDING ──────────────────────────────────────────────────────────────
 
 export const ONBOARDING_SLIDES = [
   {
-    willie: 'willie_waving',
-    title: 'Hi, I\'m Willie! 🦉',
-    body: 'I\'m here to help you save money on groceries. Let\'s find the stores near you to get started!',
-    williePosition: 'right',
-    accent: 'bg-blue-500',
+    character:         'willie',
+    pose:              'waving',
+    message:           "Hi! I'm Willie the Wise Savings Owl — I'll help you save money every time you shop! Let me show you around.",
+    characterPosition: 'center',
+    arrowDirection:    'none',
   },
   {
-    willie: 'willie_thumbs',
-    title: 'You\'re Almost In!',
-    body: 'Select the stores you shop at — they\'ll be pre-selected every time you compare prices.',
-    williePosition: 'left',
-    accent: 'bg-emerald-500',
+    character:         'willie',
+    pose:              'pointing_up',
+    message:           "Start by entering your zip code so I can find the best stores near you!",
+    characterPosition: 'bottom',
+    arrowDirection:    'up',
+    highlightTop:      '180px',
+    highlightHeight:   '56px',
+  },
+  {
+    character:         'willie',
+    pose:              'thumbs',
+    message:           "You're all set! Now let's build your first grocery list and find you the best prices.",
+    characterPosition: 'center',
+    arrowDirection:    'none',
   },
 ];
+
+// ─── HOME ─────────────────────────────────────────────────────────────────────
+
+export const HOME_SLIDES = [
+  {
+    character:         'willie',
+    pose:              'both_arms',
+    message:           "Welcome to THRFT! Your saved grocery lists live here. Tap any list to compare prices.",
+    characterPosition: 'center',
+    arrowDirection:    'none',
+  },
+  {
+    character:         'willie',
+    pose:              'pointing_up',
+    message:           "Tap the + button at the top to create a new grocery list and start saving!",
+    characterPosition: 'bottom',
+    arrowDirection:    'up',
+    highlightTop:      '12px',
+    highlightHeight:   '44px',
+  },
+];
+
+// ─── SHOP ─────────────────────────────────────────────────────────────────────
+
+export const SHOP_SLIDES = [
+  {
+    character:         'willie',
+    pose:              'waving',
+    message:           "Welcome to the THRFT store! Browse by aisle or search for exactly what you need.",
+    characterPosition: 'center',
+    arrowDirection:    'none',
+  },
+  {
+    character:         'willie',
+    pose:              'pointing_up',
+    message:           "Tap any aisle tab to browse real products from Kroger near you — with photos and prices!",
+    characterPosition: 'bottom',
+    arrowDirection:    'up',
+    highlightTop:      '60px',
+    highlightHeight:   '72px',
+  },
+  {
+    character:         'willie',
+    pose:              'pointing_up',
+    message:           "Or search for anything up here — type 'Pepsi' and I'll find it across every brand and size!",
+    characterPosition: 'bottom',
+    arrowDirection:    'up',
+    highlightTop:      '8px',
+    highlightHeight:   '48px',
+  },
+];
+
+// ─── AISLE ────────────────────────────────────────────────────────────────────
+
+export const AISLE_SLIDES = [
+  {
+    character:         'willie',
+    pose:              'pointing_up',
+    message:           "Tap a brand to expand it and see all their products. Tap any product to view sizes and add to your list!",
+    characterPosition: 'bottom',
+    arrowDirection:    'up',
+    highlightTop:      '108px',
+    highlightHeight:   '60px',
+  },
+  {
+    character:         'willie',
+    pose:              'thumbs',
+    message:           "When you're done adding items, tap 'View list' at the bottom to compare prices across 50+ stores!",
+    characterPosition: 'center',
+    arrowDirection:    'down',
+  },
+];
+
+// ─── PRODUCT PAGE ─────────────────────────────────────────────────────────────
+
+export const PRODUCT_SLIDES = [
+  {
+    character:         'willie',
+    pose:              'reading',
+    message:           "Here's everything about this product! Tap a size below to pick the right one for your family.",
+    characterPosition: 'bottom',
+    arrowDirection:    'up',
+    highlightTop:      '280px',
+    highlightHeight:   '120px',
+  },
+  {
+    character:         'willie',
+    pose:              'pointing_right',
+    message:           "Check out 'You might also like' — I find similar products and brands so you never miss a better deal!",
+    characterPosition: 'bottom',
+    arrowDirection:    'none',
+  },
+];
+
+// ─── CART ─────────────────────────────────────────────────────────────────────
+
+export const CART_SLIDES = [
+  {
+    character:         'willie',
+    pose:              'pointing_up',
+    message:           "Here's your grocery list! Add more items or adjust quantities before we find the best price.",
+    characterPosition: 'bottom',
+    arrowDirection:    'up',
+    highlightTop:      '60px',
+    highlightHeight:   '200px',
+  },
+  {
+    character:         'willie',
+    pose:              'both_arms',
+    message:           "Tap 'Compare prices now' and I'll check 50+ stores to find your lowest total. Ready to save?",
+    characterPosition: 'center',
+    arrowDirection:    'down',
+  },
+];
+
+// ─── LIST DETAIL ──────────────────────────────────────────────────────────────
+
+export const LISTDETAIL_SLIDES = [
+  {
+    character:         'robot',
+    pose:              'robot',
+    message:           "I've compared your list across 50+ stores! The green card at the top is your best price — that's your winner.",
+    characterPosition: 'bottom',
+    arrowDirection:    'up',
+    highlightTop:      '100px',
+    highlightHeight:   '80px',
+  },
+  {
+    character:         'robot',
+    pose:              'robot_bag',
+    message:           "Tap any store card to see a full price breakdown — or tap 'Shop Now' to order pickup or delivery!",
+    characterPosition: 'center',
+    arrowDirection:    'none',
+  },
+];
+
+// ─── NEWLIST ──────────────────────────────────────────────────────────────────
+
+export const NEWLIST_SLIDES = [
+  {
+    character:         'willie',
+    pose:              'both_arms',
+    message:           "Let's build your grocery list! Type each item you need and I'll find the best price at every store near you.",
+    characterPosition: 'center',
+    arrowDirection:    'none',
+  },
+  {
+    character:         'willie',
+    pose:              'pointing_up',
+    message:           "Be specific — 'Breyers Vanilla Ice Cream' or '2% Milk' helps me find exact prices for you!",
+    characterPosition: 'bottom',
+    arrowDirection:    'up',
+    highlightTop:      '56px',
+    highlightHeight:   '52px',
+  },
+];
+
+// ─── BUDGET ───────────────────────────────────────────────────────────────────
+
+export const BUDGET_SLIDES = [
+  {
+    character:         'willie',
+    pose:              'reading',
+    message:           "Set your weekly grocery budget here and I'll track every dollar. Staying on budget = more savings!",
+    characterPosition: 'bottom',
+    arrowDirection:    'up',
+    highlightTop:      '80px',
+    highlightHeight:   '80px',
+  },
+  {
+    character:         'willie',
+    pose:              'thumbs',
+    message:           "Your budget progress updates automatically every time you compare a list. Watch those savings add up!",
+    characterPosition: 'center',
+    arrowDirection:    'none',
+  },
+];
+
+// ─── COUPONS ──────────────────────────────────────────────────────────────────
+
+export const COUPONS_SLIDES = [
+  {
+    character:         'willie',
+    pose:              'waving',
+    message:           "Scan any paper coupon with your camera and I'll pull out all the details automatically — no typing needed!",
+    characterPosition: 'center',
+    arrowDirection:    'none',
+  },
+  {
+    character:         'willie',
+    pose:              'pointing_up',
+    message:           "Tap the camera button to scan a coupon. I'll match it to your grocery list so you never miss savings!",
+    characterPosition: 'bottom',
+    arrowDirection:    'up',
+    highlightTop:      '60px',
+    highlightHeight:   '56px',
+  },
+];
+
+// ─── STORES ───────────────────────────────────────────────────────────────────
 
 export const STORES_SLIDES = [
   {
-    willie: 'willie_pointing_right',
-    title: 'Your Store Accounts',
-    body: 'Save your loyalty card numbers here so you never forget them at checkout.',
-    williePosition: 'left',
-    accent: 'bg-blue-500',
+    character:         'robot',
+    pose:              'robot',
+    message:           "These are your selected stores — I'll always compare prices across all of them whenever you run a comparison!",
+    characterPosition: 'center',
+    arrowDirection:    'none',
   },
   {
-    willie: 'willie_reading',
-    title: 'Change Your Zip',
-    body: 'Moved or visiting somewhere new? Update your zip code to find stores in a different area.',
-    williePosition: 'right',
-    accent: 'bg-amber-500',
-  },
-  {
-    willie: 'willie_thumbs',
-    title: 'Set Shopping Preference',
-    body: 'Choose whether you prefer in-store, curbside pickup, or delivery — applied to all new lists.',
-    williePosition: 'left',
-    accent: 'bg-emerald-500',
+    character:         'robot',
+    pose:              'robot_bag',
+    message:           "Tap the + button to add more stores. The more stores I compare, the more money you save!",
+    characterPosition: 'bottom',
+    arrowDirection:    'up',
+    highlightTop:      '56px',
+    highlightHeight:   '52px',
   },
 ];
+
+// ─── SEARCH PRODUCTS ──────────────────────────────────────────────────────────
 
 export const SEARCHPRODUCTS_SLIDES = [
   {
-    willie: 'willie_pointing_up',
-    title: 'Search Products',
-    body: 'Type any product name or brand to search our database. Use Browse to explore by category.',
-    williePosition: 'right',
-    accent: 'bg-blue-500',
+    character:         'willie',
+    pose:              'pointing_up',
+    message:           "Search for any product here — type a brand name, item, or category and I'll find it instantly!",
+    characterPosition: 'bottom',
+    arrowDirection:    'up',
+    highlightTop:      '8px',
+    highlightHeight:   '52px',
   },
   {
-    willie: 'willie_pointing_right',
-    title: 'Add to Your List',
-    body: 'Found what you need? Tap "Add" and it goes straight to your grocery list — ready to compare!',
-    williePosition: 'left',
-    accent: 'bg-emerald-500',
+    character:         'willie',
+    pose:              'thumbs',
+    message:           "Tap any result to add it to your list. Build your full list here, then compare prices all at once!",
+    characterPosition: 'center',
+    arrowDirection:    'none',
   },
 ];
 
+// ─── INVITE FRIENDS ───────────────────────────────────────────────────────────
+
 export const INVITEFRIENDS_SLIDES = [
   {
-    willie: 'willie_both_arms',
-    title: 'Invite Friends & Earn!',
-    body: 'Share your referral link and earn points every time a friend signs up or subscribes.',
-    williePosition: 'right',
-    accent: 'bg-blue-500',
+    character:         'willie',
+    pose:              'both_arms',
+    message:           "Share THRFT with friends and earn rewards! Every friend who signs up gets you closer to free months.",
+    characterPosition: 'center',
+    arrowDirection:    'none',
   },
   {
-    willie: 'willie_thumbs',
-    title: 'Unlock Free Months',
-    body: '5 paid referrals = THRFT free forever! Check your progress in the Rewards section.',
-    williePosition: 'left',
-    accent: 'bg-amber-500',
+    character:         'willie',
+    pose:              'thumbs',
+    message:           "Refer 10 friends who subscribe and you get lifetime access — FREE forever! Start sharing now.",
+    characterPosition: 'center',
+    arrowDirection:    'none',
   },
 ];
