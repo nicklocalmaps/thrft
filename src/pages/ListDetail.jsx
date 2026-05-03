@@ -1,11 +1,11 @@
-import ThrftListIcon from '@/components/icons/ThrftListIcon';
+import InstructionModal from '@/components/InstructionModal';
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, RefreshCw, Loader2, Store, ChevronDown, ChevronUp, CheckSquare } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Loader2, ShoppingCart, Store, ChevronDown, ChevronUp, CheckSquare } from 'lucide-react';
 import AddItemForm from '@/components/grocery/AddItemForm';
 import GroceryItemRow from '@/components/grocery/GroceryItemRow';
 import StoreCard from '@/components/grocery/StoreCard';
@@ -25,6 +25,11 @@ const METHOD_LABELS = {
   all: '📦 All Methods',
 };
 
+const LISTDETAIL_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/4f6af4bc3_Stores1.jpg', nextTop: '5%', dismissTop: '15%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c2c0b6303_Stores2.jpg', nextTop: '76%', dismissTop: '86%' },
+];
+
 export default function ListDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const listId = urlParams.get('id');
@@ -34,20 +39,21 @@ export default function ListDetail() {
   const [comparing, setComparing] = useState(false);
   const [localItems, setLocalItems] = useState(null);
   const [showTrialModal, setShowTrialModal] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(() => !localStorage.getItem('thrft_instructions_dismissed_listdetail'));
   const trialTimerRef = useRef(null);
 
   useEffect(() => {
     const addItemParam = urlParams.get('addItem');
     if (addItemParam) {
       const item = JSON.parse(decodeURIComponent(addItemParam));
-      const newUrl = `/ListDetail?id=${listId}`;
-      window.history.replaceState({}, '', newUrl);
+      window.history.replaceState({}, '', `/ListDetail?id=${listId}`);
       const doAdd = async () => {
-        const lists = await base44.entities.GroceryList.filter({ id: listId });
-        const currentItems = lists[0]?.items || [];
+        const lists = await import('@/api/base44Client').then(m => m.base44.entities.GroceryList.filter({ id: listId }));
+        const currentList = lists[0];
+        const currentItems = currentList?.items || [];
         const newItems = [...currentItems, item];
         setLocalItems(newItems);
-        await base44.entities.GroceryList.update(listId, { items: newItems });
+        await import('@/api/base44Client').then(m => m.base44.entities.GroceryList.update(listId, { items: newItems }));
         queryClient.invalidateQueries({ queryKey: ['grocery-list', listId] });
       };
       doAdd();
@@ -80,7 +86,7 @@ export default function ListDetail() {
   const { data: list, isLoading } = useQuery({
     queryKey: ['grocery-list', listId],
     queryFn: () => base44.entities.GroceryList.filter({ id: listId }),
-    select: (data) => data[0],
+    select: data => data[0],
     enabled: !!listId,
   });
 
@@ -136,7 +142,7 @@ export default function ListDetail() {
     const krogerStores = effectiveStores.filter(k => KROGER_FAMILY.includes(k));
     const aiStores = effectiveStores.filter(k => !KROGER_FAMILY.includes(k));
 
-    const storeSchema = (withPickup, withDelivery) => ({
+    const storeSchema = (includePickup, includeDelivery) => ({
       type: 'object',
       properties: {
         items: {
@@ -153,8 +159,8 @@ export default function ListDetail() {
           },
         },
         instore_total: { type: 'number' },
-        ...(withPickup ? { pickup_total: { type: 'number' }, pickup_available: { type: 'boolean' } } : {}),
-        ...(withDelivery ? {
+        ...(includePickup ? { pickup_total: { type: 'number' }, pickup_available: { type: 'boolean' } } : {}),
+        ...(includeDelivery ? {
           instacart_fee: { type: 'number' },
           instacart_available: { type: 'boolean' },
           shipt_fee: { type: 'number' },
@@ -170,7 +176,7 @@ export default function ListDetail() {
         ? base44.functions.invoke('krogerPrices', {
             items: items.map(i => ({ ...i, name: i.search_hint || i.name })),
             store_keys: krogerStores,
-            zip_code: userZip
+            zip_code: userZip,
           })
         : Promise.resolve({ data: { results: {} } }),
       aiStores.length > 0
@@ -205,9 +211,15 @@ ${itemsList}
 CRITICAL RULES:
 - ALWAYS find a product for every item — never leave an item out or mark it as unavailable unless the store literally has zero comparable products in that entire category.
 - If the exact branded product is not carried, substitute the closest store-brand or generic equivalent.
-- Set in_stock=true for substitutes.
-- Calculate instore_total as the sum of ALL items.
-- Only set in_stock=false if the store has absolutely no comparable product in that category.${pickupNote}${deliveryNote}`,
+- Set in_stock=true for substitutes. Use the substitute's product_name to make it clear it's a substitute.
+- Calculate instore_total as the sum of ALL items including substitutes.
+- Only set in_stock=false if the store has absolutely no comparable product in that category.${pickupNote}${deliveryNote}
+
+Store pricing tendencies:
+- Aldi & Walmart: lowest prices
+- Safeway, Albertsons: mid-range
+- Whole Foods, The Fresh Market: premium
+- Trader Joe's, H-E-B, Publix: competitive`,
                 add_context_from_internet: true,
                 model: 'gemini_3_flash',
                 response_json_schema: { type: 'object', properties: batchProperties },
@@ -223,10 +235,7 @@ CRITICAL RULES:
     for (const storeKey of krogerStores) {
       const realData = krogerRealData[storeKey];
       if (realData) {
-        if (includePickup) {
-          realData.pickup_available = true;
-          realData.pickup_total = realData.instore_total;
-        }
+        if (includePickup) { realData.pickup_available = true; realData.pickup_total = realData.instore_total; }
         if (includeDelivery) {
           realData.instacart_available = true;
           realData.instacart_fee = 5.99;
@@ -244,7 +253,7 @@ CRITICAL RULES:
         const props = {};
         props[storeKey] = storeSchema(includePickup, includeDelivery);
         const fallback = await base44.integrations.Core.InvokeLLM({
-          prompt: `Provide realistic estimated grocery prices for ${storeName}. Items: ${itemsList}. ALWAYS find a substitute for any item not carried. Never leave an item out. Return instore_total and item prices.`,
+          prompt: `Provide realistic estimated grocery prices for ${storeName}. Items: ${itemsList}. ALWAYS find a substitute for any item not carried. Return instore_total and item prices.`,
           model: 'gemini_3_flash',
           response_json_schema: { type: 'object', properties: props },
         });
@@ -281,7 +290,8 @@ CRITICAL RULES:
     setComparing(false);
 
     const user = await base44.auth.me().catch(() => null);
-    if (!['trialing', 'active'].includes(user?.subscription_status)) {
+    const activeStatuses = ['trialing', 'active'];
+    if (!activeStatuses.includes(user?.subscription_status)) {
       clearTimeout(trialTimerRef.current);
       trialTimerRef.current = setTimeout(() => setShowTrialModal(true), 30000);
     }
@@ -318,14 +328,20 @@ CRITICAL RULES:
     : null;
 
   const cheapestStore = storeTotals && Object.keys(storeTotals).length > 0
-    ? Object.entries(storeTotals).reduce((a, b) => (a[1] < b[1] ? a : b))[0]
+    ? Object.entries(storeTotals).reduce((a, b) => a[1] < b[1] ? a : b)[0]
     : null;
 
   return (
     <div>
       {showTrialModal && <FreeTrialModal onClose={() => { setShowTrialModal(false); clearTimeout(trialTimerRef.current); }} />}
+      {showInstructions && (
+        <InstructionModal
+          instructionKey="listdetail"
+          slides={LISTDETAIL_SLIDES}
+          onClose={() => setShowInstructions(false)}
+        />
+      )}
 
-      {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <Link to="/Home">
           <Button variant="ghost" size="icon" className="rounded-xl text-slate-400 hover:text-slate-600">
@@ -355,19 +371,16 @@ CRITICAL RULES:
         </Button>
       </div>
 
-      {/* Coupon Suggestions */}
       <CouponListMatcher
         coupons={coupons}
         list={{ ...list, items }}
         onItemAdded={() => queryClient.invalidateQueries({ queryKey: ['grocery-list', listId] })}
       />
 
-      {/* Add Item */}
       <div className="mb-4">
         <AddItemForm onAdd={addItem} listId={listId} />
       </div>
 
-      {/* Items List */}
       <div className="space-y-2 mb-6">
         {shoppingMode ? (
           <>
@@ -375,16 +388,8 @@ CRITICAL RULES:
             {items.map((item, i) => {
               const checked = checkedItems.has(i);
               return (
-                <button
-                  key={`${item.name}-${i}`}
-                  onClick={() => toggleChecked(i)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border text-left transition-all ${
-                    checked ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-slate-100'
-                  }`}
-                >
-                  <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${
-                    checked ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300'
-                  }`}>
+                <button key={`${item.name}-${i}`} onClick={() => toggleChecked(i)} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border text-left transition-all ${checked ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-slate-100'}`}>
+                  <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${checked ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300'}`}>
                     {checked && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
                   </div>
                   <div className="flex items-center gap-2 flex-1">
@@ -394,9 +399,7 @@ CRITICAL RULES:
                 </button>
               );
             })}
-            {checkedItems.size > 0 && (
-              <p className="text-xs text-slate-400 text-center pt-1">{checkedItems.size} of {items.length} checked off</p>
-            )}
+            {checkedItems.size > 0 && <p className="text-xs text-slate-400 text-center pt-1">{checkedItems.size} of {items.length} checked off</p>}
           </>
         ) : (
           <AnimatePresence>
@@ -407,7 +410,6 @@ CRITICAL RULES:
         )}
       </div>
 
-      {/* Store Selector */}
       {items.length > 0 && (
         <div className="mb-6 rounded-2xl border border-slate-100 bg-white overflow-hidden">
           {!isPremium ? (
@@ -417,9 +419,7 @@ CRITICAL RULES:
                   <Store className="w-4 h-4" style={{ color: '#4181ed' }} />
                   <span className="font-semibold text-slate-800">Stores to Compare</span>
                 </div>
-                <Link to="/Subscribe" className="text-xs font-semibold underline" style={{ color: '#4181ed' }}>
-                  Upgrade for 50+ stores →
-                </Link>
+                <Link to="/Subscribe" className="text-xs font-semibold underline" style={{ color: '#4181ed' }}>Upgrade for 50+ stores →</Link>
               </div>
               <div className="flex flex-wrap gap-2">
                 {['Walmart', 'Kroger', 'Amazon Fresh'].map(name => (
@@ -430,25 +430,16 @@ CRITICAL RULES:
             </div>
           ) : (
             <>
-              <button
-                onClick={() => setShowStorePicker(!showStorePicker)}
-                className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50 transition-colors"
-              >
+              <button onClick={() => setShowStorePicker(!showStorePicker)} className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50 transition-colors">
                 <div className="flex items-center gap-2.5">
                   <Store className="w-4 h-4" style={{ color: '#4181ed' }} />
                   <span className="font-semibold text-slate-800">Stores to Compare</span>
-                  <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
-                    {selectedStores.length} selected
-                  </span>
+                  <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">{selectedStores.length} selected</span>
                 </div>
                 {showStorePicker ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
               </button>
               {showStorePicker && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  className="px-5 pb-5 border-t border-slate-100"
-                >
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="px-5 pb-5 border-t border-slate-100">
                   <div className="pt-4">
                     <StorePicker selected={selectedStores} onChange={saveStores} />
                   </div>
@@ -459,25 +450,18 @@ CRITICAL RULES:
         </div>
       )}
 
-      {/* Per-List Budget */}
       {items.length > 0 && (
         <div className="mb-6">
-          <ListBudget
-            list={list}
-            priceData={list?.price_data}
-            onUpdate={() => queryClient.invalidateQueries({ queryKey: ['grocery-list', listId] })}
-          />
+          <ListBudget list={list} priceData={list?.price_data} onUpdate={() => queryClient.invalidateQueries({ queryKey: ['grocery-list', listId] })} />
         </div>
       )}
 
-      {/* Nearby Stores Map */}
       {items.length > 0 && (
         <div className="mb-6">
           <NearbyStoresMap priceData={list?.price_data} listName={list?.name} />
         </div>
       )}
 
-      {/* Compare Button */}
       {items.length > 0 && (
         <Button
           onClick={comparePrices}
@@ -486,43 +470,28 @@ CRITICAL RULES:
           style={{ backgroundColor: '#4181ed' }}
         >
           {comparing ? (
-            <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              Comparing prices across {selectedStores.length} stores...
-            </>
+            <><Loader2 className="w-5 h-5 animate-spin" />Comparing prices across {selectedStores.length} stores...</>
           ) : (
-            <>
-              <RefreshCw className="w-5 h-5" />
-              {priceData ? 'Refresh Price Comparison' : `Compare Prices Across ${selectedStores.length} Stores`}
-            </>
+            <><RefreshCw className="w-5 h-5" />{priceData ? 'Refresh Price Comparison' : `Compare Prices Across ${selectedStores.length} Stores`}</>
           )}
         </Button>
       )}
 
-      {/* Loading state */}
       {comparing && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex flex-col items-center py-12 text-center"
-        >
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center py-12 text-center">
           <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
-            <ThrftListIcon className="w-8 h-8 animate-pulse" style={{ color: '#4181ed' }} />
+            <ShoppingCart className="w-8 h-8 animate-pulse" style={{ color: '#4181ed' }} />
           </div>
           <p className="text-slate-900 font-medium">Searching {selectedStores.length} stores...</p>
           <p className="text-sm text-slate-900 mt-1">This may take a moment</p>
         </motion.div>
       )}
 
-      {/* Results */}
       {priceData && !comparing && comparedStoreKeys.length > 0 && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-xl font-bold text-slate-900">Price Comparison</h2>
-            <button
-              onClick={() => setShowHistory(v => !v)}
-              className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
-            >
+            <button onClick={() => setShowHistory(v => !v)} className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 hover:text-emerald-700 transition-colors">
               📈 {showHistory ? 'Hide' : 'Show'} History
             </button>
           </div>
@@ -558,17 +527,10 @@ CRITICAL RULES:
                 }))
               : {};
             const deliveryEntries = Object.entries(deliveryTotals).filter(([, v]) => v !== null);
-            const bestDelivery = deliveryEntries.length
-              ? deliveryEntries.reduce((a, b) => a[1] < b[1] ? a : b)
-              : null;
+            const bestDelivery = deliveryEntries.length ? deliveryEntries.reduce((a, b) => a[1] < b[1] ? a : b) : null;
 
             return (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="mt-6 p-5 rounded-2xl bg-blue-50 border border-blue-100 space-y-2"
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mt-6 p-5 rounded-2xl bg-blue-50 border border-blue-100 space-y-2">
                 <p className="text-sm font-medium" style={{ color: '#4181ed' }}>
                   🏪 Best in-store: <strong>{ALL_STORES.find(s => s.key === cheapestStore)?.name || cheapestStore}</strong> at <strong>${storeTotals[cheapestStore]?.toFixed(2)}</strong>
                   {' '}— saves up to <strong>${(Math.max(...Object.values(storeTotals)) - storeTotals[cheapestStore]).toFixed(2)}</strong>

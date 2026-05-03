@@ -1,3 +1,4 @@
+import InstructionModal from '@/components/InstructionModal';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
@@ -6,6 +7,10 @@ import ThrftListIcon from '@/components/icons/ThrftListIcon';
 import { useCart } from '@/lib/cartContext';
 
 const THRFT_BLUE = '#4181ed';
+const SHOP_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/3f9b2db30_NewList1.jpg', nextTop: '5%', dismissTop: '20%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/a2a628e97_NewList2.jpg', nextTop: '76%', dismissTop: '85%' },
+];
 
 const AISLES = [
   { key: 'beverages',     label: 'Beverages',    emoji: '🥤' },
@@ -41,8 +46,7 @@ function ProductCard({ product, onClick }) {
     >
       <div className="w-full bg-slate-50 flex items-center justify-center" style={{ height: 110 }}>
         {product.imageUrl && !imgError ? (
-          <img src={product.imageUrl} alt={product.name} className="object-contain"
-            style={{ maxHeight: 100, maxWidth: '90%' }} onError={() => setImgError(true)} />
+          <img src={product.imageUrl} alt={product.name} className="object-contain" style={{ maxHeight: 100, maxWidth: '90%' }} onError={() => setImgError(true)} />
         ) : (
           <span style={{ fontSize: 40 }}>{product.emoji || '🛒'}</span>
         )}
@@ -58,8 +62,6 @@ function ProductCard({ product, onClick }) {
     </button>
   );
 }
-
-// ─── Search result row ────────────────────────────────────────────────────────
 
 function SearchRow({ product, onClick }) {
   const [imgError, setImgError] = useState(false);
@@ -90,8 +92,6 @@ function SearchRow({ product, onClick }) {
   );
 }
 
-// ─── Aisle sidebar ────────────────────────────────────────────────────────────
-
 const MAX_VISIBLE_AISLES = 8;
 
 function AisleSidebar({ aisles, onSelect }) {
@@ -104,27 +104,21 @@ function AisleSidebar({ aisles, onSelect }) {
       style={{ width: 72, maxHeight: 'calc(100vh - 130px)', overflowY: 'auto', scrollbarWidth: 'none' }}
     >
       {visible.map(aisle => (
-        <button key={aisle.key} onClick={() => onSelect(aisle)}
-          className="flex flex-col items-center justify-center gap-1 py-3 px-1 border-b border-slate-50 hover:bg-blue-50 transition-colors">
+        <button key={aisle.key} onClick={() => onSelect(aisle)} className="flex flex-col items-center justify-center gap-1 py-3 px-1 border-b border-slate-50 hover:bg-blue-50 transition-colors">
           <span style={{ fontSize: 22 }}>{aisle.emoji}</span>
-          <span className="text-center font-medium text-slate-600 leading-tight"
-            style={{ fontSize: 9, maxWidth: 60, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+          <span className="text-center font-medium text-slate-600 leading-tight" style={{ fontSize: 9, maxWidth: 60, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
             {aisle.label}
           </span>
         </button>
       ))}
       {!showAll && aisles.length > MAX_VISIBLE_AISLES && (
-        <button onClick={() => setShowAll(true)}
-          className="flex flex-col items-center justify-center gap-1 py-3 px-1 hover:bg-blue-50 transition-colors"
-          style={{ color: THRFT_BLUE }}>
+        <button onClick={() => setShowAll(true)} className="flex flex-col items-center justify-center gap-1 py-3 px-1 hover:bg-blue-50 transition-colors" style={{ color: THRFT_BLUE }}>
           <span style={{ fontSize: 16 }}>⋯</span>
           <span style={{ fontSize: 9, fontWeight: 600 }}>More</span>
         </button>
       )}
       {showAll && (
-        <button onClick={() => setShowAll(false)}
-          className="flex flex-col items-center justify-center gap-1 py-3 px-1 hover:bg-blue-50 transition-colors"
-          style={{ color: THRFT_BLUE }}>
+        <button onClick={() => setShowAll(false)} className="flex flex-col items-center justify-center gap-1 py-3 px-1 hover:bg-blue-50 transition-colors" style={{ color: THRFT_BLUE }}>
           <span style={{ fontSize: 14 }}>▲</span>
           <span style={{ fontSize: 9, fontWeight: 600 }}>Less</span>
         </button>
@@ -134,16 +128,17 @@ function AisleSidebar({ aisles, onSelect }) {
 }
 
 export default function Shop() {
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
   const { cartCount, userZip } = useCart();
 
-  const [query, setQuery]                       = useState('');
-  const [searchResults, setSearchResults]       = useState([]);
-  const [searching, setSearching]               = useState(false);
+  const [showInstructions, setShowInstructions] = useState(() => !localStorage.getItem('thrft_instructions_dismissed_shop'));
+  const [query, setQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [searching, setSearching] = useState(false);
   const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [loadingFeatured, setLoadingFeatured]   = useState(true);
+  const [loadingFeatured, setLoadingFeatured] = useState(true);
   const debounceRef = useRef(null);
-  const inputRef    = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (!userZip) return;
@@ -158,7 +153,6 @@ export default function Shop() {
   useEffect(() => {
     const q = query.trim();
     if (q.length < 2) { setSearchResults([]); return; }
-
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(async () => {
       setSearching(true);
@@ -170,7 +164,6 @@ export default function Shop() {
       } catch { setSearchResults([]); }
       setSearching(false);
     }, 400);
-
     return () => clearTimeout(debounceRef.current);
   }, [query, userZip]);
 
@@ -183,6 +176,13 @@ export default function Shop() {
 
   return (
     <div className="min-h-screen" style={{ background: '#f8fafc', paddingBottom: 80, paddingRight: 76 }}>
+      {showInstructions && (
+        <InstructionModal
+          instructionKey="shop"
+          slides={SHOP_SLIDES}
+          onClose={() => setShowInstructions(false)}
+        />
+      )}
 
       <header className="sticky top-0 z-40" style={{ backgroundColor: THRFT_BLUE }}>
         <div className="px-4 py-3 flex items-center gap-3">
@@ -195,10 +195,16 @@ export default function Shop() {
               ? <Loader2 className="w-3.5 h-3.5 text-blue-400 animate-spin shrink-0" />
               : <Search className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             }
-            <input ref={inputRef} type="text" placeholder="Search products..." value={query}
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder="Search products..."
+              value={query}
               onChange={e => setQuery(e.target.value)}
               className="flex-1 text-sm text-slate-900 placeholder:text-slate-400 bg-transparent focus:outline-none"
-              autoComplete="off" spellCheck={false} />
+              autoComplete="off"
+              spellCheck={false}
+            />
             {query && (
               <button onClick={() => { setQuery(''); setSearchResults([]); }}>
                 <X className="w-3.5 h-3.5 text-slate-400" />
@@ -262,9 +268,7 @@ export default function Shop() {
             <h2 className="text-base font-bold text-slate-900 mb-3">Browse by aisle</h2>
             <div className="grid grid-cols-2 gap-2">
               {AISLES.map(aisle => (
-                <button key={aisle.key}
-                  onClick={() => navigate(`/Aisle?key=${aisle.key}&label=${encodeURIComponent(aisle.label)}&emoji=${aisle.emoji}`)}
-                  className="flex items-center gap-3 bg-white border border-slate-100 rounded-2xl px-4 py-3 text-left hover:border-blue-200 hover:shadow-sm transition-all">
+                <button key={aisle.key} onClick={() => navigate(`/Aisle?key=${aisle.key}&label=${encodeURIComponent(aisle.label)}&emoji=${aisle.emoji}`)} className="flex items-center gap-3 bg-white border border-slate-100 rounded-2xl px-4 py-3 text-left hover:border-blue-200 hover:shadow-sm transition-all">
                   <span style={{ fontSize: 22 }}>{aisle.emoji}</span>
                   <p className="text-sm font-semibold text-slate-900 truncate">{aisle.label}</p>
                 </button>

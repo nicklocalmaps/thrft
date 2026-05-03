@@ -1,3 +1,4 @@
+import InstructionModal from '@/components/InstructionModal';
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useUserTier from '@/hooks/useUserTier';
@@ -9,8 +10,14 @@ import { Button } from '@/components/ui/button';
 import CouponScanner from '@/components/coupons/CouponScanner';
 import CouponCard from '@/components/coupons/CouponCard';
 
+const COUPONS_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/e304df701_Budget1.jpg', nextTop: '5%', dismissTop: '17%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/6557429b2_Budget2.jpg', nextTop: '76%', dismissTop: '85%' },
+];
+
 export default function Coupons() {
   const { isPremium } = useUserTier();
+  const [showInstructions, setShowInstructions] = useState(() => !localStorage.getItem('thrft_instructions_dismissed_coupons'));
   const queryClient = useQueryClient();
   const [showScanner, setShowScanner] = useState(false);
 
@@ -24,7 +31,7 @@ export default function Coupons() {
     queryFn: () => base44.entities.GroceryList.list('-created_date'),
   });
 
-  const handleCouponExtracted = (coupon) => {
+  const handleCouponExtracted = () => {
     queryClient.invalidateQueries({ queryKey: ['coupons'] });
     setShowScanner(false);
   };
@@ -39,13 +46,8 @@ export default function Coupons() {
       is_branded: !!coupon.brand,
       search_hint: coupon.brand ? `${coupon.brand} ${coupon.product_name}` : coupon.product_name,
     };
-    await base44.entities.GroceryList.update(listId, {
-      items: [...(list.items || []), newItem],
-    });
-    await base44.entities.Coupon.update(coupon.id, {
-      status: 'used',
-      added_to_list_id: listId,
-    });
+    await base44.entities.GroceryList.update(listId, { items: [...(list.items || []), newItem] });
+    await base44.entities.Coupon.update(coupon.id, { status: 'used', added_to_list_id: listId });
     queryClient.invalidateQueries({ queryKey: ['coupons'] });
     queryClient.invalidateQueries({ queryKey: ['grocery-lists'] });
   };
@@ -64,7 +66,13 @@ export default function Coupons() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      {/* Header */}
+      {showInstructions && (
+        <InstructionModal
+          instructionKey="coupons"
+          slides={COUPONS_SLIDES}
+          onClose={() => setShowInstructions(false)}
+        />
+      )}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
@@ -73,17 +81,12 @@ export default function Coupons() {
           </h1>
           <p className="text-slate-500 mt-1">Scan paper coupons and add matching items to your lists.</p>
         </div>
-        <Button
-          onClick={() => setShowScanner(v => !v)}
-          className="rounded-xl gap-2 shrink-0"
-          style={{ backgroundColor: '#4181ed' }}
-        >
+        <Button onClick={() => setShowScanner(v => !v)} className="rounded-xl gap-2 shrink-0" style={{ backgroundColor: '#4181ed' }}>
           {showScanner ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
           {showScanner ? 'Cancel' : 'Scan Coupon'}
         </Button>
       </div>
 
-      {/* Scanner */}
       <AnimatePresence>
         {showScanner && (
           <div className="mb-6">
@@ -92,60 +95,35 @@ export default function Coupons() {
         )}
       </AnimatePresence>
 
-      {/* Active Coupons */}
       {active.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">
-            Active ({active.length})
-          </h2>
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Active ({active.length})</h2>
           <div className="space-y-3">
             <AnimatePresence>
-              {active.map(c => (
-                <CouponCard
-                  key={c.id}
-                  coupon={c}
-                  lists={lists}
-                  onAddToList={handleAddToList}
-                  onDelete={handleDelete}
-                />
-              ))}
+              {active.map(c => <CouponCard key={c.id} coupon={c} lists={lists} onAddToList={handleAddToList} onDelete={handleDelete} />)}
             </AnimatePresence>
           </div>
         </div>
       )}
 
-      {/* Used/Expired */}
       {inactive.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">
-            Used / Expired ({inactive.length})
-          </h2>
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Used / Expired ({inactive.length})</h2>
           <div className="space-y-3">
             <AnimatePresence>
-              {inactive.map(c => (
-                <CouponCard
-                  key={c.id}
-                  coupon={c}
-                  lists={lists}
-                  onAddToList={handleAddToList}
-                  onDelete={handleDelete}
-                />
-              ))}
+              {inactive.map(c => <CouponCard key={c.id} coupon={c} lists={lists} onAddToList={handleAddToList} onDelete={handleDelete} />)}
             </AnimatePresence>
           </div>
         </div>
       )}
 
-      {/* Empty state */}
       {coupons.length === 0 && !showScanner && (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
             <Ticket className="w-8 h-8 text-blue-400" />
           </div>
           <h3 className="text-lg font-semibold text-slate-800 mb-2">No coupons yet</h3>
-          <p className="text-slate-500 max-w-sm mb-5">
-            Scan a paper coupon and AI will extract the details automatically.
-          </p>
+          <p className="text-slate-500 max-w-sm mb-5">Scan a paper coupon and AI will extract the details automatically.</p>
           <Button onClick={() => setShowScanner(true)} className="rounded-xl gap-2" style={{ backgroundColor: '#4181ed' }}>
             <Plus className="w-4 h-4" /> Scan Your First Coupon
           </Button>
