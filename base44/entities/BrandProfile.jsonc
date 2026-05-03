@@ -1,0 +1,49 @@
+{
+  "name": "BrandProfile",
+  "type": "object",
+  "properties": {
+    "brand_name": {
+      "type": "string",
+      "description": "Brand name"
+    },
+    "aisle_key": {
+      "type": "string",
+      "description": "Primary aisle this brand belongs to"
+    },
+    "category_key": {
+      "type": "string",
+      "description": "Primary category key within the aisle"
+    },
+    "popularity_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Computed popularity score based on user interactions"
+    },
+    "product_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of products from this brand in the library"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Brand logo or representative image URL"
+    },
+    "related_brands": {
+      "type": "array",
+      "description": "List of related brand names",
+      "items": {
+        "type": "string"
+      }
+    },
+    "top_products": {
+      "type": "array",
+      "description": "List of top product IDs or names for this brand",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "brand_name"
+  ]
+}

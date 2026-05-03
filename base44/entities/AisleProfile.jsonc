@@ -1,0 +1,45 @@
+{
+  "name": "AisleProfile",
+  "type": "object",
+  "properties": {
+    "aisle_key": {
+      "type": "string",
+      "description": "Unique aisle identifier (e.g. beverages, meat)"
+    },
+    "label": {
+      "type": "string",
+      "description": "Human-readable aisle label"
+    },
+    "emoji": {
+      "type": "string",
+      "description": "Emoji representing the aisle"
+    },
+    "subcategories": {
+      "type": "array",
+      "description": "List of subcategory keys within this aisle",
+      "items": {
+        "type": "string"
+      }
+    },
+    "featured_brands": {
+      "type": "array",
+      "description": "List of featured brand names for this aisle",
+      "items": {
+        "type": "string"
+      }
+    },
+    "product_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of products in this aisle"
+    },
+    "last_updated": {
+      "type": "string",
+      "description": "ISO timestamp of last update"
+    }
+  },
+  "required": [
+    "aisle_key",
+    "label"
+  ]
+}

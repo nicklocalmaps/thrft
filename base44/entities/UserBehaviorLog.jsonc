@@ -1,0 +1,44 @@
+{
+  "name": "UserBehaviorLog",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "User ID"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "browse",
+        "search",
+        "add",
+        "view"
+      ],
+      "description": "Type of user action"
+    },
+    "aisle_key": {
+      "type": "string",
+      "description": "Aisle context of the action"
+    },
+    "category_key": {
+      "type": "string",
+      "description": "Category context of the action"
+    },
+    "brand": {
+      "type": "string",
+      "description": "Brand involved in the action"
+    },
+    "product_name": {
+      "type": "string",
+      "description": "Product involved in the action"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session identifier for grouping actions"
+    }
+  },
+  "required": [
+    "user_id",
+    "action"
+  ]
+}

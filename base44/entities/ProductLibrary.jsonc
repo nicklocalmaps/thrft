@@ -14,6 +14,10 @@
       "type": "string",
       "description": "Aisle category key (e.g. beverages, meat)"
     },
+    "category_key": {
+      "type": "string",
+      "description": "Sub-category key within the aisle"
+    },
     "size": {
       "type": "string",
       "description": "Product size/weight"
@@ -22,34 +26,64 @@
       "type": "string",
       "description": "Product image URL"
     },
-    "price": {
+    "price_kroger": {
       "type": "number",
-      "description": "Last known price"
+      "description": "Last known Kroger price"
+    },
+    "price_walmart": {
+      "type": "number",
+      "description": "Last known Walmart price"
     },
     "kroger_id": {
       "type": "string",
       "description": "Kroger product ID"
     },
+    "walmart_id": {
+      "type": "string",
+      "description": "Walmart product ID"
+    },
     "upc": {
       "type": "string",
       "description": "UPC barcode"
-    },
-    "added_by": {
-      "type": "string",
-      "enum": [
-        "user",
-        "system"
-      ],
-      "default": "system"
     },
     "times_added": {
       "type": "number",
       "default": 0,
       "description": "How many times users have added this to a list"
     },
-    "created_at": {
+    "times_viewed": {
+      "type": "number",
+      "default": 0,
+      "description": "How many times users have viewed this product"
+    },
+    "last_seen": {
       "type": "string",
-      "description": "ISO timestamp of creation"
+      "description": "ISO timestamp of last user interaction"
+    },
+    "similar_products": {
+      "type": "array",
+      "description": "List of similar product IDs or names",
+      "items": {
+        "type": "string"
+      }
+    },
+    "frequently_bought_with": {
+      "type": "array",
+      "description": "List of product IDs or names frequently bought together",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "user",
+        "system",
+        "kroger_api",
+        "walmart_api"
+      ],
+      "default": "system",
+      "description": "How this product was added"
     }
   },
   "required": [
