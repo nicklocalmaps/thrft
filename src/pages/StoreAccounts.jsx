@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import InstructionModal from '@/components/InstructionModal';
-
-const STORES_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/4f6af4bc3_Stores1.jpg', nextTop: '5%', dismissTop: '15%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c2c0b6303_Stores2.jpg', nextTop: '76%', dismissTop: '86%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/7df75b810_Stores3.jpg', nextTop: '76%', dismissTop: '86%' },
-];
-
 import { ALL_STORES, COLOR_MAP } from '@/lib/storeConfig';
 import { getStoreLink } from '@/lib/storeLinks';
 import { Button } from '@/components/ui/button';
@@ -15,6 +8,12 @@ import { Input } from '@/components/ui/input';
 import { ExternalLink, Smartphone, Check, CreditCard, Edit2, X, MapPin, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ShoppingMethodPicker from '@/components/grocery/ShoppingMethodPicker';
+
+const STORES_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/4f6af4bc3_Stores1.jpg', nextTop: '5%', dismissTop: '15%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c2c0b6303_Stores2.jpg', nextTop: '76%', dismissTop: '86%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/7df75b810_Stores3.jpg', nextTop: '76%', dismissTop: '86%' },
+];
 
 export default function StoreAccounts() {
   const [user, setUser] = useState(null);
@@ -29,7 +28,9 @@ export default function StoreAccounts() {
   const [savingZip, setSavingZip] = useState(false);
   const [refreshingStores, setRefreshingStores] = useState(false);
   const [refreshMessage, setRefreshMessage] = useState('');
-  const [showInstructions, setShowInstructions] = useState(true);
+  const [showInstructions, setShowInstructions] = useState(() => {
+    return !localStorage.getItem('thrft_instructions_dismissed_stores');
+  });
 
   useEffect(() => {
     base44.auth.me().then(u => {
@@ -78,15 +79,8 @@ export default function StoreAccounts() {
     ? ALL_STORES.filter(s => favoriteStores.includes(s.key))
     : ALL_STORES.slice(0, 8);
 
-  const startEdit = (key, current) => {
-    setEditing(key);
-    setEditValue(current || '');
-  };
-
-  const cancelEdit = () => {
-    setEditing(null);
-    setEditValue('');
-  };
+  const startEdit = (key, current) => { setEditing(key); setEditValue(current || ''); };
+  const cancelEdit = () => { setEditing(null); setEditValue(''); };
 
   const saveCard = async (key) => {
     setSaving(true);
@@ -103,6 +97,7 @@ export default function StoreAccounts() {
     <div>
       {showInstructions && (
         <InstructionModal
+          instructionKey="stores"
           slides={STORES_SLIDES}
           onClose={() => setShowInstructions(false)}
         />
@@ -131,43 +126,25 @@ export default function StoreAccounts() {
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <Input
-                value={zipValue}
-                onChange={e => setZipValue(e.target.value.replace(/\D/g, '').slice(0, 5))}
-                className="h-8 w-24 rounded-lg text-sm text-center focus-visible:ring-blue-400"
-                autoFocus
-                onKeyDown={e => { if (e.key === 'Enter') saveZip(); if (e.key === 'Escape') setEditingZip(false); }}
-              />
-              <Button size="icon" className="h-8 w-8 rounded-lg" style={{ backgroundColor: '#4181ed' }} disabled={savingZip} onClick={saveZip}>
-                <Check className="w-4 h-4" />
-              </Button>
-              <Button size="icon" variant="ghost" className="h-8 w-8 rounded-lg text-slate-400" onClick={() => setEditingZip(false)}>
-                <X className="w-4 h-4" />
-              </Button>
+              <Input value={zipValue} onChange={e => setZipValue(e.target.value.replace(/\D/g, '').slice(0, 5))} className="h-8 w-24 rounded-lg text-sm text-center focus-visible:ring-blue-400" autoFocus onKeyDown={e => { if (e.key === 'Enter') saveZip(); if (e.key === 'Escape') setEditingZip(false); }} />
+              <Button size="icon" className="h-8 w-8 rounded-lg" style={{ backgroundColor: '#4181ed' }} disabled={savingZip} onClick={saveZip}><Check className="w-4 h-4" /></Button>
+              <Button size="icon" variant="ghost" className="h-8 w-8 rounded-lg text-slate-400" onClick={() => setEditingZip(false)}><X className="w-4 h-4" /></Button>
             </div>
           )}
         </div>
         {!editingZip && user?.zip_code && (
           <div className="mt-3 pt-3 border-t border-slate-50 flex items-center justify-between">
             <p className="text-xs text-slate-400">Stores are cached from your last detection. Refresh to find new ones.</p>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={refreshNearbyStores}
-              disabled={refreshingStores}
-              className="h-8 rounded-lg text-xs gap-1.5 border-slate-200 shrink-0 ml-3"
-            >
+            <Button variant="outline" size="sm" onClick={refreshNearbyStores} disabled={refreshingStores} className="h-8 rounded-lg text-xs gap-1.5 border-slate-200 shrink-0 ml-3">
               <RefreshCw className={`w-3 h-3 ${refreshingStores ? 'animate-spin' : ''}`} />
               {refreshingStores ? 'Detecting...' : 'Refresh Nearby Stores'}
             </Button>
           </div>
         )}
-        {refreshMessage && (
-          <p className="text-xs text-emerald-600 font-medium mt-2">{refreshMessage}</p>
-        )}
+        {refreshMessage && <p className="text-xs text-emerald-600 font-medium mt-2">{refreshMessage}</p>}
       </div>
 
-      {/* Shopping Method Preference */}
+      {/* Shopping Method */}
       <div className="bg-white rounded-2xl border border-slate-100 p-5 mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -187,102 +164,46 @@ export default function StoreAccounts() {
           const isEditing = editing === store.key;
 
           return (
-            <motion.div
-              key={store.key}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.04 }}
-              className="bg-white rounded-2xl border border-slate-100 p-5 hover:border-slate-200 transition-all"
-            >
+            <motion.div key={store.key} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }} className="bg-white rounded-2xl border border-slate-100 p-5 hover:border-slate-200 transition-all">
               <div className="flex items-start justify-between gap-4">
-                {/* Store name + loyalty */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">
                     <div className={`w-2 h-2 rounded-full bg-gradient-to-br ${colors.bar}`} />
                     <h3 className="font-semibold text-slate-900">{store.name}</h3>
                     <span className="text-xs text-slate-400">{store.region}</span>
                   </div>
-
-                  {/* Loyalty Card */}
                   {link.loyalty && (
                     <div className="mt-2">
                       {isEditing ? (
                         <div className="flex items-center gap-2">
-                          <Input
-                            value={editValue}
-                            onChange={e => setEditValue(e.target.value)}
-                            placeholder={link.loyalty_label || 'Card number'}
-                            className="h-9 rounded-lg text-sm flex-1 focus-visible:ring-blue-400"
-                            autoFocus
-                            onKeyDown={e => {
-                              if (e.key === 'Enter') saveCard(store.key);
-                              if (e.key === 'Escape') cancelEdit();
-                            }}
-                          />
-                          <Button
-                            size="icon"
-                            className="h-9 w-9 rounded-lg shrink-0"
-                            style={{ backgroundColor: '#4181ed' }}
-                            disabled={saving}
-                            onClick={() => saveCard(store.key)}
-                          >
-                            <Check className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-9 w-9 rounded-lg shrink-0 text-slate-400"
-                            onClick={cancelEdit}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
+                          <Input value={editValue} onChange={e => setEditValue(e.target.value)} placeholder={link.loyalty_label || 'Card number'} className="h-9 rounded-lg text-sm flex-1 focus-visible:ring-blue-400" autoFocus onKeyDown={e => { if (e.key === 'Enter') saveCard(store.key); if (e.key === 'Escape') cancelEdit(); }} />
+                          <Button size="icon" className="h-9 w-9 rounded-lg shrink-0" style={{ backgroundColor: '#4181ed' }} disabled={saving} onClick={() => saveCard(store.key)}><Check className="w-4 h-4" /></Button>
+                          <Button size="icon" variant="ghost" className="h-9 w-9 rounded-lg shrink-0 text-slate-400" onClick={cancelEdit}><X className="w-4 h-4" /></Button>
                         </div>
                       ) : (
-                        <button
-                          onClick={() => startEdit(store.key, cardNumber)}
-                          className="flex items-center gap-2 text-sm group"
-                        >
+                        <button onClick={() => startEdit(store.key, cardNumber)} className="flex items-center gap-2 text-sm group">
                           <CreditCard className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          {cardNumber ? (
-                            <span className="text-slate-700 font-mono">{cardNumber}</span>
-                          ) : (
-                            <span className="text-slate-400 italic">Add {link.loyalty_label || 'loyalty card #'}</span>
-                          )}
+                          {cardNumber ? <span className="text-slate-700 font-mono">{cardNumber}</span> : <span className="text-slate-400 italic">Add {link.loyalty_label || 'loyalty card #'}</span>}
                           <Edit2 className="w-3 h-3 text-slate-300 group-hover:text-slate-500 transition-colors" />
                         </button>
                       )}
                     </div>
                   )}
                 </div>
-
-                {/* Action Buttons */}
                 <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
                   {link.signup && (
                     <a href={link.signup} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" size="sm" className="h-8 rounded-lg text-xs gap-1.5 border-slate-200">
-                        <ExternalLink className="w-3 h-3" />
-                        Sign Up
-                      </Button>
+                      <Button variant="outline" size="sm" className="h-8 rounded-lg text-xs gap-1.5 border-slate-200"><ExternalLink className="w-3 h-3" />Sign Up</Button>
                     </a>
                   )}
                   {link.website && (
                     <a href={link.website} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" size="sm" className="h-8 rounded-lg text-xs gap-1.5 border-slate-200">
-                        <ExternalLink className="w-3 h-3" />
-                        Website
-                      </Button>
+                      <Button variant="outline" size="sm" className="h-8 rounded-lg text-xs gap-1.5 border-slate-200"><ExternalLink className="w-3 h-3" />Website</Button>
                     </a>
                   )}
                   {(link.app_ios || link.app_android) && (
-                    <a
-                      href={/iPhone|iPad|iPod/i.test(navigator.userAgent) ? (link.app_ios || link.app_android) : (link.app_android || link.app_ios)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Button size="sm" className="h-8 rounded-lg text-xs gap-1.5" style={{ backgroundColor: '#4181ed' }}>
-                        <Smartphone className="w-3 h-3" />
-                        App
-                      </Button>
+                    <a href={/iPhone|iPad|iPod/i.test(navigator.userAgent) ? (link.app_ios || link.app_android) : (link.app_android || link.app_ios)} target="_blank" rel="noopener noreferrer">
+                      <Button size="sm" className="h-8 rounded-lg text-xs gap-1.5" style={{ backgroundColor: '#4181ed' }}><Smartphone className="w-3 h-3" />App</Button>
                     </a>
                   )}
                 </div>
@@ -293,9 +214,7 @@ export default function StoreAccounts() {
       </div>
 
       {favoriteStores.length === 0 && (
-        <p className="text-sm text-slate-400 text-center mt-6">
-          Complete onboarding to see only your nearby stores here.
-        </p>
+        <p className="text-sm text-slate-400 text-center mt-6">Complete onboarding to see only your nearby stores here.</p>
       )}
     </div>
   );

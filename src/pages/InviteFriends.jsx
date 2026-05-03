@@ -2,26 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import InstructionModal from '@/components/InstructionModal';
-
-const INVITE_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/9cfab70f3_InviteFriends1.jpg', nextTop: '76%', dismissTop: '87%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/4ed147b0c_InviteFriends2.jpg', nextTop: '7%', dismissTop: '16%' },
-];
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, Copy, Check, Mail, MessageSquare, Share2, Loader2, Users, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-
-
-
-
 const THRFT_BLUE = '#4181ed';
+
+const INVITE_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/9cfab70f3_InviteFriends1.jpg', nextTop: '76%', dismissTop: '87%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/4ed147b0c_InviteFriends2.jpg', nextTop: '7%', dismissTop: '16%' },
+];
 
 export default function InviteFriends() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showInstructions, setShowInstructions] = useState(true);
+  const [showInstructions, setShowInstructions] = useState(() => {
+    return !localStorage.getItem('thrft_instructions_dismissed_invitefriends');
+  });
   const [copied, setCopied] = useState(false);
   const [emailInput, setEmailInput] = useState('');
   const [sendingEmail, setSendingEmail] = useState(false);
@@ -64,11 +62,7 @@ export default function InviteFriends() {
 
   const shareViaWeb = () => {
     if (navigator.share) {
-      navigator.share({
-        title: 'Save money on groceries with THRFT',
-        text: 'Compare prices across all grocery stores. Try free for 30 days!',
-        url: referralLink,
-      });
+      navigator.share({ title: 'Save money on groceries with THRFT', text: 'Compare prices across all grocery stores. Try free for 30 days!', url: referralLink });
     } else {
       copyLink();
     }
@@ -86,16 +80,15 @@ export default function InviteFriends() {
     <div className="max-w-lg mx-auto">
       {showInstructions && (
         <InstructionModal
+          instructionKey="invitefriends"
           slides={INVITE_SLIDES}
           onClose={() => setShowInstructions(false)}
         />
       )}
-      {/* Back */}
       <Link to="/Rewards" className="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-700 transition-colors mb-5">
         <ArrowLeft className="w-4 h-4" /> Back to Rewards
       </Link>
 
-      {/* Hero */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
         <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mx-auto mb-4">
           <Users className="w-8 h-8" style={{ color: THRFT_BLUE }} />
@@ -104,7 +97,6 @@ export default function InviteFriends() {
         <p className="text-slate-500">For every friend who subscribes, you earn <strong className="text-slate-800">150 points</strong> toward free months — and 5 paid referrals unlock <strong className="text-slate-800">lifetime access</strong>.</p>
       </motion.div>
 
-      {/* Reward steps */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
         {[
           { step: 'Invite Sent', pts: '+2 pts', icon: '✉️' },
@@ -120,7 +112,6 @@ export default function InviteFriends() {
         ))}
       </div>
 
-      {/* Referral Link */}
       <div className="bg-white rounded-2xl border border-slate-100 p-5 mb-4 shadow-sm">
         <p className="text-sm font-semibold text-slate-700 mb-3">Your Referral Link</p>
         <div className="flex items-center gap-2 bg-slate-50 rounded-xl border border-slate-200 px-4 py-2.5 mb-3">
@@ -129,8 +120,6 @@ export default function InviteFriends() {
             {copied ? <><Check className="w-4 h-4 text-emerald-500" /> Copied!</> : <><Copy className="w-4 h-4" /> Copy</>}
           </button>
         </div>
-
-        {/* Share buttons */}
         <div className="grid grid-cols-3 gap-2">
           <button onClick={copyLink} className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors">
             <Copy className="w-5 h-5 text-slate-500" />
@@ -147,32 +136,18 @@ export default function InviteFriends() {
         </div>
       </div>
 
-      {/* Email Invite */}
       <div className="bg-white rounded-2xl border border-slate-100 p-5 mb-4 shadow-sm">
         <p className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
           <Mail className="w-4 h-4 text-slate-400" /> Invite via Email
         </p>
         <div className="flex gap-2">
-          <Input
-            type="email"
-            placeholder="friend@email.com"
-            value={emailInput}
-            onChange={e => setEmailInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && shareViaEmail()}
-            className="h-10 rounded-xl border-slate-200 text-sm focus-visible:ring-blue-400 flex-1"
-          />
-          <Button
-            onClick={shareViaEmail}
-            disabled={sendingEmail || !emailInput.trim()}
-            className="h-10 px-4 rounded-xl text-sm font-semibold shrink-0"
-            style={{ backgroundColor: THRFT_BLUE }}
-          >
+          <Input type="email" placeholder="friend@email.com" value={emailInput} onChange={e => setEmailInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && shareViaEmail()} className="h-10 rounded-xl border-slate-200 text-sm focus-visible:ring-blue-400 flex-1" />
+          <Button onClick={shareViaEmail} disabled={sendingEmail || !emailInput.trim()} className="h-10 px-4 rounded-xl text-sm font-semibold shrink-0" style={{ backgroundColor: THRFT_BLUE }}>
             {sendingEmail ? <Loader2 className="w-4 h-4 animate-spin" /> : emailSent ? '✅ Sent!' : 'Send'}
           </Button>
         </div>
       </div>
 
-      {/* Progress reminder */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 p-5 text-center">
         <Star className="w-5 h-5 text-amber-400 mx-auto mb-2" />
         <p className="text-sm font-bold text-slate-900">Invite 5 friends who subscribe</p>

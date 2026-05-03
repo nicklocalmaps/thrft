@@ -1,21 +1,17 @@
-import ThrftListIcon from '@/components/icons/ThrftListIcon';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import InstructionModal from '@/components/InstructionModal';
-
-const ONBOARDING_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c2b98c125_Onboarding1.jpg', nextTop: '5%', dismissTop: '17%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/81ac9ce9a_Onboarding2.jpg', nextTop: '5%', dismissTop: '20%' },
-];
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Loader2, Check, ArrowRight, Star, Search } from 'lucide-react';
 import { ALL_STORES } from '@/lib/storeConfig';
 
-const VALID_PROMO_CODES = ['EBT2026', 'AIRDROP2026'];
+const ONBOARDING_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c2b98c125_Onboarding1.jpg', nextTop: '5%', dismissTop: '17%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/81ac9ce9a_Onboarding2.jpg', nextTop: '5%', dismissTop: '20%' },
+];
 
 export default function Onboarding() {
   const navigate = useNavigate();
@@ -30,7 +26,9 @@ export default function Onboarding() {
   const [promoError, setPromoError] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
   const [userCount, setUserCount] = useState(217);
-  const [showInstructions, setShowInstructions] = useState(true);
+  const [showInstructions, setShowInstructions] = useState(() => {
+    return !localStorage.getItem('thrft_instructions_dismissed_onboarding');
+  });
 
   useEffect(() => {
     base44.functions.invoke('getUserCount', {}).then(res => {
@@ -54,14 +52,16 @@ export default function Onboarding() {
     setSelectedStores(prev => prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]);
   };
 
+  const VALID_PROMO_CODES = ['EBT2026', 'AIRDROP2026'];
+
   const validatePromo = () => {
     setPromoError('');
     const code = promoCode.trim().toUpperCase();
     if (VALID_PROMO_CODES.includes(code)) {
       setPromoApplied(true);
-    } else {
-      setPromoError('Invalid promo code. Please check and try again.');
+      return;
     }
+    setPromoError('Invalid promo code. Please check and try again.');
   };
 
   const completeOnboarding = async () => {
@@ -95,7 +95,6 @@ export default function Onboarding() {
       )}
 
       <div className="w-full max-w-xl">
-        {/* Logo */}
         <div className="flex items-center justify-center gap-4 mb-6">
           <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-lg">
             <img src="https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/c6dd00316_cartcomparelogo1024x1024.jpg" alt="THRFT logo" className="w-full h-full object-cover" />
@@ -103,7 +102,6 @@ export default function Onboarding() {
           <span className="text-4xl font-bold tracking-tight text-slate-900">THRFT</span>
         </div>
 
-        {/* User count badge */}
         <div className="flex justify-center mb-8">
           <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm">
             <div className="flex -space-x-1.5">
@@ -117,11 +115,8 @@ export default function Onboarding() {
         </div>
 
         <AnimatePresence mode="wait">
-
-          {/* Step 1: Zip Code */}
           {step === 'zip' && (
-            <motion.div key="zip" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-              className="bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 p-8">
+            <motion.div key="zip" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 p-8">
               <div className="flex items-center gap-3 mb-5">
                 <div className="rounded-2xl w-14 h-14 flex items-center justify-center shrink-0" style={{ backgroundColor: '#4181ed' }}>
                   <MapPin className="w-7 h-7 text-white" />
@@ -130,7 +125,6 @@ export default function Onboarding() {
               </div>
               <p className="text-slate-900 mb-4">Enter your ZIP code to discover nearby grocery stores and start comparing prices instantly.</p>
               <p className="text-slate-900 mb-8">THRFT shows you the cheapest options for your entire list—so you always shop smarter.</p>
-
               <label className="text-sm font-medium text-slate-900 mb-2 block">Your Zip Code</label>
               <div className="flex gap-3">
                 <Input
@@ -141,8 +135,7 @@ export default function Onboarding() {
                   className="h-12 rounded-xl border-slate-200 text-base flex-1 focus-visible:ring-blue-400"
                   maxLength={5}
                 />
-                <Button onClick={findNearbyStores} disabled={zipCode.length < 5 || loadingStores}
-                  className="h-12 px-6 rounded-xl shadow-md shadow-blue-200 gap-2" style={{ backgroundColor: '#4181ed' }}>
+                <Button onClick={findNearbyStores} disabled={zipCode.length < 5 || loadingStores} className="h-12 px-6 rounded-xl shadow-md shadow-blue-200 gap-2" style={{ backgroundColor: '#4181ed' }}>
                   {loadingStores ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Find Stores <ArrowRight className="w-4 h-4" /></>}
                 </Button>
               </div>
@@ -154,10 +147,8 @@ export default function Onboarding() {
             </motion.div>
           )}
 
-          {/* Step 2: Store Selection */}
           {step === 'stores' && (
-            <motion.div key="stores" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-              className="bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 p-8">
+            <motion.div key="stores" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 p-8">
               <div className="w-14 h-14 rounded-2xl bg-amber-50 flex items-center justify-center mb-5">
                 <Star className="w-7 h-7 text-amber-500" />
               </div>
@@ -165,20 +156,28 @@ export default function Onboarding() {
               <p className="text-slate-900 mb-6">
                 We found <strong>{nearbyStores.length} stores</strong> within ~25 miles. Check the ones you shop at — they'll be pre-selected on all your lists.
               </p>
-
               <div className="relative mb-3">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <input type="text" placeholder="Search stores..." value={storeQuery} onChange={e => setStoreQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white" />
+                <input
+                  type="text"
+                  placeholder="Search stores..."
+                  value={storeQuery}
+                  onChange={e => setStoreQuery(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white"
+                />
               </div>
-
               <div className="space-y-2 max-h-64 overflow-y-auto mb-6 pr-1">
                 {nearbyStores.filter(s => !storeQuery.trim() || s.name.toLowerCase().includes(storeQuery.toLowerCase())).map((store, i) => {
                   const isSelected = selectedStores.includes(store.key);
                   return (
-                    <motion.button key={store.key} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}
+                    <motion.button
+                      key={store.key}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.04 }}
                       onClick={() => toggleStore(store.key)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border text-left transition-all ${isSelected ? 'bg-blue-50 border-blue-200 text-slate-800' : 'bg-white border-slate-100 text-slate-900 hover:border-slate-200'}`}>
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border text-left transition-all ${isSelected ? 'bg-blue-50 border-blue-200 text-slate-800' : 'bg-white border-slate-100 text-slate-900 hover:border-slate-200'}`}
+                    >
                       <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${isSelected ? 'border-blue-500' : 'border-slate-300'}`}>
                         {isSelected && <div className="w-5 h-5 rounded-md flex items-center justify-center" style={{ backgroundColor: '#4181ed' }}><Check className="w-3 h-3 text-white" strokeWidth={3} /></div>}
                       </div>
@@ -188,13 +187,11 @@ export default function Onboarding() {
                   );
                 })}
               </div>
-
               <div className="flex items-center justify-between">
                 <p className="text-sm text-slate-900">
                   <span className="font-semibold" style={{ color: '#4181ed' }}>{selectedStores.length}</span> store{selectedStores.length !== 1 ? 's' : ''} selected
                 </p>
-                <Button onClick={() => setStep('promo')} disabled={selectedStores.length === 0}
-                  className="h-11 px-6 rounded-xl shadow-md shadow-blue-200 gap-2" style={{ backgroundColor: '#4181ed' }}>
+                <Button onClick={() => setStep('promo')} disabled={selectedStores.length === 0} className="h-11 px-6 rounded-xl shadow-md shadow-blue-200 gap-2" style={{ backgroundColor: '#4181ed' }}>
                   Next <ArrowRight className="w-4 h-4" />
                 </Button>
               </div>
@@ -204,10 +201,8 @@ export default function Onboarding() {
             </motion.div>
           )}
 
-          {/* Step 3: Promo Code */}
           {step === 'promo' && (
-            <motion.div key="promo" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-              className="bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 p-8">
+            <motion.div key="promo" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 p-8">
               <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center mb-5">
                 <span className="text-3xl">🎟️</span>
               </div>
@@ -224,9 +219,12 @@ export default function Onboarding() {
                 <div className="space-y-3 mb-6">
                   <div>
                     <label className="text-sm font-medium text-slate-700 mb-1.5 block">Promo Code</label>
-                    <Input placeholder="e.g. EBT2026" value={promoCode}
+                    <Input
+                      placeholder="e.g. EBT2026"
+                      value={promoCode}
                       onChange={e => { setPromoCode(e.target.value); setPromoError(''); }}
-                      className="h-11 rounded-xl border-slate-200 text-base focus-visible:ring-blue-400" />
+                      className="h-11 rounded-xl border-slate-200 text-base focus-visible:ring-blue-400"
+                    />
                   </div>
                   {promoError && <p className="text-sm text-red-500">{promoError}</p>}
                   {promoCode.trim() && (
@@ -237,8 +235,7 @@ export default function Onboarding() {
                 </div>
               )}
 
-              <Button onClick={completeOnboarding} disabled={saving}
-                className="w-full h-12 rounded-xl shadow-md shadow-blue-200 gap-2 font-semibold" style={{ backgroundColor: '#4181ed' }}>
+              <Button onClick={completeOnboarding} disabled={saving} className="w-full h-12 rounded-xl shadow-md shadow-blue-200 gap-2 font-semibold" style={{ backgroundColor: '#4181ed' }}>
                 {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <>{promoApplied ? 'Activate Lifetime Access' : 'Start 7-Day Free Trial'} <ArrowRight className="w-4 h-4" /></>}
               </Button>
               <button onClick={() => setStep('stores')} className="mt-4 text-sm text-slate-500 hover:text-black transition-colors w-full text-center">
@@ -246,7 +243,6 @@ export default function Onboarding() {
               </button>
             </motion.div>
           )}
-
         </AnimatePresence>
       </div>
     </div>

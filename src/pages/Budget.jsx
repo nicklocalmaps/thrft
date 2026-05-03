@@ -5,23 +5,24 @@ import useUserTier from '@/hooks/useUserTier';
 import UpgradePrompt from '@/components/subscription/UpgradePrompt';
 import InstructionModal from '@/components/InstructionModal';
 import { Input } from '@/components/ui/input';
-
-const BUDGET_SLIDES = [
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/e304df701_Budget1.jpg', nextTop: '5%', dismissTop: '17%' },
-  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/6557429b2_Budget2.jpg', nextTop: '76%', dismissTop: '85%' },
-];
 import { Loader2, DollarSign, Target, Users, TrendingDown, Lightbulb, AlertTriangle, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { format, startOfMonth, endOfMonth, isWithinInterval, parseISO } from 'date-fns';
 
 const THRFT_BLUE = '#4181ed';
+const AVG_SPEND_PER_PERSON = 300;
 
-const AVG_SPEND_PER_PERSON = 300; // avg monthly grocery spend per person (USD)
+const BUDGET_SLIDES = [
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/e304df701_Budget1.jpg', nextTop: '5%', dismissTop: '17%' },
+  { imageUrl: 'https://media.base44.com/images/public/69b782bc4deba77b6b05ba34/6557429b2_Budget2.jpg', nextTop: '76%', dismissTop: '85%' },
+];
 
 export default function Budget() {
   const { isPremium, loading: tierLoading } = useUserTier();
-  const [showInstructions, setShowInstructions] = useState(true);
+  const [showInstructions, setShowInstructions] = useState(() => {
+    return !localStorage.getItem('thrft_instructions_dismissed_budget');
+  });
   const [user, setUser] = useState(null);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -102,9 +103,6 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
     );
   }
 
-  // Budget is available to all users including free trial
-
-  // --- Data calculations ---
   const now = new Date();
   const monthStart = startOfMonth(now);
   const monthEnd = endOfMonth(now);
@@ -122,7 +120,6 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
   const isOverBudget = mBudget > 0 && thisMonthSpend > mBudget;
   const recommended = parseInt(householdSize) * AVG_SPEND_PER_PERSON;
 
-  // Savings vs most expensive store
   const totalSavings = history.reduce((s, h) => {
     if (!h.store_totals) return s;
     const vals = Object.values(h.store_totals).filter(v => v > 0);
@@ -131,14 +128,12 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
     return s + (max - (h.cheapest_total || 0));
   }, 0);
 
-  // Chart data — last 8 trips
   const chartData = [...history].slice(0, 8).reverse().map(h => ({
     date: (() => { try { return format(parseISO(h.snapshot_date), 'MMM d'); } catch { return ''; } })(),
     spent: parseFloat((h.cheapest_total || 0).toFixed(2)),
     budget: tripBudget || null,
   }));
 
-  // Monthly trend — last 4 months
   const monthlyTrend = [];
   for (let i = 3; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -151,7 +146,6 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
     const total = trips.reduce((s, h) => s + (h.cheapest_total || 0), 0);
     monthlyTrend.push({ month: format(d, 'MMM'), spent: parseFloat(total.toFixed(2)), budget: mBudget || null });
   }
-
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -180,40 +174,19 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
             <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5 block">Monthly Budget</label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
-              <Input
-                type="number"
-                placeholder="400"
-                value={monthlyBudget}
-                onChange={e => setMonthlyBudget(e.target.value)}
-                className="h-10 pl-7 rounded-xl border-slate-200 text-sm focus-visible:ring-blue-400"
-              />
+              <Input type="number" placeholder="400" value={monthlyBudget} onChange={e => setMonthlyBudget(e.target.value)} className="h-10 pl-7 rounded-xl border-slate-200 text-sm focus-visible:ring-blue-400" />
             </div>
           </div>
           <div>
             <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5 block">Per-Trip Target</label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
-              <Input
-                type="number"
-                placeholder="80"
-                value={perTripBudget}
-                onChange={e => setPerTripBudget(e.target.value)}
-                className="h-10 pl-7 rounded-xl border-slate-200 text-sm focus-visible:ring-blue-400"
-              />
+              <Input type="number" placeholder="80" value={perTripBudget} onChange={e => setPerTripBudget(e.target.value)} className="h-10 pl-7 rounded-xl border-slate-200 text-sm focus-visible:ring-blue-400" />
             </div>
           </div>
           <div>
-            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5 block flex items-center gap-1">
-              <Users className="w-3 h-3" /> Household Size
-            </label>
-            <Input
-              type="number"
-              placeholder="2"
-              min="1"
-              value={householdSize}
-              onChange={e => setHouseholdSize(e.target.value)}
-              className="h-10 rounded-xl border-slate-200 text-sm focus-visible:ring-blue-400"
-            />
+            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5 block">Household Size</label>
+            <Input type="number" placeholder="2" min="1" value={householdSize} onChange={e => setHouseholdSize(e.target.value)} className="h-10 rounded-xl border-slate-200 text-sm focus-visible:ring-blue-400" />
           </div>
         </div>
         {parseInt(householdSize) > 0 && (
@@ -221,12 +194,7 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
             💡 National average for {householdSize}-person household: <strong className="text-slate-600">${recommended}/mo</strong>
           </p>
         )}
-        <Button
-          onClick={saveBudget}
-          disabled={saving}
-          className="h-9 px-5 rounded-xl text-sm font-semibold gap-2"
-          style={{ backgroundColor: THRFT_BLUE }}
-        >
+        <Button onClick={saveBudget} disabled={saving} className="h-9 px-5 rounded-xl text-sm font-semibold gap-2" style={{ backgroundColor: THRFT_BLUE }}>
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? '✅ Saved!' : 'Save Budget'}
         </Button>
       </div>
@@ -237,8 +205,6 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
           <h2 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
             <DollarSign className="w-4 h-4 text-emerald-500" /> This Month's Spending
           </h2>
-
-          {/* Alert */}
           {isOverBudget && (
             <div className="flex items-start gap-2 bg-red-50 border border-red-100 rounded-xl p-3 mb-3">
               <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
@@ -257,7 +223,6 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
               <p className="text-sm text-emerald-700 font-medium">On track! ${(mBudget - thisMonthSpend).toFixed(2)} remaining this month.</p>
             </div>
           )}
-
           <div className="flex items-end justify-between mb-2">
             <span className="text-2xl font-bold text-slate-900">${thisMonthSpend.toFixed(2)}</span>
             <span className="text-sm text-slate-400">of ${mBudget.toFixed(2)}</span>
@@ -291,18 +256,12 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
               <p className="text-xs text-blue-600 mt-0.5">Trips compared</p>
             </div>
             <div className="bg-purple-50 rounded-xl p-3 text-center col-span-2 sm:col-span-1">
-              <p className="text-xl font-bold text-purple-700">
-                ${history.length ? (totalSavings / history.length).toFixed(2) : '0.00'}
-              </p>
+              <p className="text-xl font-bold text-purple-700">${history.length ? (totalSavings / history.length).toFixed(2) : '0.00'}</p>
               <p className="text-xs text-purple-600 mt-0.5">Avg saved per trip</p>
             </div>
           </div>
 
-          {/* Chart */}
-          <button
-            onClick={() => setShowChart(v => !v)}
-            className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-700 mb-3"
-          >
+          <button onClick={() => setShowChart(v => !v)} className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-700 mb-3">
             {showChart ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
             {showChart ? 'Hide' : 'Show'} spending chart
           </button>
@@ -322,7 +281,6 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
                     {mBudget > 0 && <Line type="monotone" dataKey="budget" stroke="#f59e0b" strokeWidth={2} strokeDasharray="5 5" dot={false} name="Budget" />}
                   </LineChart>
                 </ResponsiveContainer>
-
                 {chartData.length > 1 && (
                   <>
                     <p className="text-xs text-slate-400 mt-4 mb-2">Per-trip spend (last {chartData.length} trips)</p>
@@ -364,9 +322,7 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className={`text-sm font-bold ${overTrip ? 'text-red-600' : 'text-emerald-600'}`}>
-                      ${(trip.cheapest_total || 0).toFixed(2)}
-                    </p>
+                    <p className={`text-sm font-bold ${overTrip ? 'text-red-600' : 'text-emerald-600'}`}>${(trip.cheapest_total || 0).toFixed(2)}</p>
                     {overTrip && <p className="text-xs text-red-400">+${(trip.cheapest_total - tripBudget).toFixed(2)} over</p>}
                   </div>
                 </div>
@@ -387,18 +343,11 @@ Give 3 short, specific, actionable tips to help them save money and stay within 
           <Lightbulb className="w-4 h-4 text-amber-500" /> AI Smart Suggestions
         </h2>
         <p className="text-xs text-slate-500 mb-4">Personalized tips based on your shopping patterns.</p>
-
         {aiTips === null && (
-          <Button
-            onClick={getAiTips}
-            disabled={loadingTips}
-            className="h-9 px-5 rounded-xl text-sm font-semibold gap-2"
-            style={{ backgroundColor: THRFT_BLUE }}
-          >
+          <Button onClick={getAiTips} disabled={loadingTips} className="h-9 px-5 rounded-xl text-sm font-semibold gap-2" style={{ backgroundColor: THRFT_BLUE }}>
             {loadingTips ? <><Loader2 className="w-4 h-4 animate-spin" /> Analyzing…</> : '✨ Get My Tips'}
           </Button>
         )}
-
         {aiTips && (
           <div className="space-y-2">
             {aiTips.map((tip, i) => (
