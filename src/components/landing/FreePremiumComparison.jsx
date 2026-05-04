@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 const THRFT_BLUE = '#4181ed';
 
 const ROWS = [
-  { feature: 'Grocery lists', free: '2 per month', premium: 'Unlimited' },
+  { feature: 'Grocery lists', free: '5 per month', premium: 'Unlimited' },
   { feature: 'Stores to compare', free: 'Walmart, Kroger, Amazon Fresh', premium: '50+ stores' },
   { feature: 'In-store price comparison', free: true, premium: true },
   { feature: 'Curbside pickup pricing', free: false, premium: true },
